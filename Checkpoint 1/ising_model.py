@@ -31,7 +31,7 @@ class DynamicSystem:
 
     def glauber_dynamics(self, points, coords):
         """
-        Takes an array of one point and calculates the energy change and if it 
+        Takes an array of one point and calculates the energy change and if it
         is favourable.
         """
         init_E = self.calc_energy(points[0])
@@ -47,7 +47,7 @@ class DynamicSystem:
                 return True
             else:
                 return False
-            
+
     def kawasaki_dynamics(self, points, coords):
         # TODO Consider double counting for nearest neighbours
         point1 = points[0]
@@ -150,7 +150,7 @@ class Lattice:
         for j in range(self.pneeded):
             selections.append(self.select_rand_coords())
             points.append(self.around_selection(selections[j]))
-            
+
         if self.sys(points, selections):
             for k in range(len(selections)):
                 self.grid[selections[k][0]][selections[k][1]] *= -1
@@ -202,9 +202,8 @@ def main():
     # lattice.sys_magnetisation()
     # plt.show()
     #
-    # lattice.animate()  # Animate live
+    lattice.animate()  # Animate live
     #
-    lattice.temperature_test()
+    # lattice.temperature_test()
 
 main()
-
