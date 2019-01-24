@@ -181,7 +181,7 @@ class Lattice:
         # print(mag)
         return mag
 
-    def temperature_tests(self, t_min=1, t_max=3, data_points=30, sweeps=100, tests=5, save=True):
+    def temperature_tests(self, t_min=1, t_max=3, data_points=20, sweeps=100, tests=20, save=True):
         temperature = np.linspace(t_min, t_max, data_points)
         magnetisation = np.zeros((data_points, tests))
         for i in range(data_points):
@@ -195,19 +195,19 @@ class Lattice:
                 magnetisation[i][j] = self.sys_magnetisation()
 
         if save:
-            np.savetxt('magnetisation_kaw.txt', magnetisation)
-            np.savetxt('temperature_kaw.txt', temperature)
+            np.savetxt('magnetisation.txt', magnetisation)
+            np.savetxt('temperature.txt', temperature)
 
     def susceptibility(self, save=True):
-        data = np.genfromtxt('magnetisation_kaw.txt')
-        temp = np.genfromtxt('temperature_kaw.txt')
+        data = np.genfromtxt('magnetisation.txt')
+        temp = np.genfromtxt('temperature.txt')
         magnetisation = [np.average(data[x]) for x in range(len(data))]
         chi = np.zeros(len(temp))
         for i in range(len(temp)):
             norm_fact = 1 / (self.N**2 * self.ds.kb * temp[i])
             chi[i] = norm_fact * (np.average(np.square(data[i])) - np.square(np.average(data[i])))
         if save:
-            np.savetxt('susceptibility_kaw.txt', chi)
+            np.savetxt('susceptibility.txt', chi)
 
 
 def main():
@@ -218,18 +218,18 @@ def main():
     # sys = int(input("Choose the system dynamics: 0, %s: 1, %s: " % (dynamic_sys[0], dynamic_sys[1])))
     # print(dynamic_sys[sys][0])
 
-    # lattice = Lattice(50, ds.glauber_dynamics, 1, ds=ds)
-    lattice = Lattice(50, ds.kawasaki_dynamics, 2, ds=ds)
+    lattice = Lattice(50, ds.glauber_dynamics, 1, ds=ds)
+    # lattice = Lattice(50, ds.kawasaki_dynamics, 2, ds=ds)
 
-    lattice.run_sim(100)  # Run for a certain number of sweeps.
-    lattice.imshow_grid()  # Display grid after n sweeps.
-    lattice.sys_magnetisation()
-    plt.show()
+    # lattice.run_sim(100)  # Run for a certain number of sweeps.
+    # lattice.imshow_grid()  # Display grid after n sweeps.
+    # lattice.sys_magnetisation()
+    # plt.show()
     #
     # lattice.animate()  # Animate live
     #
-    # lattice.temperature_tests()  # Run Tests
-    # lattice.susceptibility()
+    lattice.temperature_tests()  # Run Tests
+    lattice.susceptibility()
     #
     # lattice.sys_magnetisation()
 main()
