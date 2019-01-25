@@ -239,7 +239,7 @@ def main():
     # sys = int(input("Choose the system dynamics: 0, %s: 1, %s: " % (dynamic_sys[0], dynamic_sys[1])))
     # print(dynamic_sys[sys][0])
 
-    lattice = Lattice(3, ds.glauber_dynamics, 1, ds=ds)
+    lattice = Lattice(50, ds.glauber_dynamics, 1, ds=ds)
     # lattice = Lattice(50, ds.kawasaki_dynamics, 2, ds=ds)
 
     # lattice.run_sim(100)  # Run for a certain number of sweeps.
