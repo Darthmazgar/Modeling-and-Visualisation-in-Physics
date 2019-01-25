@@ -188,7 +188,7 @@ class Lattice:
         E /= 2  # Prevent double counting.
         return E
 
-    def temperature_tests(self, t_min=1, t_max=3, data_points=20, sweeps=100, tests=100, eng=True, mag=True, save=True):
+    def temperature_tests(self, t_min=1, t_max=3, data_points=20, sweeps=100, tests=1000, eng=True, mag=True, save=True):
         temperature = np.linspace(t_min, t_max, data_points)
         magnetisation = np.zeros((data_points, tests))
         energy = np.zeros((data_points, tests))
@@ -207,56 +207,56 @@ class Lattice:
                     energy[i][j] = self.sys_energy()
 
         if save:
-            np.savetxt('temperature.txt', temperature)
+            np.savetxt('temperature_kaw.txt', temperature)
             if mag:
-                np.savetxt('magnetisation.txt', magnetisation)
+                np.savetxt('magnetisation_kaw.txt', magnetisation)
             if eng:
-                np.savetxt('energy.txt', energy)
+                np.savetxt('energy_kaw.txt', energy)
 
     def susceptibility(self, save=True):
-        data = np.genfromtxt('magnetisation.txt')
-        temp = np.genfromtxt('temperature.txt')
+        data = np.genfromtxt('magnetisation_kaw.txt')
+        temp = np.genfromtxt('temperature_kaw.txt')
         magnetisation = [np.average(data[x]) for x in range(len(data))]
         chi = np.zeros(len(temp))
         for i in range(len(temp)):
             norm_fact = 1 / (self.N**2 * self.ds.kb * temp[i])
             chi[i] = norm_fact * (np.average(np.square(data[i])) - np.square(np.average(data[i])))
         if save:
-            np.savetxt('susceptibility.txt', chi)
+            np.savetxt('susceptibility_kaw.txt', chi)
 
     def heat_cap(self, save=True):
-        data = np.genfromtxt('energy.txt')
-        temp = np.genfromtxt('temperature.txt')
+        data = np.genfromtxt('energy_kaw.txt')
+        temp = np.genfromtxt('temperature_kaw.txt')
         magnetisation = [np.average(data[x]) for x in range(len(data))]
         C = np.zeros(len(temp))
         for i in range(len(temp)):
             norm_fact = 1 / (self.N**2 * self.ds.kb * temp[i]**2)
             C[i] = norm_fact * (np.average(np.square(data[i])) - np.square(np.average(data[i])))
         if save:
-            np.savetxt('heat_cap.txt', C)
+            np.savetxt('heat_cap_kaw.txt', C)
 
 
 def main():
     # T = float(input("Enter the temperature of the system: "))
-    ds = DynamicSystem(1.0)
+    ds = DynamicSystem(2.3)
 
     # dynamic_sys = [(ds.glauber_dynamics, 1), (ds.kawasaki_dynamics, 2)]
     # sys = int(input("Choose the system dynamics: 0, %s: 1, %s: " % (dynamic_sys[0], dynamic_sys[1])))
     # print(dynamic_sys[sys][0])
 
-    lattice = Lattice(50, ds.glauber_dynamics, 1, ds=ds)
-    # lattice = Lattice(50, ds.kawasaki_dynamics, 2, ds=ds)
+    lattice = Lattice(50, ds.glauber_dynamics, 1, ds=ds, all_up=True)
+    # lattice = Lattice(50, ds.kawasaki_dynamics, 2, ds=ds, all_up=False)
 
     # lattice.run_sim(100)  # Run for a certain number of sweeps.
     # lattice.imshow_grid()  # Display grid after n sweeps.
     # lattice.sys_magnetisation()
     # plt.show()
     #
-    # lattice.animate()  # Animate live
+    lattice.animate()  # Animate live
     #
-    lattice.temperature_tests()  # Run Tests
-    lattice.susceptibility()
-    lattice.heat_cap()
+    # lattice.temperature_tests()  # Run Tests
+    # lattice.susceptibility()
+    # lattice.heat_cap()
     #
     # lattice.sys_magnetisation()
     # lattice.temperature_test()
