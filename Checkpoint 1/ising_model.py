@@ -192,14 +192,13 @@ class Lattice:
         return E
 
     def temperature_tests(self, t_min=1, t_max=3, data_points=20, sweeps=100, tests=20, eng=True, mag=True, save=True):
-        # temperature = np.linspace(t_min, t_max, data_points)
-        temperature = [0]
+        temperature = np.linspace(t_min, t_max, data_points)
         magnetisation = np.zeros((data_points, tests))
         energy = np.zeros((data_points, tests))
 
         for i in range(data_points):
-            # sys.stdout.write("Simulation progress: %.1f%%\r" % (100 * i / data_points))
-            # sys.stdout.flush()
+            sys.stdout.write("Simulation progress: %.1f%%\r" % (100 * i / data_points))
+            sys.stdout.flush()
 
             self.ds.set_T(temperature[i])  # Set the temperature of the system.
             self.run_sim(sweeps)
@@ -209,8 +208,6 @@ class Lattice:
                     magnetisation[i][j] = self.sys_magnetisation()
                 if eng:
                     energy[i][j] = self.sys_energy()
-
-            print("Energy: %d" % np.average(energy[i]))
 
         if save:
             np.savetxt('temperature.txt', temperature)
