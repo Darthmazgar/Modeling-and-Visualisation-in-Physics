@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-data = np.genfromtxt('Magnetisation_kaw.txt')
-sus = np.genfromtxt('susceptibility_kaw.txt')
-temp = np.genfromtxt('temperature_kaw.txt')
+data = np.genfromtxt('Magnetisation.txt')
+sus = np.genfromtxt('susceptibility.txt')
+temp = np.genfromtxt('temperature.txt')
 magnetisation = [np.average(data[x]) for x in range(len(data))]
 plt.plot(temp, magnetisation)
 plt.title("Magnetisation vs Temperature")
