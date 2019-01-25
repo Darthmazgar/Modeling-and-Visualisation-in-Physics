@@ -76,14 +76,15 @@ class DynamicSystem:
 
 
 class Lattice:
-    def __init__(self, N, sys, points_needed, ds, sps=2500):
+    def __init__(self, N, sys, points_needed, ds, sps=2500, all_up=True):
         self.N = N
         self.sys = sys
         self.pneeded = points_needed  # Number of random points needed
         self.ds = ds
         self.steps_per_sweep = sps
-        self.grid = np.zeros((N, N), dtype=int)
-        self.init_grid()
+        self.grid = np.ones((N, N), dtype=int)
+        if not all_up:
+            self.init_grid()
         self.fig = plt.figure()
 
     def print_grid(self):
@@ -174,10 +175,6 @@ class Lattice:
         Magnetisation per data point in the simulation
         :return: <|m|> = |m_i/n|
         """
-        """M = 0
-        for j in range(len(self.grid)):
-            for i in range(len(self.grid[j])):
-                M += self.grid[i][j]"""
         M = np.sum(self.grid)
         mag = np.abs(M )
         return mag
@@ -191,7 +188,7 @@ class Lattice:
         E /= 2  # Prevent double counting.
         return E
 
-    def temperature_tests(self, t_min=1, t_max=3, data_points=20, sweeps=100, tests=20, eng=True, mag=True, save=True):
+    def temperature_tests(self, t_min=1, t_max=3, data_points=20, sweeps=100, tests=100, eng=True, mag=True, save=True):
         temperature = np.linspace(t_min, t_max, data_points)
         magnetisation = np.zeros((data_points, tests))
         energy = np.zeros((data_points, tests))
@@ -227,6 +224,17 @@ class Lattice:
         if save:
             np.savetxt('susceptibility.txt', chi)
 
+    def heat_cap(self, save=True):
+        data = np.genfromtxt('energy.txt')
+        temp = np.genfromtxt('temperature.txt')
+        magnetisation = [np.average(data[x]) for x in range(len(data))]
+        C = np.zeros(len(temp))
+        for i in range(len(temp)):
+            norm_fact = 1 / (self.N**2 * self.ds.kb * temp[i]**2)
+            C[i] = norm_fact * (np.average(np.square(data[i])) - np.square(np.average(data[i])))
+        if save:
+            np.savetxt('heat_cap.txt', C)
+
 
 def main():
     # T = float(input("Enter the temperature of the system: "))
@@ -247,7 +255,8 @@ def main():
     # lattice.animate()  # Animate live
     #
     lattice.temperature_tests()  # Run Tests
-    # lattice.susceptibility()
+    lattice.susceptibility()
+    lattice.heat_cap()
     #
     # lattice.sys_magnetisation()
     # lattice.temperature_test()
