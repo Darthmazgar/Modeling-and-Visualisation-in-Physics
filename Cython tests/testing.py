@@ -13,18 +13,21 @@ import timeit
 # print(cy, py)
 # print("Cython is {}x faster".fotmat(py/cy))
 
+
 def main():
-    grid = Grid(50, 50, 0, anim=True, all_up=True)
+    grid = Grid(50, 50, 2, anim=True, all_up=False)
     # grid.print_grid()
     # grid.imshow_grid()
     # plt.show()
     # for i in range(100):
     #     grid.update_sweep(1)
+    # # grid.print_grid()
     # grid.imshow_grid()
     # plt.show()
     # grid.animate()
-    grid.temperature_tests()
-    grid.susceptibility()
-    grid.heat_cap()
+    # grid.temperature_tests()
+    # grid.susceptibility()
+    # grid.heat_cap()
+    print(grid.nn_check(0, 0, 0, 1))
 
 main()
