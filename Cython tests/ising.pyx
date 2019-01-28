@@ -1,9 +1,17 @@
 import numpy as np
+# cimport numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import sys
 
+# cdef class Grid:
 class Grid:
+    # cdef int N, M, steps_per_sweep
+    # cdef float J, Kb, T
+    # # cdef object anim , fig
+    # cpdef object fig
+    # cdef np.int64_t[:, :] grid
+    # cpdef object __cpinit__(self, int N, int M, float T, float J=1, float Kb=1, all_up=True, anim=True):
     def __init__(self, int N, int M, float T, float J=1, float Kb=1, all_up=True, anim=True):
         self.N = N
         self.M = M
@@ -15,8 +23,10 @@ class Grid:
         if anim:
             self.fig = plt.figure()
         if all_up:
+            # cdef np.int64_t[:, :]
             self.grid = np.ones((N, M))
-        if not all_up:
+        else:
+            # cdef np.int64_t[:, :]
             self.grid = np.random.choice([-1, 1], size=(N, M))
 
     def print_grid(self):
@@ -27,7 +37,9 @@ class Grid:
 
     def update_sweep(self, int k):
         cdef int N, M, i, n, m
-        N, M = self.grid.shape
+        # N, M = self.grid.shape
+        N = self.N
+        M = self.M
         for i in range(self.steps_per_sweep):
             n = np.random.randint(N)
             m = np.random.randint(M)
@@ -40,7 +52,9 @@ class Grid:
         cdef int total, N, M, i, j
         # cdef float dE
         total = 0
-        N, M = self.grid.shape
+        # N, M = self.grid.shape
+        N = self.N
+        M = self.M
         total += self.grid[(n - 1) % N][m]
         total += self.grid[(n + 1) % N][m]
         total += self.grid[n][(m-1) % M]
@@ -59,7 +73,7 @@ class Grid:
             exp = np.exp (-dE / (self.Kb * self.T))
             return exp
 
-    def temperature_tests(self, float t_min=1, float t_max=3, int data_points=20, int sweeps=100, int tests=1000, eng=True, mag=True, save=True):
+    def temperature_tests(self, float t_min=1, float t_max=3, int data_points=20, int sweeps=100, int tests=50, eng=True, mag=True, save=True):
         cdef double [:] temperature = np.linspace(t_min, t_max, data_points)
         cdef double [:,:] magnetisation = np.zeros((data_points, tests))
         cdef double [:, :] energy = np.zeros((data_points, tests))
@@ -97,7 +111,9 @@ class Grid:
         # TODO needs to be tested
         cdef int N, M, n, m
         cdef float energy
-        N, M = self.grid.shape
+        # N, M = self.grid.shape
+        N = self.N
+        M = self.M
         energy = 0
         for n in range(N):
             for m in range(M):
