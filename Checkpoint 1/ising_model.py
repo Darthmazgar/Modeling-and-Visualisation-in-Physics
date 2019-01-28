@@ -207,33 +207,33 @@ class Lattice:
                     energy[i][j] = self.sys_energy()
 
         if save:
-            np.savetxt('temperature_kaw.txt', temperature)
+            np.savetxt('temperature.txt', temperature)
             if mag:
-                np.savetxt('magnetisation_kaw.txt', magnetisation)
+                np.savetxt('magnetisation.txt', magnetisation)
             if eng:
-                np.savetxt('energy_kaw.txt', energy)
+                np.savetxt('energy.txt', energy)
 
     def susceptibility(self, save=True):
-        data = np.genfromtxt('magnetisation_kaw.txt')
-        temp = np.genfromtxt('temperature_kaw.txt')
+        data = np.genfromtxt('magnetisation.txt')
+        temp = np.genfromtxt('temperature.txt')
         magnetisation = [np.average(data[x]) for x in range(len(data))]
         chi = np.zeros(len(temp))
         for i in range(len(temp)):
             norm_fact = 1 / (self.N**2 * self.ds.kb * temp[i])
             chi[i] = norm_fact * (np.average(np.square(data[i])) - np.square(np.average(data[i])))
         if save:
-            np.savetxt('susceptibility_kaw.txt', chi)
+            np.savetxt('susceptibility.txt', chi)
 
     def heat_cap(self, save=True):
-        data = np.genfromtxt('energy_kaw.txt')
-        temp = np.genfromtxt('temperature_kaw.txt')
+        data = np.genfromtxt('energy.txt')
+        temp = np.genfromtxt('temperature.txt')
         magnetisation = [np.average(data[x]) for x in range(len(data))]
         C = np.zeros(len(temp))
         for i in range(len(temp)):
             norm_fact = 1 / (self.N**2 * self.ds.kb * temp[i]**2)
             C[i] = norm_fact * (np.average(np.square(data[i])) - np.square(np.average(data[i])))
         if save:
-            np.savetxt('heat_cap_kaw.txt', C)
+            np.savetxt('heat_cap.txt', C)
 
 
 def main():
@@ -252,11 +252,11 @@ def main():
     # lattice.sys_magnetisation()
     # plt.show()
     #
-    lattice.animate()  # Animate live
+    # lattice.animate()  # Animate live
     #
-    # lattice.temperature_tests()  # Run Tests
-    # lattice.susceptibility()
-    # lattice.heat_cap()
+    lattice.temperature_tests()  # Run Tests
+    lattice.susceptibility()
+    lattice.heat_cap()
     #
     # lattice.sys_magnetisation()
     # lattice.temperature_test()
