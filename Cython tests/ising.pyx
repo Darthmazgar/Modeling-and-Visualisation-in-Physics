@@ -2,8 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import sys
-from libcpp cimport bool
-from scipy.ndimage import generate_binary_structure
 
 class Grid:
     def __init__(self, int N, int M, float T, float J=1, float Kb=1, all_up=True, anim=True):
@@ -43,37 +41,25 @@ class Grid:
         # cdef float dE
         total = 0
         N, M = self.grid.shape
-        k = generate_binary_structure(2, 1)
-        for i in range(n-1, n+2):
-            for j in range(m-1, m+2):
-                # if k[i - n + 1][j - m + 1]:
-                #     total += self.grid[i % N][j % M]
-                if i != n or j != m:
-                    # continue
-                    total += self.grid[i % N][j % M]
-                # if i == n or j == n:
-                #     # print(i, n)
-                #     # print(j, m)
-                #     total += self.grid[i % N][j % M]
-        # print("total: %d" % total)
+        total += self.grid[(n - 1) % N][m]
+        total += self.grid[(n + 1) % N][m]
+        total += self.grid[n][(m-1) % M]
+        total += self.grid[n][(m+1) % M]
         cdef float dE = 2 * self.J * self.grid[n][m] * total  # Check energy signs
         if dE <= 0:
             self.grid[n][m] *= -1
         elif np.random.rand() <= self.P(dE):
-            # print(np.exp(-dE / (self.Kb * self.T)))
             self.grid[n][m] *= -1
 
     def P(self, float dE):
         cdef float exp
         if self.T == 0:
-            # print("T=0")
             return 0
         else:
             exp = np.exp (-dE / (self.Kb * self.T))
-            # print(exp)
             return exp
 
-    def temperature_tests(self, float t_min=2, float t_max=10, int data_points=10, int sweeps=50, int tests=10, eng=True, mag=True, save=True):
+    def temperature_tests(self, float t_min=1, float t_max=3, int data_points=20, int sweeps=100, int tests=1000, eng=True, mag=True, save=True):
         cdef double [:] temperature = np.linspace(t_min, t_max, data_points)
         cdef double [:,:] magnetisation = np.zeros((data_points, tests))
         cdef double [:, :] energy = np.zeros((data_points, tests))
@@ -152,19 +138,3 @@ class Grid:
     def animate(self):
         anim = FuncAnimation(self.fig, self.update_sweep)
         plt.show()
-
-# def main():
-#     grid = Grid(50, 50, 0, anim=True, all_up=False)
-#     # grid.print_grid()
-#     # grid.imshow_grid()
-#     # plt.show()
-#     for i in range(100):
-#         grid.update_sweep(1)
-#     grid.imshow_grid()
-#     # plt.show()
-#     # grid.animate()
-#     # grid.temperature_tests()
-#     # grid.susceptibility()
-#     # grid.heat_cap()
-
-# main()
