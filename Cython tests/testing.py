@@ -15,7 +15,7 @@ import timeit
 
 
 def main():
-    grid = Grid(50, 50, 2.4, anim=True, all_up=True)
+    grid = Grid(50, 50, 2, anim=True, all_up=False)
     # grid.print_grid()
     # grid.imshow_grid()
     # plt.show()
@@ -24,9 +24,10 @@ def main():
     # # grid.print_grid()
     # grid.imshow_grid()
     # plt.show()
-    grid.animate()
+    # grid.animate()
     # grid.temperature_tests()
     # grid.susceptibility()
     # grid.heat_cap()
+    print(grid.nn_check(0, 0, 0, 1))
 
 main()

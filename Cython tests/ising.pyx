@@ -1,8 +1,11 @@
 import numpy as np
 # cimport numpy as np
+import cython
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import sys
+from libc.stdlib cimport abs, rand
+from libc.math cimport exp
 
 # cdef class Grid:
 class Grid:
@@ -23,10 +26,8 @@ class Grid:
         if anim:
             self.fig = plt.figure()
         if all_up:
-            # cdef np.int64_t[:, :]
             self.grid = np.ones((N, M))
         else:
-            # cdef np.int64_t[:, :]
             self.grid = np.random.choice([-1, 1], size=(N, M))
 
     def print_grid(self):
@@ -37,41 +38,86 @@ class Grid:
 
     def update_sweep(self, int k):
         cdef int N, M, i, n, m
-        # N, M = self.grid.shape
         N = self.N
         M = self.M
         for i in range(self.steps_per_sweep):
-            n = np.random.randint(N)
-            m = np.random.randint(M)
-            self.glauber_dynamics(n, m)
+            # self.glauber_dynamics()
+            self.kawasaki_dynamics()
         if self.anim:
             self.fig.clear()
             self.imshow_grid()
 
-    def glauber_dynamics(self, int n, int m):
-        cdef int total, N, M, i, j
-        # cdef float dE
-        total = 0
-        # N, M = self.grid.shape
+    def nn_check(self, n, m, x, y):
+        if n == x and (m == y or m == y+1 or m == y-1):
+            return True
+        elif m == y and (n == x+1 or n == x-1):
+            return True
+        else:
+            return False
+
+    def kawasaki_dynamics(self):
+        cdef int total, total2, N, M, x, y
+        cdef float dE
+        # n = np.random.randint(N)
+        # m = np.random.randint(M)
         N = self.N
         M = self.M
-        total += self.grid[(n - 1) % N][m]
-        total += self.grid[(n + 1) % N][m]
-        total += self.grid[n][(m-1) % M]
-        total += self.grid[n][(m+1) % M]
+        n = rand() % N
+        m = rand() % M
+        x = rand() % N
+        y = rand() % M
+        if self.grid[n][m] == self.grid[x][y]:
+            return 0
+        total = self.sum_spin(n, m, N, M)
+        total2 = self.sum_spin(x, y, N, M)
+        # cdef float ei = -self.J * self.grid[n][m] * total - self.J * self.grid[x][y] * total2
+        # cdef float ef = self.J * self.grid[n][m] * total + self.J * self.grid[x][y] * total2
+        if self.nn_check(n, m, x, y):
+            # TODO Need to work out what goes on with nn
+            dE = 0 # ###############
+        else:
+            dE = 2 * self.J * (self.grid[n][m]*total + self.grid[x][y]*total2)
+        # print(dE)
+        if dE <= 0:
+            self.grid[n][m] *= -1
+            self.grid[x][y] *= -1
+        elif np.random.rand() <= self.P(dE):
+            self.grid[n][m] *= -1
+            self.grid[x][y] *= -1
+        return 1
+
+
+    def glauber_dynamics(self):
+        cdef int total, N, M
+        # n = np.random.randint(N)
+        # m = np.random.randint(M)
+        N = self.N
+        M = self.M
+        n = rand() % N
+        m = rand() % M
+        total = self.sum_spin(n, m, N, M)
         cdef float dE = 2 * self.J * self.grid[n][m] * total  # Check energy signs
         if dE <= 0:
             self.grid[n][m] *= -1
         elif np.random.rand() <= self.P(dE):
             self.grid[n][m] *= -1
 
+    def sum_spin(self, int n, int m, int N, int M):
+        cdef int total = 0
+        total += self.grid[(n - 1) % N][m]
+        total += self.grid[(n + 1) % N][m]
+        total += self.grid[n][(m-1) % M]
+        total += self.grid[n][(m+1) % M]
+        return total
+
+    @cython.cdivision(True)
     def P(self, float dE):
-        cdef float exp
+        cdef float expo
         if self.T == 0:
             return 0
         else:
-            exp = np.exp (-dE / (self.Kb * self.T))
-            return exp
+            expo = exp(-dE / (self.Kb * self.T))
+            return expo
 
     def temperature_tests(self, float t_min=1, float t_max=3, int data_points=20, int sweeps=100, int tests=50, eng=True, mag=True, save=True):
         cdef double [:] temperature = np.linspace(t_min, t_max, data_points)
@@ -104,7 +150,8 @@ class Grid:
         """
         cdef int M, mag
         M = np.sum(self.grid)
-        mag = np.abs(M)
+        # mag = np.abs(M)
+        mag = abs(M)
         return mag
 
     def sys_energy(self):
