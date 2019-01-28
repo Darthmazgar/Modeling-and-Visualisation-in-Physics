@@ -1,5 +1,3 @@
-import Cython
-%%cython
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
@@ -38,6 +36,7 @@ class Grid:
             self.imshow_grid()
 
     def glauber_dynamics(self, n, m):
+        # TODO i think there is something wrong here that makes the need for a much higher T
         total = 0
         N, M = self.grid.shape
         for i in range(n-1, n+2):
@@ -48,10 +47,16 @@ class Grid:
         dE = 2 * self.J * self.grid[n][m] * total  # Check energy signs
         if dE <= 0:
             self.grid[n][m] *= -1
-        elif np.exp(-dE / (self.Kb * self.T)) > np.random.rand():
+        elif np.random.rand() <= self.P(dE):
+            # print(np.exp(-dE / (self.Kb * self.T)))
             self.grid[n][m] *= -1
 
-    def temperature_tests(self, t_min=1, t_max=3, data_points=20, sweeps=100, tests=50, eng=True, mag=True, save=True):
+    def P(self, dE):
+        if self.T == 0:
+            return 0
+        return np.exp(- (dE / (self.Kb * self.T)))
+
+    def temperature_tests(self, t_min=1, t_max=3, data_points=2, sweeps=10, tests=1, eng=True, mag=True, save=True):
         temperature = np.linspace(t_min, t_max, data_points)
         magnetisation = np.zeros((data_points, tests))
         energy = np.zeros((data_points, tests))
@@ -92,7 +97,8 @@ class Grid:
         for n in range(N):
             for m in range(M):
                 ne_sum = self.grid[(n + 1) % N][m] + self.grid[n][(m + 1) % M]
-                energy += -self.J * self.grid[n][m] * ne_sum  # Check if -J * ... or J * ... same with above in glauber
+                energy += -self.J * self.grid[n][m] * ne_sum
+        print(energy)
         return energy
 
     def susceptibility(self, save=True):
@@ -122,17 +128,17 @@ class Grid:
         plt.show()
 
 def main():
-    grid = Grid(50, 50, 0, anim=True, all_up=True)
+    grid = Grid(50, 50, 3, anim=True, all_up=True)
     # grid.print_grid()
     # grid.imshow_grid()
     # plt.show()
-    # for i in range(100):
-    #     grid.update_sweep(1)
-    # grid.imshow_grid()
+    for i in range(100):
+        grid.update_sweep(1)
+    grid.imshow_grid()
     # plt.show()
     # grid.animate()
-    grid.temperature_tests()
-    grid.susceptibility()
-    grid.heat_cap()
+    # grid.temperature_tests(save=False)
+    # grid.susceptibility()
+    # grid.heat_cap()
 
-main()
+# main()
