@@ -3,6 +3,7 @@ import numpy as np
 import cython
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+from matplotlib.widgets import Slider
 import sys
 from libc.stdlib cimport abs, rand
 from libc.math cimport exp
@@ -15,12 +16,14 @@ class Grid:
     # cpdef object fig
     # cdef np.int64_t[:, :] grid
     # cpdef object __cpinit__(self, int N, int M, float T, float J=1, float Kb=1, all_up=True, anim=True):
-    def __init__(self, int N, int M, float T, float J=1, float Kb=1, all_up=True, anim=True):
+    def __init__(self, int N, int M, float T, sv_ext, ds=0, float J=1, float Kb=1, all_up=True, anim=True):
         self.N = N
         self.M = M
         self.J = J
         self.Kb = Kb
         self.T = T
+        self.ds = ds
+        self.sv_ext = sv_ext
         self.steps_per_sweep = N * M
         self.anim = anim
         if anim:
@@ -34,15 +37,20 @@ class Grid:
         print(self.grid)
 
     def imshow_grid(self):
+        # axcolor = 'lightgoldenrodyellow'
+        # axfreq = plt.axes([0.25, 0.1, 0.65, 0.03], facecolor=axcolor)
         plt.imshow(self.grid, interpolation='None', cmap='Blues', vmin=-1, vmax=1)
+        # self.T = Slider(axfreq, 'Temperature', 0, 4, valinit=0.8)
 
     def update_sweep(self, int k):
         cdef int N, M, i, n, m
         N = self.N
         M = self.M
         for i in range(self.steps_per_sweep):
-            # self.glauber_dynamics()
-            self.kawasaki_dynamics()
+            if self.ds == 0:
+                self.glauber_dynamics()
+            elif self.ds == 1:
+                self.kawasaki_dynamics()
         if self.anim:
             self.fig.clear()
             self.imshow_grid()
@@ -119,7 +127,9 @@ class Grid:
             expo = exp(-dE / (self.Kb * self.T))
             return expo
 
-    def temperature_tests(self, float t_min=1, float t_max=3, int data_points=20, int sweeps=100, int tests=50, eng=True, mag=True, save=True):
+    def temperature_tests(self, float t_min=1, float t_max=3, int data_points=20,
+                        int sweeps=100, int tests=1000, int sweeps_per_test=10,
+                        eng=True, mag=True, save=True):
         cdef double [:] temperature = np.linspace(t_min, t_max, data_points)
         cdef double [:,:] magnetisation = np.zeros((data_points, tests))
         cdef double [:, :] energy = np.zeros((data_points, tests))
@@ -137,11 +147,11 @@ class Grid:
                 if eng:
                     energy[i][j] = self.sys_energy()
         if save:
-            np.savetxt('temperature.txt', temperature)
+            np.savetxt(('temperature'+ self.sv_ext +'.txt'), temperature)
             if mag:
-                np.savetxt('magnetisation.txt', magnetisation)
+                np.savetxt(('magnetisation'+ self.sv_ext +'.txt'), magnetisation)
             if eng:
-                np.savetxt('energy.txt', energy)
+                np.savetxt(('energy'+ self.sv_ext +'.txt'), energy)
 
     def sys_magnetisation(self):
         """
@@ -171,8 +181,8 @@ class Grid:
     def susceptibility(self, save=True):
         cdef double [:,:] data
         cdef double [:] temp
-        data = np.genfromtxt('magnetisation.txt')
-        temp = np.genfromtxt('temperature.txt')
+        data = np.genfromtxt(('magnetisation'+ self.sv_ext +'.txt'))
+        temp = np.genfromtxt(('temperature'+ self.sv_ext +'.txt'))
         # cdef double [:] magnetisation, chi
         cdef int x, i
         magnetisation = [np.average(data[x]) for x in range(len(data))]
@@ -181,22 +191,22 @@ class Grid:
             norm_fact = 1 / (self.N * self.M * self.Kb * temp[i])
             chi[i] = norm_fact * (np.average(np.square(data[i])) - np.square(np.average(data[i])))
         if save:
-            np.savetxt('susceptibility.txt', chi)
+            np.savetxt(('susceptibility'+ self.sv_ext +'.txt'), chi)
 
     def heat_cap(self, save=True):
         cdef double [:, :] energy
         cdef double [:] C, temp
         cdef int i
         cdef double norm_fact
-        data = np.genfromtxt('energy.txt')
-        temp = np.genfromtxt('temperature.txt')
+        data = np.genfromtxt(('energy'+ self.sv_ext +'.txt'))
+        temp = np.genfromtxt(('temperature'+ self.sv_ext +'.txt'))
         magnetisation = [np.average(data[x]) for x in range(len(data))]
         C = np.zeros(len(temp))
         for i in range(len(temp)):
             norm_fact = 1 / (self.N**2 * self.Kb * temp[i]**2)
             C[i] = norm_fact * (np.average(np.square(data[i])) - np.square(np.average(data[i])))
         if save:
-            np.savetxt('heat_cap.txt', C)
+            np.savetxt(('heat_cap'+ self.sv_ext +'.txt'), C)
 
     def animate(self):
         anim = FuncAnimation(self.fig, self.update_sweep)
