@@ -3,7 +3,6 @@ import numpy as np
 import cython
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
-from matplotlib.widgets import Slider
 import sys
 from libc.stdlib cimport abs, rand
 from libc.math cimport exp
@@ -192,6 +191,7 @@ class Grid:
             chi[i] = norm_fact * (np.average(np.square(data[i])) - np.square(np.average(data[i])))
         if save:
             np.savetxt(('susceptibility'+ self.sv_ext +'.txt'), chi)
+        return chi
 
     def heat_cap(self, save=True):
         cdef double [:, :] energy
@@ -203,10 +203,38 @@ class Grid:
         magnetisation = [np.average(data[x]) for x in range(len(data))]
         C = np.zeros(len(temp))
         for i in range(len(temp)):
-            norm_fact = 1 / (self.N**2 * self.Kb * temp[i]**2)
+            norm_fact = 1 / (self.N * self.Kb * temp[i]**2)
             C[i] = norm_fact * (np.average(np.square(data[i])) - np.square(np.average(data[i])))
         if save:
             np.savetxt(('heat_cap'+ self.sv_ext +'.txt'), C)
+        return C
+
+    def bootstarap_errors(self, int k=100, save=True):
+        cdef int i, d_len
+        cdef double avg
+        cdef double [:, :] data, sel_data
+        cdef double [:] sigma, elem, heat_cap, temp
+        data = np.genfromtxt(('energy'+ self.sv_ext +'.txt'))
+        temp = np.genfromtxt(('temperature'+ self.sv_ext +'.txt'))
+        dlen = len(data)
+        sel_data = np.zeros((dlen, k))
+        heat_cap = np.zeros(k)
+        sigma = np.zeros(dlen)
+        for i in range(dlen):
+            elem = np.random.choice(data[i], k)  # Have to set to elem so initialising a cdef array with a cdef array.
+            sel_data[i] = elem
+            norm_fact = 1 / (self.N * self.Kb * temp[i]**2)
+            for j in range(k):
+                heat_cap[j] = norm_fact * (np.average(np.square(sel_data[i])) - np.square(np.average(sel_data[i])))
+                print(heat_cap[j])
+            print("-----------------------------------")
+            sigma[i] = np.sqrt(np.average(np.square(heat_cap)) - np.square(np.average(heat_cap)))
+        if save:
+            np.savetxt(('sigma_bs' + self.sv_ext + '.txt'), sigma)
+        return sigma
+
+    def jacknife_errors(self):
+        pass
 
     def animate(self):
         anim = FuncAnimation(self.fig, self.update_sweep)

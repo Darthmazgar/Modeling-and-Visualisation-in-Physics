@@ -12,9 +12,11 @@ sus = np.genfromtxt('susceptibility_gla.txt')
 temp = np.genfromtxt('temperature_gla.txt')
 en = np.genfromtxt('energy_gla.txt')
 c = np.genfromtxt('heat_cap_gla.txt')
+e_error = np.genfromtxt('sigma_bs_gla.txt')
 
 magnetisation = [np.average(data[x]) for x in range(len(data))]
 energy = [np.average(en[x]) for x in range(len(en))]
+
 
 plt.plot(temp, magnetisation)
 plt.title("Magnetisation vs Temperature")
@@ -31,7 +33,7 @@ plt.title("Energy vs Temperature")
 plt.ylabel("Energy")
 plt.xlabel("Temperature")
 plt.show()
-plt.plot(temp, c)
+plt.errorbar(temp, c, yerr=e_error)
 plt.title("Heat Capacity vs Temperature")
 plt.ylabel("Heat Capacity")
 plt.xlabel("Temperature")

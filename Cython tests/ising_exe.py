@@ -25,9 +25,10 @@ def main(argv):
         else:
             sv_ext = ''
         grid = Grid(N, M, T, ds=ds, sv_ext=sv_ext, anim=False, all_up=True)
-        grid.temperature_tests()
-        grid.susceptibility()
-        grid.heat_cap()
+        # grid.temperature_tests()
+        # grid.susceptibility()
+        # grid.heat_cap()
+        grid.bootstarap_errors()
     elif argv[4] == 'run' or argv[4] == '2':
         grid = Grid(N, M, T, ds=ds, sv_ext='', anim=True, all_up=False)
         sweeps = int(input("Run for how many sweeps: "))
