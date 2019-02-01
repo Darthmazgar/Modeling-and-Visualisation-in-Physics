@@ -129,7 +129,7 @@ class Grid:
             expo = exp(-dE / (self.Kb * self.T))
             return expo
 
-    def temperature_tests(self, float t_min=1, float t_max=3, int data_points=20,
+    def temperature_tests(self, float t_min=1, float t_max=2.9, int data_points=20,
                         int sweeps=100, int tests=1000, int sweeps_per_test=10,
                         eng=True, mag=True, save=True):
         cdef double [:] temperature = np.linspace(t_min, t_max, data_points)
@@ -206,31 +206,28 @@ class Grid:
         magnetisation = [np.average(data[x]) for x in range(len(data))]
         C = np.zeros(len(temp))
         for i in range(len(temp)):
-            norm_fact = 1 / (self.N * self.Kb * temp[i]**2)
+            norm_fact = 1 / (self.N**2 * self.Kb * temp[i]**2)
             C[i] = norm_fact * (np.average(np.square(data[i])) - np.square(np.average(data[i])))
         if save:
             np.savetxt(('heat_cap'+ self.sv_ext +'.txt'), C)
         return C
 
     def bootstarap_errors(self, int k=100, save=True):
-        cdef int i, d_len
-        cdef double avg
-        cdef double [:, :] data, sel_data
-        cdef double [:] sigma, elem, heat_cap, temp
+        cdef int i, dlen
+        cdef double avg, norm_fact
+        cdef double [:, :] data
+        cdef double [:] heat_cap, temp ,sel_data, h_caps, sigma
         data = np.genfromtxt(('energy'+ self.sv_ext +'.txt'))
         temp = np.genfromtxt(('temperature'+ self.sv_ext +'.txt'))
         dlen = len(data)
-        sel_data = np.zeros((dlen, k))
+        row_len = len(data[0])
         heat_cap = np.zeros(k)
         sigma = np.zeros(dlen)
         for i in range(dlen):
-            elem = np.random.choice(data[i], k)  # Have to set to elem so initialising a cdef array with a cdef array.
-            sel_data[i] = elem
-            norm_fact = 1 / (self.N * self.Kb * temp[i]**2)
+            norm_fact = 1 / (self.N**2 * self.Kb * temp[i]**2)
             for j in range(k):
-                heat_cap[j] = norm_fact * (np.average(np.square(sel_data[i])) - np.square(np.average(sel_data[i])))
-                # print(heat_cap[j])
-            print("-----------------------------------")
+                sel_data = np.random.choice(data[i], row_len)
+                heat_cap[j] = norm_fact * (np.average(np.square(sel_data)) - np.square(np.average(sel_data)))
             sigma[i] = np.sqrt(np.average(np.square(heat_cap)) - np.square(np.average(heat_cap)))
         if save:
             np.savetxt(('sigma_bs' + self.sv_ext + '.txt'), sigma)

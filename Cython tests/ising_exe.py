@@ -32,7 +32,7 @@ def main(argv):
         grid.temperature_tests()
         grid.susceptibility()
         grid.heat_cap()
-        # grid.bootstarap_errors()
+        grid.bootstarap_errors()
     elif argv[4] == 'run' or argv[4] == '2':
         grid = Grid(N, M, T, ds=ds, sv_ext='', anim=True, all_up=False)
         sweeps = int(input("Run for how many sweeps: "))
