@@ -5363,7 +5363,7 @@ static PyObject *__pyx_pf_5ising_4Grid_18P(CYTHON_UNUSED PyObject *__pyx_self, P
  *             return expo
  * 
  *     def temperature_tests(self, float t_min=1, float t_max=2.9, int data_points=20,             # <<<<<<<<<<<<<<
- *                         int sweeps=100, int tests=1000, int sweeps_per_test=10,
+ *                         int sweeps=100, int tests=10000, int sweeps_per_test=10,
  *                         eng=True, mag=True, save=True):
  */
 
@@ -5390,7 +5390,7 @@ static PyObject *__pyx_pw_5ising_4Grid_21temperature_tests(PyObject *__pyx_self,
 
     /* "ising.pyx":134
  *     def temperature_tests(self, float t_min=1, float t_max=2.9, int data_points=20,
- *                         int sweeps=100, int tests=1000, int sweeps_per_test=10,
+ *                         int sweeps=100, int tests=10000, int sweeps_per_test=10,
  *                         eng=True, mag=True, save=True):             # <<<<<<<<<<<<<<
  *         cdef double [:] temperature = np.linspace(t_min, t_max, data_points)
  *         cdef double [:,:] magnetisation = np.zeros((data_points, tests))
@@ -5537,7 +5537,7 @@ static PyObject *__pyx_pw_5ising_4Grid_21temperature_tests(PyObject *__pyx_self,
     if (values[5]) {
       __pyx_v_tests = __Pyx_PyInt_As_int(values[5]); if (unlikely((__pyx_v_tests == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 133, __pyx_L3_error)
     } else {
-      __pyx_v_tests = ((int)((int)0x3E8));
+      __pyx_v_tests = ((int)((int)0x2710));
     }
     if (values[6]) {
       __pyx_v_sweeps_per_test = __Pyx_PyInt_As_int(values[6]); if (unlikely((__pyx_v_sweeps_per_test == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 133, __pyx_L3_error)
@@ -5562,7 +5562,7 @@ static PyObject *__pyx_pw_5ising_4Grid_21temperature_tests(PyObject *__pyx_self,
  *             return expo
  * 
  *     def temperature_tests(self, float t_min=1, float t_max=2.9, int data_points=20,             # <<<<<<<<<<<<<<
- *                         int sweeps=100, int tests=1000, int sweeps_per_test=10,
+ *                         int sweeps=100, int tests=10000, int sweeps_per_test=10,
  *                         eng=True, mag=True, save=True):
  */
 
@@ -5606,7 +5606,7 @@ static PyObject *__pyx_pf_5ising_4Grid_20temperature_tests(CYTHON_UNUSED PyObjec
   __Pyx_RefNannySetupContext("temperature_tests", 0);
 
   /* "ising.pyx":135
- *                         int sweeps=100, int tests=1000, int sweeps_per_test=10,
+ *                         int sweeps=100, int tests=10000, int sweeps_per_test=10,
  *                         eng=True, mag=True, save=True):
  *         cdef double [:] temperature = np.linspace(t_min, t_max, data_points)             # <<<<<<<<<<<<<<
  *         cdef double [:,:] magnetisation = np.zeros((data_points, tests))
@@ -6364,7 +6364,7 @@ static PyObject *__pyx_pf_5ising_4Grid_20temperature_tests(CYTHON_UNUSED PyObjec
  *             return expo
  * 
  *     def temperature_tests(self, float t_min=1, float t_max=2.9, int data_points=20,             # <<<<<<<<<<<<<<
- *                         int sweeps=100, int tests=1000, int sweeps_per_test=10,
+ *                         int sweeps=100, int tests=10000, int sweeps_per_test=10,
  *                         eng=True, mag=True, save=True):
  */
 
@@ -23051,7 +23051,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *             return expo
  * 
  *     def temperature_tests(self, float t_min=1, float t_max=2.9, int data_points=20,             # <<<<<<<<<<<<<<
- *                         int sweeps=100, int tests=1000, int sweeps_per_test=10,
+ *                         int sweeps=100, int tests=10000, int sweeps_per_test=10,
  *                         eng=True, mag=True, save=True):
  */
   __pyx_tuple__40 = PyTuple_Pack(15, __pyx_n_s_self, __pyx_n_s_t_min, __pyx_n_s_t_max, __pyx_n_s_data_points, __pyx_n_s_sweeps, __pyx_n_s_tests, __pyx_n_s_sweeps_per_test, __pyx_n_s_eng, __pyx_n_s_mag, __pyx_n_s_save, __pyx_n_s_temperature, __pyx_n_s_magnetisation, __pyx_n_s_energy, __pyx_n_s_i, __pyx_n_s_j); if (unlikely(!__pyx_tuple__40)) __PYX_ERR(0, 132, __pyx_L1_error)
@@ -23771,7 +23771,7 @@ if (!__Pyx_RefNanny) {
  *             return expo
  * 
  *     def temperature_tests(self, float t_min=1, float t_max=2.9, int data_points=20,             # <<<<<<<<<<<<<<
- *                         int sweeps=100, int tests=1000, int sweeps_per_test=10,
+ *                         int sweeps=100, int tests=10000, int sweeps_per_test=10,
  *                         eng=True, mag=True, save=True):
  */
   __pyx_t_3 = PyFloat_FromDouble(((float)1.0)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 132, __pyx_L1_error)
@@ -23784,13 +23784,13 @@ if (!__Pyx_RefNanny) {
   /* "ising.pyx":133
  * 
  *     def temperature_tests(self, float t_min=1, float t_max=2.9, int data_points=20,
- *                         int sweeps=100, int tests=1000, int sweeps_per_test=10,             # <<<<<<<<<<<<<<
+ *                         int sweeps=100, int tests=10000, int sweeps_per_test=10,             # <<<<<<<<<<<<<<
  *                         eng=True, mag=True, save=True):
  *         cdef double [:] temperature = np.linspace(t_min, t_max, data_points)
  */
   __pyx_t_5 = __Pyx_PyInt_From_int(((int)0x64)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 133, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyInt_From_int(((int)0x3E8)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 133, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_From_int(((int)0x2710)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 133, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_t_7 = __Pyx_PyInt_From_int(((int)10)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 133, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
@@ -23799,7 +23799,7 @@ if (!__Pyx_RefNanny) {
  *             return expo
  * 
  *     def temperature_tests(self, float t_min=1, float t_max=2.9, int data_points=20,             # <<<<<<<<<<<<<<
- *                         int sweeps=100, int tests=1000, int sweeps_per_test=10,
+ *                         int sweeps=100, int tests=10000, int sweeps_per_test=10,
  *                         eng=True, mag=True, save=True):
  */
   __pyx_t_8 = PyTuple_New(9); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 132, __pyx_L1_error)

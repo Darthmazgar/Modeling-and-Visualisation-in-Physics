@@ -130,7 +130,7 @@ class Grid:
             return expo
 
     def temperature_tests(self, float t_min=1, float t_max=2.9, int data_points=20,
-                        int sweeps=100, int tests=1000, int sweeps_per_test=10,
+                        int sweeps=100, int tests=10000, int sweeps_per_test=10,
                         eng=True, mag=True, save=True):
         cdef double [:] temperature = np.linspace(t_min, t_max, data_points)
         cdef double [:,:] magnetisation = np.zeros((data_points, tests))
