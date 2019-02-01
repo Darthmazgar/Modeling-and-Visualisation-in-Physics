@@ -7,14 +7,7 @@ import sys
 from libc.stdlib cimport abs, rand
 from libc.math cimport exp
 
-# cdef class Grid:
 class Grid:
-    # cdef int N, M, steps_per_sweep
-    # cdef float J, Kb, T
-    # # cdef object anim , fig
-    # cpdef object fig
-    # cdef np.int64_t[:, :] grid
-    # cpdef object __cpinit__(self, int N, int M, float T, float J=1, float Kb=1, all_up=True, anim=True):
     def __init__(self, int N, int M, float T, sv_ext, ds=0, float J=1, float Kb=1, all_up=True, anim=True):
         self.N = N
         self.M = M
@@ -31,6 +24,14 @@ class Grid:
             self.grid = np.ones((N, M))
         else:
             self.grid = np.random.choice([-1, 1], size=(N, M))
+
+    def init_kaw_grid(self):
+        ones = np.ones((int(self.N / 2), self.M))
+        neg_ones = ones * -1
+        self.grid = np.concatenate((ones, neg_ones))
+        # print(self.grid)
+        # print(len(self.grid), len(self.grid[0]))
+        return self.grid
 
     def print_grid(self):
         print(self.grid)
@@ -54,7 +55,8 @@ class Grid:
             self.fig.clear()
             self.imshow_grid()
 
-    def nn_check(self, n, m, x, y):
+    def nn_check(self, int n, int m, int x, int y):
+
         if n == x and (m == y or m == y+1 or m == y-1):
             return True
         elif m == y and (n == x+1 or n == x-1):
@@ -81,7 +83,8 @@ class Grid:
         # cdef float ef = self.J * self.grid[n][m] * total + self.J * self.grid[x][y] * total2
         if self.nn_check(n, m, x, y):
             # TODO Need to work out what goes on with nn
-            dE = 0 # ###############
+            total += 2
+            total2 += 2
         else:
             dE = 2 * self.J * (self.grid[n][m]*total + self.grid[x][y]*total2)
         # print(dE)
@@ -226,7 +229,7 @@ class Grid:
             norm_fact = 1 / (self.N * self.Kb * temp[i]**2)
             for j in range(k):
                 heat_cap[j] = norm_fact * (np.average(np.square(sel_data[i])) - np.square(np.average(sel_data[i])))
-                print(heat_cap[j])
+                # print(heat_cap[j])
             print("-----------------------------------")
             sigma[i] = np.sqrt(np.average(np.square(heat_cap)) - np.square(np.average(heat_cap)))
         if save:
