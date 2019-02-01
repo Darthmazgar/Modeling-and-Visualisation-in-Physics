@@ -16,6 +16,7 @@ def main(argv):
 
     if argv[4] == 'anim' or argv[4] == '0':
         grid = Grid(N, M, T, ds=ds, sv_ext='', anim=True, all_up=False)
+        # grid.init_kaw_grid()
         grid.animate()
     elif argv[4] == 'test' or argv[4] == '1':
         if ds == 0:
@@ -24,10 +25,15 @@ def main(argv):
             sv_ext = '_kaw'
         else:
             sv_ext = ''
-        grid = Grid(N, M, T, ds=ds, sv_ext=sv_ext, anim=False, all_up=True)
+        if ds == 0:
+            grid = Grid(N, M, T, ds=ds, sv_ext=sv_ext, anim=False, all_up=True)
+        elif ds == 1:
+            grid = Grid(N, M, T, ds=ds, sv_ext=sv_ext, anim=False, all_up=False)
+            grid.init_kaw_grid()
         grid.temperature_tests()
         grid.susceptibility()
         grid.heat_cap()
+        grid.bootstarap_errors()
     elif argv[4] == 'run' or argv[4] == '2':
         grid = Grid(N, M, T, ds=ds, sv_ext='', anim=True, all_up=False)
         sweeps = int(input("Run for how many sweeps: "))
@@ -38,20 +44,5 @@ def main(argv):
         print("System energy: %d" % grid.sys_energy())
         plt.show()
 
-    # grid = Grid(50, 50, 0.6, ds=0, sv_ext='', anim=True, all_up=False)
-
-    # grid.print_grid()
-    # grid.imshow_grid()
-    # plt.show()
-    # for i in range(100):
-    #     grid.update_sweep(1)
-    # # grid.print_grid()
-    # grid.imshow_grid()
-    # plt.show()
-    # grid.animate()
-    # grid.temperature_tests()
-    # grid.susceptibility()
-    # grid.heat_cap()
-    # print(grid.nn_check(0, 0, 0, 1))
 
 main(sys.argv[1:])

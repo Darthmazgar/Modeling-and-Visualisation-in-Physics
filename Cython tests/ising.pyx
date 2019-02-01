@@ -3,19 +3,11 @@ import numpy as np
 import cython
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
-from matplotlib.widgets import Slider
 import sys
 from libc.stdlib cimport abs, rand
 from libc.math cimport exp
 
-# cdef class Grid:
 class Grid:
-    # cdef int N, M, steps_per_sweep
-    # cdef float J, Kb, T
-    # # cdef object anim , fig
-    # cpdef object fig
-    # cdef np.int64_t[:, :] grid
-    # cpdef object __cpinit__(self, int N, int M, float T, float J=1, float Kb=1, all_up=True, anim=True):
     def __init__(self, int N, int M, float T, sv_ext, ds=0, float J=1, float Kb=1, all_up=True, anim=True):
         self.N = N
         self.M = M
@@ -32,6 +24,14 @@ class Grid:
             self.grid = np.ones((N, M))
         else:
             self.grid = np.random.choice([-1, 1], size=(N, M))
+
+    def init_kaw_grid(self):
+        ones = np.ones((int(self.N / 2), self.M))
+        neg_ones = ones * -1
+        self.grid = np.concatenate((ones, neg_ones))
+        # print(self.grid)
+        # print(len(self.grid), len(self.grid[0]))
+        return self.grid
 
     def print_grid(self):
         print(self.grid)
@@ -55,7 +55,8 @@ class Grid:
             self.fig.clear()
             self.imshow_grid()
 
-    def nn_check(self, n, m, x, y):
+    def nn_check(self, int n, int m, int x, int y):
+
         if n == x and (m == y or m == y+1 or m == y-1):
             return True
         elif m == y and (n == x+1 or n == x-1):
@@ -82,7 +83,8 @@ class Grid:
         # cdef float ef = self.J * self.grid[n][m] * total + self.J * self.grid[x][y] * total2
         if self.nn_check(n, m, x, y):
             # TODO Need to work out what goes on with nn
-            dE = 0 # ###############
+            total += 2
+            total2 += 2
         else:
             dE = 2 * self.J * (self.grid[n][m]*total + self.grid[x][y]*total2)
         # print(dE)
@@ -127,8 +129,8 @@ class Grid:
             expo = exp(-dE / (self.Kb * self.T))
             return expo
 
-    def temperature_tests(self, float t_min=1, float t_max=3, int data_points=20,
-                        int sweeps=100, int tests=1000, int sweeps_per_test=10,
+    def temperature_tests(self, float t_min=1, float t_max=2.9, int data_points=20,
+                        int sweeps=100, int tests=10000, int sweeps_per_test=10,
                         eng=True, mag=True, save=True):
         cdef double [:] temperature = np.linspace(t_min, t_max, data_points)
         cdef double [:,:] magnetisation = np.zeros((data_points, tests))
@@ -141,7 +143,7 @@ class Grid:
             self.T = temperature[i]  # Set the temperature of the system.
             self.update_sweep(sweeps)
             for j in range(tests):
-                self.update_sweep(10)
+                self.update_sweep(sweeps_per_test)
                 if mag:
                     magnetisation[i][j] = self.sys_magnetisation()
                 if eng:
@@ -192,6 +194,7 @@ class Grid:
             chi[i] = norm_fact * (np.average(np.square(data[i])) - np.square(np.average(data[i])))
         if save:
             np.savetxt(('susceptibility'+ self.sv_ext +'.txt'), chi)
+        return chi
 
     def heat_cap(self, save=True):
         cdef double [:, :] energy
@@ -207,6 +210,31 @@ class Grid:
             C[i] = norm_fact * (np.average(np.square(data[i])) - np.square(np.average(data[i])))
         if save:
             np.savetxt(('heat_cap'+ self.sv_ext +'.txt'), C)
+        return C
+
+    def bootstarap_errors(self, int k=100, save=True):
+        cdef int i, dlen
+        cdef double avg, norm_fact
+        cdef double [:, :] data
+        cdef double [:] heat_cap, temp ,sel_data, h_caps, sigma
+        data = np.genfromtxt(('energy'+ self.sv_ext +'.txt'))
+        temp = np.genfromtxt(('temperature'+ self.sv_ext +'.txt'))
+        dlen = len(data)
+        row_len = len(data[0])
+        heat_cap = np.zeros(k)
+        sigma = np.zeros(dlen)
+        for i in range(dlen):
+            norm_fact = 1 / (self.N**2 * self.Kb * temp[i]**2)
+            for j in range(k):
+                sel_data = np.random.choice(data[i], row_len)
+                heat_cap[j] = norm_fact * (np.average(np.square(sel_data)) - np.square(np.average(sel_data)))
+            sigma[i] = np.sqrt(np.average(np.square(heat_cap)) - np.square(np.average(heat_cap)))
+        if save:
+            np.savetxt(('sigma_bs' + self.sv_ext + '.txt'), sigma)
+        return sigma
+
+    def jacknife_errors(self):
+        pass
 
     def animate(self):
         anim = FuncAnimation(self.fig, self.update_sweep)
