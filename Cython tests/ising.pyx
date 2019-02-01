@@ -143,7 +143,7 @@ class Grid:
             self.T = temperature[i]  # Set the temperature of the system.
             self.update_sweep(sweeps)
             for j in range(tests):
-                self.update_sweep(10)
+                self.update_sweep(sweeps_per_test)
                 if mag:
                     magnetisation[i][j] = self.sys_magnetisation()
                 if eng:

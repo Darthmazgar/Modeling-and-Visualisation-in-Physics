@@ -2316,7 +2316,7 @@ static PyObject *__pyx_pf_5ising_4Grid_12kawasaki_dynamics(CYTHON_UNUSED PyObjec
 static PyObject *__pyx_pf_5ising_4Grid_14glauber_dynamics(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_5ising_4Grid_16sum_spin(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, int __pyx_v_n, int __pyx_v_m, int __pyx_v_N, int __pyx_v_M); /* proto */
 static PyObject *__pyx_pf_5ising_4Grid_18P(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, float __pyx_v_dE); /* proto */
-static PyObject *__pyx_pf_5ising_4Grid_20temperature_tests(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, float __pyx_v_t_min, float __pyx_v_t_max, int __pyx_v_data_points, int __pyx_v_sweeps, int __pyx_v_tests, CYTHON_UNUSED int __pyx_v_sweeps_per_test, PyObject *__pyx_v_eng, PyObject *__pyx_v_mag, PyObject *__pyx_v_save); /* proto */
+static PyObject *__pyx_pf_5ising_4Grid_20temperature_tests(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, float __pyx_v_t_min, float __pyx_v_t_max, int __pyx_v_data_points, int __pyx_v_sweeps, int __pyx_v_tests, int __pyx_v_sweeps_per_test, PyObject *__pyx_v_eng, PyObject *__pyx_v_mag, PyObject *__pyx_v_save); /* proto */
 static PyObject *__pyx_pf_5ising_4Grid_22sys_magnetisation(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_5ising_4Grid_24sys_energy(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_5ising_4Grid_26susceptibility(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_save); /* proto */
@@ -2373,7 +2373,6 @@ static PyObject *__pyx_tp_new__memoryviewslice(PyTypeObject *t, PyObject *a, PyO
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
 static PyObject *__pyx_int_2;
-static PyObject *__pyx_int_10;
 static PyObject *__pyx_int_184977713;
 static PyObject *__pyx_int_neg_1;
 static PyObject *__pyx_tuple_;
@@ -5378,7 +5377,7 @@ static PyObject *__pyx_pw_5ising_4Grid_21temperature_tests(PyObject *__pyx_self,
   int __pyx_v_data_points;
   int __pyx_v_sweeps;
   int __pyx_v_tests;
-  CYTHON_UNUSED int __pyx_v_sweeps_per_test;
+  int __pyx_v_sweeps_per_test;
   PyObject *__pyx_v_eng = 0;
   PyObject *__pyx_v_mag = 0;
   PyObject *__pyx_v_save = 0;
@@ -5572,7 +5571,7 @@ static PyObject *__pyx_pw_5ising_4Grid_21temperature_tests(PyObject *__pyx_self,
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5ising_4Grid_20temperature_tests(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, float __pyx_v_t_min, float __pyx_v_t_max, int __pyx_v_data_points, int __pyx_v_sweeps, int __pyx_v_tests, CYTHON_UNUSED int __pyx_v_sweeps_per_test, PyObject *__pyx_v_eng, PyObject *__pyx_v_mag, PyObject *__pyx_v_save) {
+static PyObject *__pyx_pf_5ising_4Grid_20temperature_tests(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, float __pyx_v_t_min, float __pyx_v_t_max, int __pyx_v_data_points, int __pyx_v_sweeps, int __pyx_v_tests, int __pyx_v_sweeps_per_test, PyObject *__pyx_v_eng, PyObject *__pyx_v_mag, PyObject *__pyx_v_save) {
   __Pyx_memviewslice __pyx_v_temperature = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_magnetisation = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_energy = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -5894,7 +5893,7 @@ static PyObject *__pyx_pf_5ising_4Grid_20temperature_tests(CYTHON_UNUSED PyObjec
  *             self.T = temperature[i]  # Set the temperature of the system.
  *             self.update_sweep(sweeps)             # <<<<<<<<<<<<<<
  *             for j in range(tests):
- *                 self.update_sweep(10)
+ *                 self.update_sweep(sweeps_per_test)
  */
     __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_update_sweep); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 144, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
@@ -5922,7 +5921,7 @@ static PyObject *__pyx_pf_5ising_4Grid_20temperature_tests(CYTHON_UNUSED PyObjec
  *             self.T = temperature[i]  # Set the temperature of the system.
  *             self.update_sweep(sweeps)
  *             for j in range(tests):             # <<<<<<<<<<<<<<
- *                 self.update_sweep(10)
+ *                 self.update_sweep(sweeps_per_test)
  *                 if mag:
  */
     __pyx_t_15 = __pyx_v_tests;
@@ -5933,24 +5932,27 @@ static PyObject *__pyx_pf_5ising_4Grid_20temperature_tests(CYTHON_UNUSED PyObjec
       /* "ising.pyx":146
  *             self.update_sweep(sweeps)
  *             for j in range(tests):
- *                 self.update_sweep(10)             # <<<<<<<<<<<<<<
+ *                 self.update_sweep(sweeps_per_test)             # <<<<<<<<<<<<<<
  *                 if mag:
  *                     magnetisation[i][j] = self.sys_magnetisation()
  */
       __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_update_sweep); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 146, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_5 = NULL;
+      __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_sweeps_per_test); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 146, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_3 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
-        __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
-        if (likely(__pyx_t_5)) {
+        __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
+        if (likely(__pyx_t_3)) {
           PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-          __Pyx_INCREF(__pyx_t_5);
+          __Pyx_INCREF(__pyx_t_3);
           __Pyx_INCREF(function);
           __Pyx_DECREF_SET(__pyx_t_4, function);
         }
       }
-      __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_int_10) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_int_10);
-      __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_3, __pyx_t_5) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5);
+      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 146, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -5958,7 +5960,7 @@ static PyObject *__pyx_pf_5ising_4Grid_20temperature_tests(CYTHON_UNUSED PyObjec
 
       /* "ising.pyx":147
  *             for j in range(tests):
- *                 self.update_sweep(10)
+ *                 self.update_sweep(sweeps_per_test)
  *                 if mag:             # <<<<<<<<<<<<<<
  *                     magnetisation[i][j] = self.sys_magnetisation()
  *                 if eng:
@@ -5967,7 +5969,7 @@ static PyObject *__pyx_pf_5ising_4Grid_20temperature_tests(CYTHON_UNUSED PyObjec
       if (__pyx_t_18) {
 
         /* "ising.pyx":148
- *                 self.update_sweep(10)
+ *                 self.update_sweep(sweeps_per_test)
  *                 if mag:
  *                     magnetisation[i][j] = self.sys_magnetisation()             # <<<<<<<<<<<<<<
  *                 if eng:
@@ -6011,7 +6013,7 @@ static PyObject *__pyx_pf_5ising_4Grid_20temperature_tests(CYTHON_UNUSED PyObjec
 
         /* "ising.pyx":147
  *             for j in range(tests):
- *                 self.update_sweep(10)
+ *                 self.update_sweep(sweeps_per_test)
  *                 if mag:             # <<<<<<<<<<<<<<
  *                     magnetisation[i][j] = self.sys_magnetisation()
  *                 if eng:
@@ -23223,7 +23225,6 @@ static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
   __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_2 = PyInt_FromLong(2); if (unlikely(!__pyx_int_2)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_10 = PyInt_FromLong(10); if (unlikely(!__pyx_int_10)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_184977713 = PyInt_FromLong(184977713L); if (unlikely(!__pyx_int_184977713)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_neg_1 = PyInt_FromLong(-1); if (unlikely(!__pyx_int_neg_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   return 0;

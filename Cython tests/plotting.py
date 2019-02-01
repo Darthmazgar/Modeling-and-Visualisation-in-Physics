@@ -1,18 +1,20 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# data = np.genfromtxt('magnetisation_kaw.txt')
-# sus = np.genfromtxt('susceptibility_kaw.txt')
-# temp = np.genfromtxt('temperature_kaw.txt')
-# en = np.genfromtxt('energy_kaw.txt')
-# c = np.genfromtxt('heat_cap_kaw.txt')
+data = np.genfromtxt('magnetisation_kaw.txt')
+sus = np.genfromtxt('susceptibility_kaw.txt')
+temp = np.genfromtxt('temperature_kaw.txt')
+en = np.genfromtxt('energy_kaw.txt')
+c = np.genfromtxt('heat_cap_kaw.txt')
+e_error = np.genfromtxt('sigma_bs_kaw.txt')
 
-data = np.genfromtxt('magnetisation_gla.txt')
-sus = np.genfromtxt('susceptibility_gla.txt')
-temp = np.genfromtxt('temperature_gla.txt')
-en = np.genfromtxt('energy_gla.txt')
-c = np.genfromtxt('heat_cap_gla.txt')
-e_error = np.genfromtxt('sigma_bs_gla.txt')
+
+# data = np.genfromtxt('magnetisation_gla.txt')
+# sus = np.genfromtxt('susceptibility_gla.txt')
+# temp = np.genfromtxt('temperature_gla.txt')
+# en = np.genfromtxt('energy_gla.txt')
+# c = np.genfromtxt('heat_cap_gla.txt')
+# e_error = np.genfromtxt('sigma_bs_gla.txt')
 
 magnetisation = [np.average(data[x]) for x in range(len(data))]
 energy = [np.average(en[x]) for x in range(len(en))]
