@@ -76,12 +76,14 @@ class DynamicSystem:
 
 
 class Lattice:
+
     def __init__(self, N, sys, points_needed, ds, sps=2500, all_up=True):
         self.N = N
         self.sys = sys
         self.pneeded = points_needed  # Number of random points needed
         self.ds = ds
         self.steps_per_sweep = sps
+
         self.grid = np.ones((N, N), dtype=int)
         if not all_up:
             self.init_grid()
@@ -188,7 +190,7 @@ class Lattice:
         E /= 2  # Prevent double counting.
         return E
 
-    def temperature_tests(self, t_min=1, t_max=3, data_points=20, sweeps=100, tests=1000, eng=True, mag=True, save=True):
+    def temperature_tests(self, t_min=1, t_max=3, data_points=20, sweeps=100, tests=500, eng=True, mag=True, save=True):
         temperature = np.linspace(t_min, t_max, data_points)
         magnetisation = np.zeros((data_points, tests))
         energy = np.zeros((data_points, tests))
@@ -201,6 +203,7 @@ class Lattice:
             self.run_sim(sweeps)
             for j in range(tests):
                 self.run_sim(10)
+
                 if mag:
                     magnetisation[i][j] = self.sys_magnetisation()
                 if eng:
@@ -222,6 +225,10 @@ class Lattice:
             norm_fact = 1 / (self.N**2 * self.ds.kb * temp[i])
             chi[i] = norm_fact * (np.average(np.square(data[i])) - np.square(np.average(data[i])))
         if save:
+<<<<<<< HEAD
+=======
+
+>>>>>>> 549693668ff2eff7fea2d221db63c4c59fa02c54
             np.savetxt('susceptibility.txt', chi)
 
     def heat_cap(self, save=True):
@@ -238,13 +245,15 @@ class Lattice:
 
 def main():
     # T = float(input("Enter the temperature of the system: "))
-    ds = DynamicSystem(2.3)
+
+    ds = DynamicSystem(1.0)
 
     # dynamic_sys = [(ds.glauber_dynamics, 1), (ds.kawasaki_dynamics, 2)]
     # sys = int(input("Choose the system dynamics: 0, %s: 1, %s: " % (dynamic_sys[0], dynamic_sys[1])))
     # print(dynamic_sys[sys][0])
 
-    lattice = Lattice(50, ds.glauber_dynamics, 1, ds=ds, all_up=True)
+
+    lattice = Lattice(50, ds.glauber_dynamics, 1, ds=ds, all_up=False)
     # lattice = Lattice(50, ds.kawasaki_dynamics, 2, ds=ds, all_up=False)
 
     # lattice.run_sim(100)  # Run for a certain number of sweeps.
