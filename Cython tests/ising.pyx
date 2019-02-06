@@ -7,42 +7,51 @@ import sys
 from libc.stdlib cimport abs, rand
 from libc.math cimport exp
 
-class Grid:
-    def __init__(self, int N, int M, float T, sv_ext, ds=0, float J=1, float Kb=1, all_up=True, anim=True):
-        self.N = N
+class IsingGrid:
+    """
+    An N*M grid of ones and negative ones is initialised the 'spin' of points
+    are changed acording to either Glauber or Kawasaki ising dynamics.
+    """
+    def __init__(self, int N, int M, float T, sv_ext, ds=0, float J=1,
+                float Kb=1, all_up=True, anim=True):
+        self.N = N  # Size of the grid N*M.
         self.M = M
-        self.J = J
-        self.Kb = Kb
-        self.T = T
-        self.ds = ds
+        self.J = J  # Energy of an individual spin.
+        self.Kb = Kb  # Boltzmanns constantself.
+        self.T = T  # Temperature of the system.
+        self.ds = ds  # Synamic system used (0:Glauber, 1:Kawasaki).
         self.sv_ext = sv_ext
         self.steps_per_sweep = N * M
-        self.anim = anim
+        self.anim = anim  # Boolean if animating or not.
         if anim:
             self.fig = plt.figure()
         if all_up:
-            self.grid = np.ones((N, M))
+            self.grid = np.ones((N, M))  # Initialise all in the same state.
         else:
-            self.grid = np.random.choice([-1, 1], size=(N, M))
+            self.grid = np.random.choice([-1, 1], size=(N, M))  # Random initilisation
 
     def init_kaw_grid(self):
+        """
+        Initialise the grid with one hald all spin 1 and the other all spin -1.
+        Used for initialising Kawasaki tests.
+        """
         ones = np.ones((int(self.N / 2), self.M))
         neg_ones = ones * -1
         self.grid = np.concatenate((ones, neg_ones))
-        # print(self.grid)
-        # print(len(self.grid), len(self.grid[0]))
         return self.grid
 
     def print_grid(self):
+        """ Prints the current state of the grid to the terminal. """
         print(self.grid)
 
     def imshow_grid(self):
-        # axcolor = 'lightgoldenrodyellow'
-        # axfreq = plt.axes([0.25, 0.1, 0.65, 0.03], facecolor=axcolor)
         plt.imshow(self.grid, interpolation='None', cmap='Blues', vmin=-1, vmax=1)
-        # self.T = Slider(axfreq, 'Temperature', 0, 4, valinit=0.8)
 
     def update_sweep(self, int k):
+        """
+        Runs through one sweep of changes in the grid.
+        :param: (int) k, variable used to count frames by FuncAnimation.
+        """
         cdef int N, M, i, n, m
         N = self.N
         M = self.M
@@ -56,7 +65,10 @@ class Grid:
             self.imshow_grid()
 
     def nn_check(self, int n, int m, int x, int y):
-
+        """
+        Check if two points (x,y) and (n,m) are nearest neighbours.
+        :return: (Boolean) True if nearest neighbours; False otherwise.
+        """
         if n == x and (m == y or m == y+1 or m == y-1):
             return True
         elif m == y and (n == x+1 or n == x-1):
@@ -65,10 +77,15 @@ class Grid:
             return False
 
     def kawasaki_dynamics(self):
+        """
+        Updates the grid according to Kawasaki synamics. Two points are
+        considred randomly. If it is energeticaly favourable for those points to
+        be switched then they are. If not then there is still a probability that
+        they are switched which varies with the temperature of the system (self.T).
+        :return: 1 if swaped; 0 if left the same.
+        """
         cdef int total, total2, N, M, x, y
         cdef float dE
-        # n = np.random.randint(N)
-        # m = np.random.randint(M)
         N = self.N
         M = self.M
         n = rand() % N
@@ -76,43 +93,57 @@ class Grid:
         x = rand() % N
         y = rand() % M
         if self.grid[n][m] == self.grid[x][y]:
-            return 0
+            return 0  # If the points are the same then changing would do nothing.
         total = self.sum_spin(n, m, N, M)
         total2 = self.sum_spin(x, y, N, M)
-        # cdef float ei = -self.J * self.grid[n][m] * total - self.J * self.grid[x][y] * total2
-        # cdef float ef = self.J * self.grid[n][m] * total + self.J * self.grid[x][y] * total2
         if self.nn_check(n, m, x, y):
-            # TODO Need to work out what goes on with nn
+            # If the points are nearest neighbours then the 'total' of the points
+            # around is increased by 4 to account for the double counting.
             total += 2
             total2 += 2
         else:
+            # Calculate the energy change
             dE = 2 * self.J * (self.grid[n][m]*total + self.grid[x][y]*total2)
-        # print(dE)
-        if dE <= 0:
+        if dE <= 0:  # Swap spin of both if favourable.
             self.grid[n][m] *= -1
             self.grid[x][y] *= -1
         elif np.random.rand() <= self.P(dE):
+            # Swap spin of both if random is less than probability from self.P().
             self.grid[n][m] *= -1
             self.grid[x][y] *= -1
         return 1
 
 
     def glauber_dynamics(self):
+        """
+        Flipes the state of a randomly selected point if it is either energeticaly
+        favourable to do so or based on a probability which depends on the
+        temperature of the system.
+        :return: 1 if swaped; 0 if left the same.
+        """
         cdef int total, N, M
-        # n = np.random.randint(N)
-        # m = np.random.randint(M)
         N = self.N
         M = self.M
         n = rand() % N
         m = rand() % M
-        total = self.sum_spin(n, m, N, M)
-        cdef float dE = 2 * self.J * self.grid[n][m] * total  # Check energy signs
-        if dE <= 0:
+        total = self.sum_spin(n, m, N, M)  # Sim values of points around.
+        cdef float dE = 2 * self.J * self.grid[n][m] * total
+        if dE <= 0:  # Flip if energeticaly favourable.
             self.grid[n][m] *= -1
+            return 1
         elif np.random.rand() <= self.P(dE):
+            # Flip if rand is less than the probability given by self.P().
             self.grid[n][m] *= -1
+            return 1
+        else:
+            return 0
 
     def sum_spin(self, int n, int m, int N, int M):
+        """
+        Sums the values of the points in the grid around a selected point (n, m)
+        in a grid size of N*M.
+        :return: The sum of the values.
+        """
         cdef int total = 0
         total += self.grid[(n - 1) % N][m]
         total += self.grid[(n + 1) % N][m]
@@ -130,23 +161,30 @@ class Grid:
             return expo
 
     def temperature_tests(self, float t_min=1, float t_max=2.9, int data_points=20,
-                        int sweeps=100, int tests=10000, int sweeps_per_test=10,
+                        int sweeps=100, int tests=1000, int sweeps_per_test=10,
                         eng=True, mag=True, save=True):
+        """
+        Runs the simulation for a range of temperatures taking 'tests' measurments
+        at each temperature step. The magnetisation and evergy of the system
+        can then be calculated and stored for each test.
+        """
         cdef double [:] temperature = np.linspace(t_min, t_max, data_points)
         cdef double [:,:] magnetisation = np.zeros((data_points, tests))
         cdef double [:, :] energy = np.zeros((data_points, tests))
         cdef int i, j
         for i in range(data_points):
             sys.stdout.write("Simulation progress: %.1f%%\r" % (100 * i / data_points))
-            sys.stdout.flush()
+            sys.stdout.flush()  # Prints progress of simulation.
 
             self.T = temperature[i]  # Set the temperature of the system.
-            self.update_sweep(sweeps)
+            self.update_sweep(sweeps)  # Run simulation for a given number of sweeps.
             for j in range(tests):
                 self.update_sweep(sweeps_per_test)
                 if mag:
+                    # Calculate current system magnetisation.
                     magnetisation[i][j] = self.sys_magnetisation()
                 if eng:
+                    # Calculate current system energy.
                     energy[i][j] = self.sys_energy()
         if save:
             np.savetxt(('temperature'+ self.sv_ext +'.txt'), temperature)
@@ -162,15 +200,16 @@ class Grid:
         """
         cdef int M, mag
         M = np.sum(self.grid)
-        # mag = np.abs(M)
         mag = abs(M)
         return mag
 
     def sys_energy(self):
-        # TODO needs to be tested
+        """
+        Calculate the system energy at the current state.
+        :return: (float) System energy.
+        """
         cdef int N, M, n, m
         cdef float energy
-        # N, M = self.grid.shape
         N = self.N
         M = self.M
         energy = 0
@@ -181,11 +220,16 @@ class Grid:
         return energy
 
     def susceptibility(self, save=True):
+        """
+        Reads in the magnetisation and temperature from saved text files and
+        calculates the susceptibility at each temperature.
+        :param: (Boolean) save: saves the susceptibility measurments to a text
+        file if True.
+        """
         cdef double [:,:] data
         cdef double [:] temp
         data = np.genfromtxt(('magnetisation'+ self.sv_ext +'.txt'))
         temp = np.genfromtxt(('temperature'+ self.sv_ext +'.txt'))
-        # cdef double [:] magnetisation, chi
         cdef int x, i
         magnetisation = [np.average(data[x]) for x in range(len(data))]
         chi = np.zeros(len(temp))
@@ -197,6 +241,12 @@ class Grid:
         return chi
 
     def heat_cap(self, save=True):
+        """
+        Reads in the energy and temperature from saved text files and
+        calculates the heat capacity at each temperature.
+        :param: (Boolean) save: saves the heat capacity measurments to a text
+        file if True.
+        """
         cdef double [:, :] energy
         cdef double [:] C, temp
         cdef int i
@@ -213,6 +263,15 @@ class Grid:
         return C
 
     def bootstarap_errors(self, int k=100, save=True):
+        """
+        Reads in the energy and temperature from saved text files and
+        calculates the ascosiated error at each temperature according to the
+        'bootstrap' method for calculating errors. N points are chosen at random
+        from each energy reading. This is done 'k' times. These results are used
+        to find the varience at each step to give an error.
+        :param: (Boolean) save: saves the ascosiated error measurments to a text
+        file if True.
+        """
         cdef int i, dlen
         cdef double avg, norm_fact
         cdef double [:, :] data
@@ -226,15 +285,12 @@ class Grid:
         for i in range(dlen):
             norm_fact = 1 / (self.N**2 * self.Kb * temp[i]**2)
             for j in range(k):
-                sel_data = np.random.choice(data[i], row_len)
+                sel_data = np.random.choice(data[i], row_len)  # Choose N rand points.
                 heat_cap[j] = norm_fact * (np.average(np.square(sel_data)) - np.square(np.average(sel_data)))
             sigma[i] = np.sqrt(np.average(np.square(heat_cap)) - np.square(np.average(heat_cap)))
         if save:
             np.savetxt(('sigma_bs' + self.sv_ext + '.txt'), sigma)
         return sigma
-
-    def jacknife_errors(self):
-        pass
 
     def animate(self):
         anim = FuncAnimation(self.fig, self.update_sweep)
