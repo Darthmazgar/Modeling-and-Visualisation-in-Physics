@@ -131,7 +131,7 @@ class IsingGrid:
         M = self.M
         n = rand() % N
         m = rand() % M
-        total = self.sum_spin(n, m, N, M)  # Sim values of points around.
+        total = self.sum_spin(n, m, N, M)  # Sum values of points around.
         cdef float dE = 2 * self.J * self.grid[n][m] * total
         if dE <= 0:  # Flip if energeticaly favourable.
             self.grid[n][m] *= -1
@@ -152,8 +152,8 @@ class IsingGrid:
         cdef int total = 0
         total += self.grid[(n - 1) % N][m]
         total += self.grid[(n + 1) % N][m]
-        total += self.grid[n][(m-1) % M]
-        total += self.grid[n][(m+1) % M]
+        total += self.grid[n][(m - 1) % M]
+        total += self.grid[n][(m + 1) % M]
         return total
 
     @cython.cdivision(True)

@@ -19,7 +19,6 @@ e_error = np.genfromtxt('sigma_bs_kaw.txt')
 magnetisation = [np.average(data[x]) for x in range(len(data))]
 energy = [np.average(en[x]) for x in range(len(en))]
 
-
 plt.plot(temp, magnetisation)
 plt.title("Magnetisation vs Temperature")
 plt.ylabel("Magnetisation")
