@@ -46,7 +46,7 @@ class IsingGrid:
         print(self.grid)
 
     def imshow_grid(self):
-        plt.imshow(self.grid, interpolation='None',
+        plt.imshow(self.grid, interpolation='sinc',
                    cmap='Blues', vmin=-1, vmax=1)
 
     def update_sweep(self, int k):
@@ -71,9 +71,12 @@ class IsingGrid:
         Check if two points (x,y) and (n,m) are nearest neighbours.
         :return: (Boolean) True if nearest neighbours; False otherwise.
         """
-        if n == x and (m == y or m == y+1 or m == y-1):
+        cdef int N, M
+        N = self.N
+        M = self.M
+        if n == x and (m == y or m == (y+1) % N or m == (y-1) % M):
             return True
-        elif m == y and (n == x+1 or n == x-1):
+        elif m == y and (n == (x+1) % N or n == (x-1) % M):
             return True
         else:
             return False
@@ -113,7 +116,8 @@ class IsingGrid:
             self.grid[n][m] *= -1
             self.grid[x][y] *= -1
         elif np.random.rand() <= self.P(dE):
-            # Swap spin of both if random is less than probability from self.P().
+            # Swap spin of both if random is less than probability from
+            # self.P().
             self.grid[n][m] *= -1
             self.grid[x][y] *= -1
         return 1
