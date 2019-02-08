@@ -107,8 +107,8 @@ class IsingGrid:
             # If the points are nearest neighbours then the 'total' of the
             # points around is increased by 4 to account for the double
             # counting.
-            total += 2
-            total2 += 2
+            dE = 2 * self.J * (self.grid[n][m]*total + self.grid[x][y]*total2)\
+                + 4* self.J
         else:
             # Calculate the energy change
             dE = 2 * self.J * (self.grid[n][m]*total + self.grid[x][y]*total2)
@@ -187,8 +187,8 @@ class IsingGrid:
             sys.stdout.flush()  # Prints progress of simulation.
 
             self.T = temperature[i]  # Set the temperature of the system.
-            self.update_sweep(sweeps)  # Run simulation for a given number of
-                                       # sweeps.
+            self.update_sweep(sweeps * 2)  # Run simulation for a given number
+                                           # of sweeps. x2 longer init time.
             for j in range(tests):
                 self.update_sweep(sweeps_per_test)
                 if mag:

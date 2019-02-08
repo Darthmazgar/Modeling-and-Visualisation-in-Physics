@@ -17,7 +17,7 @@ def main(argv):
 
     if argv[4] == 'anim' or argv[4] == '0':
         grid = IsingGrid(N, M, T, ds=ds, sv_ext='', anim=True, all_up=False)
-        # grid.init_kaw_grid()
+        grid.init_kaw_grid()
         grid.animate()
     elif argv[4] == 'test' or argv[4] == '1':
         if ds == 0:
