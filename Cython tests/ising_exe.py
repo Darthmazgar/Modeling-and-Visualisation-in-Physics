@@ -6,7 +6,8 @@ import sys
 
 def main(argv):
     if len(argv) != 5:
-        print("ising_exe.py N M Temp DynamicSystem(0: Glauber, 1: Kawasaki) ('anim':0 / 'test':1, 'run':2)")
+        print("ising_exe.py N M Temp DynamicSystem(0: Glauber, 1: Kawasaki)\
+         ('anim':0 / 'test':1, 'run':2)")
         sys.exit()
 
     N = int(argv[0])
@@ -16,7 +17,7 @@ def main(argv):
 
     if argv[4] == 'anim' or argv[4] == '0':
         grid = IsingGrid(N, M, T, ds=ds, sv_ext='', anim=True, all_up=False)
-        # grid.init_kaw_grid()
+        grid.init_kaw_grid()
         grid.animate()
     elif argv[4] == 'test' or argv[4] == '1':
         if ds == 0:
@@ -26,9 +27,11 @@ def main(argv):
         else:
             sv_ext = ''
         if ds == 0:
-            grid = IsingGrid(N, M, T, ds=ds, sv_ext=sv_ext, anim=False, all_up=True)
+            grid = IsingGrid(N, M, T, ds=ds, sv_ext=sv_ext, anim=False,
+                            all_up=True)
         elif ds == 1:
-            grid = IsingGrid(N, M, T, ds=ds, sv_ext=sv_ext, anim=False, all_up=False)
+            grid = IsingGrid(N, M, T, ds=ds, sv_ext=sv_ext, anim=False,
+                            all_up=False)
             grid.init_kaw_grid()
         grid.temperature_tests()
         grid.susceptibility()

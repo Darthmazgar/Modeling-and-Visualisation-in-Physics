@@ -28,7 +28,8 @@ class IsingGrid:
         if all_up:
             self.grid = np.ones((N, M))  # Initialise all in the same state.
         else:
-            self.grid = np.random.choice([-1, 1], size=(N, M))  # Random initilisation
+            self.grid = np.random.choice([-1, 1], size=(N, M))
+            # Random initilisation
 
     def init_kaw_grid(self):
         """
@@ -45,7 +46,8 @@ class IsingGrid:
         print(self.grid)
 
     def imshow_grid(self):
-        plt.imshow(self.grid, interpolation='None', cmap='Blues', vmin=-1, vmax=1)
+        plt.imshow(self.grid, interpolation='sinc',
+                   cmap='Blues', vmin=-1, vmax=1)
 
     def update_sweep(self, int k):
         """
@@ -69,9 +71,12 @@ class IsingGrid:
         Check if two points (x,y) and (n,m) are nearest neighbours.
         :return: (Boolean) True if nearest neighbours; False otherwise.
         """
-        if n == x and (m == y or m == y+1 or m == y-1):
+        cdef int N, M
+        N = self.N
+        M = self.M
+        if n == x and (m == y or m == (y+1) % N or m == (y-1) % M):
             return True
-        elif m == y and (n == x+1 or n == x-1):
+        elif m == y and (n == (x+1) % N or n == (x-1) % M):
             return True
         else:
             return False
@@ -81,7 +86,8 @@ class IsingGrid:
         Updates the grid according to Kawasaki synamics. Two points are
         considred randomly. If it is energeticaly favourable for those points to
         be switched then they are. If not then there is still a probability that
-        they are switched which varies with the temperature of the system (self.T).
+        they are switched which varies with the temperature of the
+        system (self.T).
         :return: 1 if swaped; 0 if left the same.
         """
         cdef int total, total2, N, M, x, y
@@ -93,14 +99,16 @@ class IsingGrid:
         x = rand() % N
         y = rand() % M
         if self.grid[n][m] == self.grid[x][y]:
-            return 0  # If the points are the same then changing would do nothing.
+            return 0
+            # If the points are the same then changing would do nothing.
         total = self.sum_spin(n, m, N, M)
         total2 = self.sum_spin(x, y, N, M)
         if self.nn_check(n, m, x, y):
-            # If the points are nearest neighbours then the 'total' of the points
-            # around is increased by 4 to account for the double counting.
-            total += 2
-            total2 += 2
+            # If the points are nearest neighbours then the 'total' of the
+            # points around is increased by 4 to account for the double
+            # counting.
+            dE = 2 * self.J * (self.grid[n][m]*total + self.grid[x][y]*total2)\
+                + 4* self.J
         else:
             # Calculate the energy change
             dE = 2 * self.J * (self.grid[n][m]*total + self.grid[x][y]*total2)
@@ -108,7 +116,8 @@ class IsingGrid:
             self.grid[n][m] *= -1
             self.grid[x][y] *= -1
         elif np.random.rand() <= self.P(dE):
-            # Swap spin of both if random is less than probability from self.P().
+            # Swap spin of both if random is less than probability from
+            # self.P().
             self.grid[n][m] *= -1
             self.grid[x][y] *= -1
         return 1
@@ -116,9 +125,9 @@ class IsingGrid:
 
     def glauber_dynamics(self):
         """
-        Flipes the state of a randomly selected point if it is either energeticaly
-        favourable to do so or based on a probability which depends on the
-        temperature of the system.
+        Flipes the state of a randomly selected point if it is either
+        energeticaly favourable to do so or based on a probability which depends
+        on the temperature of the system.
         :return: 1 if swaped; 0 if left the same.
         """
         cdef int total, N, M
@@ -126,7 +135,7 @@ class IsingGrid:
         M = self.M
         n = rand() % N
         m = rand() % M
-        total = self.sum_spin(n, m, N, M)  # Sim values of points around.
+        total = self.sum_spin(n, m, N, M)  # Sum values of points around.
         cdef float dE = 2 * self.J * self.grid[n][m] * total
         if dE <= 0:  # Flip if energeticaly favourable.
             self.grid[n][m] *= -1
@@ -147,8 +156,8 @@ class IsingGrid:
         cdef int total = 0
         total += self.grid[(n - 1) % N][m]
         total += self.grid[(n + 1) % N][m]
-        total += self.grid[n][(m-1) % M]
-        total += self.grid[n][(m+1) % M]
+        total += self.grid[n][(m - 1) % M]
+        total += self.grid[n][(m + 1) % M]
         return total
 
     @cython.cdivision(True)
@@ -160,24 +169,26 @@ class IsingGrid:
             expo = exp(-dE / (self.Kb * self.T))
             return expo
 
-    def temperature_tests(self, float t_min=1, float t_max=2.9, int data_points=20,
-                        int sweeps=100, int tests=1000, int sweeps_per_test=10,
-                        eng=True, mag=True, save=True):
+    def temperature_tests(self, float t_min=1, float t_max=2.9,
+                        int data_points=20, int sweeps=100, int tests=1000,
+                        int sweeps_per_test=10, eng=True, mag=True, save=True):
         """
-        Runs the simulation for a range of temperatures taking 'tests' measurments
-        at each temperature step. The magnetisation and evergy of the system
-        can then be calculated and stored for each test.
+        Runs the simulation for a range of temperatures taking 'tests'
+        measurments at each temperature step. The magnetisation and evergy of
+        the system can then be calculated and stored for each test.
         """
         cdef double [:] temperature = np.linspace(t_min, t_max, data_points)
         cdef double [:,:] magnetisation = np.zeros((data_points, tests))
         cdef double [:, :] energy = np.zeros((data_points, tests))
         cdef int i, j
         for i in range(data_points):
-            sys.stdout.write("Simulation progress: %.1f%%\r" % (100 * i / data_points))
+            sys.stdout.write("Simulation progress: %.1f%%\r"
+                            % (100 * i / data_points))
             sys.stdout.flush()  # Prints progress of simulation.
 
             self.T = temperature[i]  # Set the temperature of the system.
-            self.update_sweep(sweeps)  # Run simulation for a given number of sweeps.
+            self.update_sweep(sweeps * 2)  # Run simulation for a given number
+                                           # of sweeps. x2 longer init time.
             for j in range(tests):
                 self.update_sweep(sweeps_per_test)
                 if mag:
@@ -189,7 +200,7 @@ class IsingGrid:
         if save:
             np.savetxt(('temperature'+ self.sv_ext +'.txt'), temperature)
             if mag:
-                np.savetxt(('magnetisation'+ self.sv_ext +'.txt'), magnetisation)
+                np.savetxt(('magnetisation'+ self.sv_ext +'.txt'),magnetisation)
             if eng:
                 np.savetxt(('energy'+ self.sv_ext +'.txt'), energy)
 
@@ -216,7 +227,7 @@ class IsingGrid:
         for n in range(N):
             for m in range(M):
                 ne_sum = self.grid[(n + 1) % N][m] + self.grid[n][(m + 1) % M]
-                energy += -self.J * self.grid[n][m] * ne_sum  # Check if -J * ... or J * ... same with above in glauber
+                energy += -self.J * self.grid[n][m] * ne_sum
         return energy
 
     def susceptibility(self, save=True):
@@ -235,7 +246,8 @@ class IsingGrid:
         chi = np.zeros(len(temp))
         for i in range(len(temp)):
             norm_fact = 1 / (self.N * self.M * self.Kb * temp[i])
-            chi[i] = norm_fact * (np.average(np.square(data[i])) - np.square(np.average(data[i])))
+            chi[i] = norm_fact * (np.average(np.square(data[i]))
+                   - np.square(np.average(data[i])))
         if save:
             np.savetxt(('susceptibility'+ self.sv_ext +'.txt'), chi)
         return chi
@@ -257,7 +269,8 @@ class IsingGrid:
         C = np.zeros(len(temp))
         for i in range(len(temp)):
             norm_fact = 1 / (self.N**2 * self.Kb * temp[i]**2)
-            C[i] = norm_fact * (np.average(np.square(data[i])) - np.square(np.average(data[i])))
+            C[i] = norm_fact * (np.average(np.square(data[i]))
+                 - np.square(np.average(data[i])))
         if save:
             np.savetxt(('heat_cap'+ self.sv_ext +'.txt'), C)
         return C
@@ -285,9 +298,12 @@ class IsingGrid:
         for i in range(dlen):
             norm_fact = 1 / (self.N**2 * self.Kb * temp[i]**2)
             for j in range(k):
-                sel_data = np.random.choice(data[i], row_len)  # Choose N rand points.
-                heat_cap[j] = norm_fact * (np.average(np.square(sel_data)) - np.square(np.average(sel_data)))
-            sigma[i] = np.sqrt(np.average(np.square(heat_cap)) - np.square(np.average(heat_cap)))
+                sel_data = np.random.choice(data[i], row_len)
+                # Choose N rand points.
+                heat_cap[j] = norm_fact * (np.average(np.square(sel_data))
+                              - np.square(np.average(sel_data)))
+            sigma[i] = np.sqrt(np.average(np.square(heat_cap))
+                     - np.square(np.average(heat_cap)))
         if save:
             np.savetxt(('sigma_bs' + self.sv_ext + '.txt'), sigma)
         return sigma
