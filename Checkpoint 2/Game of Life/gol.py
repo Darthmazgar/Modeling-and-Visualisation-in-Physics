@@ -4,20 +4,19 @@ from matplotlib.animation import FuncAnimation
 import sys
 
 class GameOfLife:
-    def __init__(self, N, M, anim=True):
+    def __init__(self, N, M, dens, anim=True):
         self.N = N
         self.M = M
         self.sweeps = 1
-        self.grid = np.random.choice([0, 1], size=(N, M), p=[.9, .1])
+        self.grid = np.random.choice([0, 1], size=(N, M), p=[1 - dens, dens])
         self.new_grid = self.grid
         if anim:
             self.fig = plt.figure()
         # self.init_kaw_grid()
 
-    def init_kaw_grid(self):
+    def init_half_grid(self):
         """
-        Initialise the grid with one hald all spin 1 and the other all spin -1.
-        Used for initialising Kawasaki tests.
+        Initialise the grid with one half all 1 and the other all 0.
         """
         ones = np.ones((int(self.N / 2), self.M))
         neg_ones = ones * -1
@@ -25,10 +24,7 @@ class GameOfLife:
         return self.grid
 
     def update(self, k, anim=True):
-        if anim:
-            self.fig.clear()
-            plt.imshow(self.grid, interpolation='None',
-                       cmap='Blues', vmin=0, vmax=1)
+
         for z in range(self.sweeps):
             for i in range(self.N):
                 for j in range(self.M):
@@ -38,8 +34,8 @@ class GameOfLife:
                         for y in range(-1, 2):
                             if x == 0 and y == 0:
                                 continue
-                            count += self.grid[(i + x) % self.N]\
-                                              [(j + y) % self.M]
+                            count += self.grid[(i + x + self.N) % self.N]\
+                                              [(j + y + self.M) % self.M]
 
                     # count -= state
                     if state == 0 and count == 3:
@@ -47,6 +43,11 @@ class GameOfLife:
                     elif state == 1 and (count < 2 or count > 3):
                         self.new_grid[i][j] = 0
             self.grid = self.new_grid
+        if anim:
+            self.fig.clear()
+            plt.imshow(self.grid, interpolation='None',
+                       cmap='Blues', vmin=0, vmax=1)
+
 
         return self.grid
 
@@ -62,14 +63,45 @@ class GameOfLife:
         anim = FuncAnimation(self.fig, self.update)
         plt.show()
 
+    def run_animation(self):
+        """
+        Gives the ability to click on the animation canvas to play and pause.
+        """
+        anim_running = True
+
+        def onClick(event):
+            nonlocal anim_running
+            if anim_running:
+                anim.event_source.stop()
+                anim_running = False
+            else:
+                anim.event_source.start()
+                anim_running = True
+
+        self.fig.canvas.mpl_connect('button_press_event', onClick)
+
+        anim = FuncAnimation(self.fig, self.update)
+        plt.show()
+
 
 def main(argv):
-    if len(argv) != 2:
-        print("gol.py N M")
+    if len(argv) != 4:
+        print("gol.py N M Density(0->1) (anim:0, teat:1)")
         sys.exit()
     N = int(argv[0])
     M = int(argv[1])
-    gol = GameOfLife(N, M)
-    gol.animate()
+    dens = float(argv[2])
+
+    if argv[3] == '0' or argv[3] == 'anim':
+        gol = GameOfLife(N, M, dens)
+        # gol.init_half_grid()
+        # gol.animate()
+        gol.run_animation()
+    elif argv[3] == '1' or argv[3] == 'test':
+        gol = GameOfLife(N, M, dens, anim=False)
+    else:
+        print("Not valid input for anim or test.")
+
+
 
 main(sys.argv[1:])
