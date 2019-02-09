@@ -4,11 +4,11 @@ from matplotlib.animation import FuncAnimation
 import sys
 
 class GameOfLife:
-    def __init__(self, N, M, anim=True):
+    def __init__(self, N, M, dens, anim=True):
         self.N = N
         self.M = M
         self.sweeps = 1
-        self.grid = np.random.choice([0, 1], size=(N, M), p=[.9, .1])
+        self.grid = np.random.choice([0, 1], size=(N, M), p=[1 - dens, dens])
         self.new_grid = self.grid
         if anim:
             self.fig = plt.figure()
@@ -38,8 +38,8 @@ class GameOfLife:
                         for y in range(-1, 2):
                             if x == 0 and y == 0:
                                 continue
-                            count += self.grid[(i + x) % self.N]\
-                                              [(j + y) % self.M]
+                            count += self.grid[(i + x + self.N) % self.N]\
+                                              [(j + y + self.M) % self.M]
 
                     # count -= state
                     if state == 0 and count == 3:
@@ -62,14 +62,36 @@ class GameOfLife:
         anim = FuncAnimation(self.fig, self.update)
         plt.show()
 
+    def run_animation(self):
+        """
+        Gives the ability to click on the animation canvas to play and pause.
+        """
+        anim_running = True
+
+        def onClick(event):
+            nonlocal anim_running
+            if anim_running:
+                anim.event_source.stop()
+                anim_running = False
+            else:
+                anim.event_source.start()
+                anim_running = True
+
+        self.fig.canvas.mpl_connect('button_press_event', onClick)
+
+        anim = FuncAnimation(self.fig, self.update)
+        plt.show()
+
 
 def main(argv):
-    if len(argv) != 2:
-        print("gol.py N M")
+    if len(argv) != 3:
+        print("gol.py N M Density(0->1)")
         sys.exit()
     N = int(argv[0])
     M = int(argv[1])
-    gol = GameOfLife(N, M)
-    gol.animate()
+    dens = float(argv[2])
+    gol = GameOfLife(N, M, dens)
+    # gol.animate()
+    gol.run_animation()
 
 main(sys.argv[1:])
