@@ -25,10 +25,7 @@ class GameOfLife:
         return self.grid
 
     def update(self, k, anim=True):
-        if anim:
-            self.fig.clear()
-            plt.imshow(self.grid, interpolation='None',
-                       cmap='Blues', vmin=0, vmax=1)
+
         for z in range(self.sweeps):
             for i in range(self.N):
                 for j in range(self.M):
@@ -47,6 +44,11 @@ class GameOfLife:
                     elif state == 1 and (count < 2 or count > 3):
                         self.new_grid[i][j] = 0
             self.grid = self.new_grid
+        if anim:
+            self.fig.clear()
+            plt.imshow(self.grid, interpolation='None',
+                       cmap='Blues', vmin=0, vmax=1)
+
 
         return self.grid
 
@@ -84,14 +86,22 @@ class GameOfLife:
 
 
 def main(argv):
-    if len(argv) != 3:
-        print("gol.py N M Density(0->1)")
+    if len(argv) != 4:
+        print("gol.py N M Density(0->1) (anim:0, teat:1)")
         sys.exit()
     N = int(argv[0])
     M = int(argv[1])
     dens = float(argv[2])
-    gol = GameOfLife(N, M, dens)
-    # gol.animate()
-    gol.run_animation()
+
+    if argv[3] == '0' or argv[3] == 'anim':
+        gol = GameOfLife(N, M, dens)
+        # gol.animate()
+        gol.run_animation()
+    elif argv[3] == '1' or argv[3] == 'test':
+        gol = GameOfLife(N, M, dens, anim=False)
+    else:
+        print("Not valid input for anim or test.")
+
+
 
 main(sys.argv[1:])
