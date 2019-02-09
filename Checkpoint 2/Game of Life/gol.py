@@ -14,10 +14,9 @@ class GameOfLife:
             self.fig = plt.figure()
         # self.init_kaw_grid()
 
-    def init_kaw_grid(self):
+    def init_half_grid(self):
         """
-        Initialise the grid with one hald all spin 1 and the other all spin -1.
-        Used for initialising Kawasaki tests.
+        Initialise the grid with one half all 1 and the other all 0.
         """
         ones = np.ones((int(self.N / 2), self.M))
         neg_ones = ones * -1
@@ -95,6 +94,7 @@ def main(argv):
 
     if argv[3] == '0' or argv[3] == 'anim':
         gol = GameOfLife(N, M, dens)
+        # gol.init_half_grid()
         # gol.animate()
         gol.run_animation()
     elif argv[3] == '1' or argv[3] == 'test':
