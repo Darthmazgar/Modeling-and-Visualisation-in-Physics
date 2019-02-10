@@ -86,10 +86,10 @@ class GameOfLife:
 
 def main(argv):
     if len(argv) != 4:
-        print("gol.py N M Density(0->1) (anim:0, teat:1)")
+        print("gol.py M N Density(0->1) (anim:0, test:1)")
         sys.exit()
-    N = int(argv[0])
-    M = int(argv[1])
+    M = int(argv[0])
+    N = int(argv[1])
     dens = float(argv[2])
 
     if argv[3] == '0' or argv[3] == 'anim':
