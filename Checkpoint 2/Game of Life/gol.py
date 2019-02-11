@@ -10,13 +10,13 @@ class GameOfLife:
         self.sweeps = 1
         if set_state == 'rand':
             self.grid = np.random.choice([0, 1], size=(N, M), p=[1 - dens, dens])
-            self.new_grid = self.grid
         elif set_state == 'oscilator':
             self.grid = np.zeros((N, M))
             self.init_oscilator(int(N/2), int(M/2))
         elif set_state == 'glider':
             self.grid = np.zeros((N, M))
             self.init_glider(int(N/2), int(M/2))
+        self.new_grid = self.grid
         if anim:
             self.fig = plt.figure()
         # self.init_kaw_grid()
@@ -30,11 +30,19 @@ class GameOfLife:
         self.grid = np.concatenate((ones, neg_ones))
         return self.grid
 
-    def init_oscilator(x, y):
-        pass
+    def init_oscilator(self, x, y):
+        print(x, y)
+        self.grid[x][y] = 1
+        self.grid[(x + 1 + self.N) % self.N][y] = 1
+        self.grid[(x - 1 + self.M) % self.M][y] = 1
 
-    def init_glider(x, y):
-        pass
+    def init_glider(self, x, y):
+        self.grid[(x + 1 + self.N) % self.N][y] = 1
+        self.grid[x][(y + 1 + self.M) % self.M] = 1
+        self.grid[x][(y - 1 + self.M) % self.M] = 1
+        self.grid[(x + 1 + self.N) % self.N][(y + 1 + self.M) % self.M] = 1
+        self.grid[(x - 1 + self.N) % self.N][(y + 1 + self.M) % self.M] = 1
+        return 1
 
     def update(self, k, anim=True):
         for z in range(self.sweeps):
@@ -97,19 +105,25 @@ class GameOfLife:
 
 
 def main(argv):
-    if len(argv) != 4:
-        print("gol.py M N Density(0->1) (anim:0, test:1)")
+    if len(argv) != 5:
+        print("gol.py M N Density(0->1) Setup(rand:0, glider:1, oscilator:2)\
+              Test(anim:0, test:1)")
         sys.exit()
     M = int(argv[0])
     N = int(argv[1])
     dens = float(argv[2])
 
-    if argv[3] == '0' or argv[3] == 'anim':
+    if argv[3] == '0' or argv[3] == 'rand':
         gol = GameOfLife(N, M, dens)
-        # gol.init_half_grid()
+    elif argv[3] == '1' or argv[3] == 'glider':
+        gol = GameOfLife(N, M, dens, set_state='glider')
+    elif argv[3] == '2' or argv[3] == 'oscilator':
+        gol = GameOfLife(N, M, dens, set_state='oscilator')
+
+    if argv[4] == '0' or argv[4] == 'anim':
         # gol.animate()
         gol.run_animation()
-    elif argv[3] == '1' or argv[3] == 'test':
+    elif argv[4] == '1' or argv[4] == 'test':
         gol = GameOfLife(N, M, dens, anim=False)
     else:
         print("Not valid input for anim or test.")
