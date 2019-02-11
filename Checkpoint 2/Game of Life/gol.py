@@ -4,12 +4,19 @@ from matplotlib.animation import FuncAnimation
 import sys
 
 class GameOfLife:
-    def __init__(self, N, M, dens, anim=True):
+    def __init__(self, N, M, dens, set_state='rand', anim=True):
         self.N = N
         self.M = M
         self.sweeps = 1
-        self.grid = np.random.choice([0, 1], size=(N, M), p=[1 - dens, dens])
-        self.new_grid = self.grid
+        if set_state == 'rand':
+            self.grid = np.random.choice([0, 1], size=(N, M), p=[1 - dens, dens])
+            self.new_grid = self.grid
+        elif set_state == 'oscilator':
+            self.grid = np.zeros((N, M))
+            self.init_oscilator(int(N/2), int(M/2))
+        elif set_state == 'glider':
+            self.grid = np.zeros((N, M))
+            self.init_glider(int(N/2), int(M/2))
         if anim:
             self.fig = plt.figure()
         # self.init_kaw_grid()
@@ -23,19 +30,24 @@ class GameOfLife:
         self.grid = np.concatenate((ones, neg_ones))
         return self.grid
 
-    def update(self, k, anim=True):
+    def init_oscilator(x, y):
+        pass
 
+    def init_glider(x, y):
+        pass
+
+    def update(self, k, anim=True):
         for z in range(self.sweeps):
             for i in range(self.N):
                 for j in range(self.M):
                     count = 0
                     state = self.grid[i][j]
-                    for x in range(-1, 2):
-                        for y in range(-1, 2):
-                            if x == 0 and y == 0:
+                    for x in range(-1 + i, 2 + i):
+                        for y in range(-1 + j, 2 + j):
+                            if x == i and y == j:
                                 continue
-                            count += self.grid[(i + x + self.N) % self.N]\
-                                              [(j + y + self.M) % self.M]
+                            count += self.grid[(x + self.N) % self.N]\
+                                              [(y + self.M) % self.M]
 
                     # count -= state
                     if state == 0 and count == 3:
