@@ -226,9 +226,13 @@ class Lattice:
             chi[i] = norm_fact * (np.average(np.square(data[i])) - np.square(np.average(data[i])))
         if save:
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> 549693668ff2eff7fea2d221db63c4c59fa02c54
+=======
+
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
             np.savetxt('susceptibility.txt', chi)
 
     def heat_cap(self, save=True):
