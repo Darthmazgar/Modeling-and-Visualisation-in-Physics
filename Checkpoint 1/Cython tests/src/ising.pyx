@@ -7,44 +7,8 @@ import sys
 from libc.stdlib cimport abs, rand
 from libc.math cimport exp
 
-<<<<<<< HEAD
-# cdef class Grid:
-class Grid:
-    # cdef int N, M, steps_per_sweep
-    # cdef float J, Kb, T
-    # # cdef object anim , fig
-    # cpdef object fig
-    # cdef np.int64_t[:, :] grid
-    # cpdef object __cpinit__(self, int N, int M, float T, float J=1, float Kb=1, all_up=True, anim=True):
-    def __init__(self, int N, int M, float T, float J=1, float Kb=1, all_up=True, anim=True):
-        self.N = N
-        self.M = M
-        self.J = J
-        self.Kb = Kb
-        self.T = T
-        self.sv_ext = sv_ext
->>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
-        self.steps_per_sweep = N * M
-        self.anim = anim  # Boolean if animating or not.
-        if anim:
-            self.fig = plt.figure()
-        if all_up:
-            self.grid = np.ones((N, M))  # Initialise all in the same state.
-        else:
-            self.grid = np.random.choice([-1, 1], size=(N, M))
-            # Random initilisation
-
-    def print_grid(self):
-        """ Prints the current state of the grid to the terminal. """
-        print(self.grid)
-
-    def imshow_grid(self):
-<<<<<<< HEAD
-        plt.imshow(self.grid, interpolation='None', cmap='Blues', vmin=-1, vmax=1)
-=======
         plt.imshow(self.grid, interpolation='sinc',
                    cmap='Blues', vmin=-1, vmax=1)
->>>>>>> 08fb9bbdfad4c6d9ec591f15f0ae28181cab55ec:Checkpoint 1/Cython tests/src/ising.pyx
 
     def update_sweep(self, int k):
         """
@@ -55,26 +19,17 @@ class Grid:
         N = self.N
         M = self.M
         for i in range(self.steps_per_sweep):
-<<<<<<< HEAD
-            # self.glauber_dynamics()
-            self.kawasaki_dynamics()
-=======
             if self.ds == 0:
                 self.glauber_dynamics()
             elif self.ds == 1:
                 self.kawasaki_dynamics()
->>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
         if self.anim:
             self.fig.clear()
             self.imshow_grid()
 
-<<<<<<< HEAD
-    def nn_check(self, n, m, x, y):
-=======
     def nn_check(self, int n, int m, int x, int y):
 <<<<<<< HEAD:Cython tests/ising.pyx
 
->>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
         if n == x and (m == y or m == y+1 or m == y-1):
 =======
         """
@@ -115,21 +70,11 @@ class Grid:
         total = self.sum_spin(n, m, N, M)
         total2 = self.sum_spin(x, y, N, M)
         if self.nn_check(n, m, x, y):
-<<<<<<< HEAD:Cython tests/ising.pyx
-            # TODO Need to work out what goes on with nn
-<<<<<<< HEAD
-            dE = 0 # ###############
-=======
-            total += 2
-            total2 += 2
->>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
-=======
             # If the points are nearest neighbours then the 'total' of the
             # points around is increased by 4 to account for the double
             # counting.
             dE = 2 * self.J * (self.grid[n][m]*total + self.grid[x][y]*total2)\
                 + 4* self.J
->>>>>>> 08fb9bbdfad4c6d9ec591f15f0ae28181cab55ec:Checkpoint 1/Cython tests/src/ising.pyx
         else:
             # Calculate the energy change
             dE = 2 * self.J * (self.grid[n][m]*total + self.grid[x][y]*total2)
@@ -190,14 +135,9 @@ class Grid:
             expo = exp(-dE / (self.Kb * self.T))
             return expo
 
-<<<<<<< HEAD:Cython tests/ising.pyx
-<<<<<<< HEAD
-    def temperature_tests(self, float t_min=1, float t_max=3, int data_points=20, int sweeps=100, int tests=50, eng=True, mag=True, save=True):
-=======
     def temperature_tests(self, float t_min=1, float t_max=2.9, int data_points=20,
                         int sweeps=100, int tests=10000, int sweeps_per_test=10,
                         eng=True, mag=True, save=True):
->>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
 =======
     def temperature_tests(self, float t_min=1, float t_max=2.9,
                         int data_points=20, int sweeps=100, int tests=1000,
@@ -221,11 +161,7 @@ class Grid:
             self.update_sweep(sweeps * 2)  # Run simulation for a given number
                                            # of sweeps. x2 longer init time.
             for j in range(tests):
-<<<<<<< HEAD
-                self.update_sweep(10)
-=======
                 self.update_sweep(sweeps_per_test)
->>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
                 if mag:
                     # Calculate current system magnetisation.
                     magnetisation[i][j] = self.sys_magnetisation()
@@ -233,19 +169,11 @@ class Grid:
                     # Calculate current system energy.
                     energy[i][j] = self.sys_energy()
         if save:
-<<<<<<< HEAD
-            np.savetxt('temperature.txt', temperature)
-            if mag:
-                np.savetxt('magnetisation.txt', magnetisation)
-            if eng:
-                np.savetxt('energy.txt', energy)
-=======
             np.savetxt(('temperature'+ self.sv_ext +'.txt'), temperature)
             if mag:
                 np.savetxt(('magnetisation'+ self.sv_ext +'.txt'),magnetisation)
             if eng:
                 np.savetxt(('energy'+ self.sv_ext +'.txt'), energy)
->>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
 
     def sys_magnetisation(self):
         """
@@ -282,14 +210,9 @@ class Grid:
         """
         cdef double [:,:] data
         cdef double [:] temp
-<<<<<<< HEAD
-        data = np.genfromtxt('magnetisation.txt')
-        temp = np.genfromtxt('temperature.txt')
-=======
         data = np.genfromtxt(('magnetisation'+ self.sv_ext +'.txt'))
         temp = np.genfromtxt(('temperature'+ self.sv_ext +'.txt'))
 <<<<<<< HEAD:Cython tests/ising.pyx
->>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
         # cdef double [:] magnetisation, chi
 =======
 >>>>>>> 08fb9bbdfad4c6d9ec591f15f0ae28181cab55ec:Checkpoint 1/Cython tests/src/ising.pyx
@@ -301,12 +224,8 @@ class Grid:
             chi[i] = norm_fact * (np.average(np.square(data[i]))
                    - np.square(np.average(data[i])))
         if save:
-<<<<<<< HEAD
-            np.savetxt('susceptibility.txt', chi)
-=======
             np.savetxt(('susceptibility'+ self.sv_ext +'.txt'), chi)
         return chi
->>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
 
     def heat_cap(self, save=True):
         """
@@ -319,13 +238,8 @@ class Grid:
         cdef double [:] C, temp
         cdef int i
         cdef double norm_fact
-<<<<<<< HEAD
-        data = np.genfromtxt('energy.txt')
-        temp = np.genfromtxt('temperature.txt')
-=======
         data = np.genfromtxt(('energy'+ self.sv_ext +'.txt'))
         temp = np.genfromtxt(('temperature'+ self.sv_ext +'.txt'))
->>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
         magnetisation = [np.average(data[x]) for x in range(len(data))]
         C = np.zeros(len(temp))
         for i in range(len(temp)):
@@ -333,9 +247,6 @@ class Grid:
             C[i] = norm_fact * (np.average(np.square(data[i]))
                  - np.square(np.average(data[i])))
         if save:
-<<<<<<< HEAD
-            np.savetxt('heat_cap.txt', C)
-=======
             np.savetxt(('heat_cap'+ self.sv_ext +'.txt'), C)
         return C
 
@@ -372,13 +283,6 @@ class Grid:
             np.savetxt(('sigma_bs' + self.sv_ext + '.txt'), sigma)
         return sigma
 
-<<<<<<< HEAD:Cython tests/ising.pyx
-    def jacknife_errors(self):
-        pass
->>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
-
-=======
->>>>>>> 08fb9bbdfad4c6d9ec591f15f0ae28181cab55ec:Checkpoint 1/Cython tests/src/ising.pyx
     def animate(self):
         anim = FuncAnimation(self.fig, self.update_sweep)
         plt.show()
