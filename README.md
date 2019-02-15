@@ -2,7 +2,10 @@
 
 ## Checkpoint 1 ##
 ### Ising model ###
-Uses Monte Carlo simulation to update the states at each point if energeticaly or probabalisticaly favourable. Due to run time limitations switched over to learning how to use Cython. Finished simulation in Cython_tests\src .
+Uses Monte Carlo simulation to update the states at each point if energeticaly or probabalisticaly favourable. Due to run time limitations switched over to learning how to use Cython. Finished simulation in Cython_tests\src . Run using;
+
+$ python setup.py build_ext --inplace  # Build c code inplace
+$ python ising_exe.py  # Run Cython code.
 
 ## Checkpoint 2 ##
 ### Game of Life ###
