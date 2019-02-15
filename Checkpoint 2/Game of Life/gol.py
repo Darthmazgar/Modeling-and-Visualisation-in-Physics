@@ -4,11 +4,12 @@ from matplotlib.animation import FuncAnimation
 import sys
 
 class GameOfLife:
-    def __init__(self, N, M, dens, set_state='rand', anim=True):
+    def __init__(self, N, M, dens, set_state='rand', test=False, anim=True):
         self.N = N
         self.M = M
         self.sweeps = 1
         self.set_state = set_state
+        self.test = test
         if set_state == 'rand':
             self.grid = np.random.choice([0, 1], size=(N, M), p=[1 - dens, dens])
         elif set_state == 'oscilator':
@@ -23,7 +24,6 @@ class GameOfLife:
         self.new_grid = self.grid.copy()  # Have to use .copy!
         if anim:
             self.fig = plt.figure()
-        # self.init_kaw_grid()
 
     def init_half_grid(self):
         """
@@ -35,33 +35,33 @@ class GameOfLife:
         return self.grid
 
     def make_oscilator(self, x, y):
-        self.grid[x][y] = 1
-        self.grid[(x + 1 + self.N) % self.N][y] = 1
-        self.grid[(x - 1 + self.M) % self.M][y] = 1
+        self.grid[(x + self.N) % self.N][(y + self.M) % self.M] = 1
+        self.grid[(x + 1 + self.N) % self.N][(y + self.M) % self.M] = 1
+        self.grid[(x - 1 + self.M) % self.M][(y + self.M) % self.M] = 1
 
     def make_glider(self, x, y):
-        self.grid[(x + 1 + self.N) % self.N][y] = 1
-        self.grid[x][(y + 1 + self.M) % self.M] = 1
-        self.grid[x][(y - 1 + self.M) % self.M] = 1
+        self.grid[(x + 1 + self.N) % self.N][(y + self.M) % self.M] = 1
+        self.grid[(x + self.N) % self.N][(y + 1 + self.M) % self.M] = 1
+        self.grid[(x + self.N) % self.N][(y - 1 + self.M) % self.M] = 1
         self.grid[(x + 1 + self.N) % self.N][(y + 1 + self.M) % self.M] = 1
         self.grid[(x - 1 + self.N) % self.N][(y + 1 + self.M) % self.M] = 1
         return 1
 
     def make_glider_gun(self, x, y):
         # Left square
-        self.grid[x][y] = 1
-        self.grid[(x + 1 + self.N) % self.N][y] = 1
-        self.grid[x][(y - 1 + self.M) % self.M] = 1
+        self.grid[(x + self.N) % self.N][(y + self.M) % self.M] = 1
+        self.grid[(x + 1 + self.N) % self.N][(y + self.M) % self.M] = 1
+        self.grid[(x + self.N) % self.N][(y - 1 + self.M) % self.M] = 1
         self.grid[(x + 1 + self.N) % self.N][(y - 1 + self.M) % self.M] = 1
 
         # Right square
-        self.grid[(x + 34 + self.N) % self.N][y + 2] = 1
-        self.grid[(x + 34 + 1 + self.N) % self.N][y + 2] = 1
+        self.grid[(x + 34 + self.N) % self.N][(y + 2 + self.M) % self.M] = 1
+        self.grid[(x + 34 + 1 + self.N) % self.N][(y + 2 +self.M) % self.M] = 1
         self.grid[(x + 34 + self.N) % self.N][(y + 2 - 1 + self.M) % self.M] = 1
         self.grid[(x + 34 + 1 + self.N) % self.N][(y + 2 - 1 + self.M) % self.M] = 1
 
         # Left bit
-        self.grid[(x + 10 + self.N) % self.N][y] = 1
+        self.grid[(x + 10 + self.N) % self.N][(y + self.M) % self.M] = 1
         self.grid[(x + 10 + self.N) % self.N][(y - 1 + self.M) % self.M] = 1
         self.grid[(x + 10 + self.N) % self.N][(y - 2 + self.M) % self.M] = 1
         self.grid[(x + 11 + self.N) % self.N][(y + 1 + self.M) % self.M] = 1
@@ -73,16 +73,16 @@ class GameOfLife:
         self.grid[(x + 14 + self.N) % self.N][(y - 1 + self.M) % self.M] = 1
         self.grid[(x + 15 + self.N) % self.N][(y + 1 + self.M) % self.M] = 1
         self.grid[(x + 15 + self.N) % self.N][(y - 3 + self.M) % self.M] = 1
-        self.grid[(x + 16 + self.N) % self.N][y] = 1
+        self.grid[(x + 16 + self.N) % self.N][(y + self.M) % self.M] = 1
         self.grid[(x + 16 + self.N) % self.N][(y - 1 + self.M) % self.M] = 1
         self.grid[(x + 16 + self.N) % self.N][(y - 2 + self.M) % self.M] = 1
         self.grid[(x + 17 + self.N) % self.N][(y - 1 + self.M) % self.M] = 1
 
         # Right bit
-        self.grid[(x + 20 + self.N) % self.N][y] = 1
+        self.grid[(x + 20 + self.N) % self.N][(y + self.M) % self.M] = 1
         self.grid[(x + 20 + self.N) % self.N][(y + 1 + self.M) % self.M] = 1
         self.grid[(x + 20 + self.N) % self.N][(y + 2 + self.M) % self.M] = 1
-        self.grid[(x + 21 + self.N) % self.N][y] = 1
+        self.grid[(x + 21 + self.N) % self.N][(y + self.M) % self.M] = 1
         self.grid[(x + 21 + self.N) % self.N][(y + 1 + self.M) % self.M] = 1
         self.grid[(x + 21 + self.N) % self.N][(y + 2 + self.M) % self.M] = 1
         self.grid[(x + 22 + self.N) % self.N][(y + 3 + self.M) % self.M] = 1
@@ -96,15 +96,26 @@ class GameOfLife:
     def com_tracking(self, s_x=0, s_y=0):
         s_x=int(self.N/2)
         s_y=int(self.M/2)
-        n = np.sum(self.grid)  # count alive cells so it dosent just have to be a glider.
+        n = int(np.sum(self.grid))  # count alive cells so it dosent just have to be a glider.
         sum = 0
+        avg_y = np.zeros(n)
+        avg_x = np.zeros(n)
+        k = 0
+        edge = False
         for i in range(self.N):
             for j in range(self.M):
                 state = self.grid[i][j]
                 if state:
+                    if i == 0 or i == self.N or j == 0 or j == self.M:
+                        edge = True
                     sum += np.sqrt((i - s_x)**2 + (j - s_y)**2)
+                    avg_y[k] = i - s_x
+                    avg_x[k] = j - s_y
+                    k += 1
         r = sum / n
-        return r
+        ax = np.average(avg_x)
+        ay = np.average(avg_y)
+        return r, ax, ay, edge
 
     def update(self, k, anim=True):
         for z in range(self.sweeps):
@@ -125,9 +136,10 @@ class GameOfLife:
                         # print("Died: %d" % count)
                         self.new_grid[i][j] = 0
             self.grid = self.new_grid.copy()  # Have to use .copy!
-        if self.set_state == 'glider':
-            r = self.com_tracking()
-            print(self.com_tracking())
+        if self.set_state == 'glider' and self.test:
+            r, ax, ay, edge = self.com_tracking()
+            if not edge:
+                print(ax, ay, edge)
         if anim:
             self.fig.clear()
             plt.imshow(self.grid, interpolation='None',
@@ -164,8 +176,7 @@ class GameOfLife:
                 anim_running = True
 
         self.fig.canvas.mpl_connect('button_press_event', onClick)
-
-        anim = FuncAnimation(self.fig, self.update)
+        anim = FuncAnimation(self.fig, self.update, interval=5)
         plt.show()
 
 
@@ -190,7 +201,9 @@ def main(argv):
         # gol.animate()
         gol.run_animation()
     elif argv[4] == '1' or argv[4] == 'test':
-        gol = GameOfLife(N, M, dens, anim=False)
+        gol = GameOfLife(N, M, dens, set_state='glider', test=True, anim=False)
+        for i in range(100):
+            gol.update(i, anim=False)
     else:
         print("Not valid input for anim or test.")
 
