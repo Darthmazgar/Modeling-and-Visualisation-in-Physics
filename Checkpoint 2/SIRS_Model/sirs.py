@@ -4,15 +4,17 @@ from matplotlib.animation import FuncAnimation
 import sys
 
 class Sirs:
-    def __init__(self, N, M, p1, p2, p3, anim=True):
+    def __init__(self, N, M, p1, p2, p3, test=False, anim=True):
         self.N = N
         self.M = M
         self.p1 = p1
         self.p2 = p2
+        if test:
+            self.p2 = 0.5
         self.p3 = p3
+        self.test = test
         # 0: suceptable, 1: infected, 2: recovered.
         self.grid = np.random.choice([0, 1], size=(N, M), p=[1/2, 1/2])
-        self.sweeps = 1
         if anim:
             self.fig = plt.figure()
 
@@ -28,8 +30,8 @@ class Sirs:
         else:
             return False
 
-    def update(self, k, anim=True):
-        for k in range(self.sweeps):
+    def update(self, k, sweeps=1, anim=True):
+        for k in range(sweeps):
             rand_ar = np.random.random((self.N,self.M))
             for i in range(self.N):
                 for j in range(self.M):
@@ -49,8 +51,47 @@ class Sirs:
         if anim:
             self.fig.clear()
             plt.imshow(self.grid, interpolation='nearest',
-                       cmap='Blues', vmin=0, vmax=2)
+                       cmap='brg', vmin=0, vmax=2)
         return self.grid
+
+    def measure_infected(self):
+        infected = 0
+        for i in range(self.N):
+            for j in range(self.M):
+                if self.grid[i][j] == 1:
+                    infected += 1
+        return infected / (self.N * self.M)
+
+    def run_test(self, resolution=10, sweeps_per_test=100,
+                measurements_per_test=10, show=True, save=True):
+        heatmap = np.zeros((resolution, resolution))  # , measurements_per_test))
+        p1_ar = np.linspace(0, 1, resolution)
+        p3_ar = np.linspace(0, 1, resolution)
+        self.sweeps_per_test = sweeps_per_test
+        for i in range(resolution):
+            self.p1 = p1_ar[i]
+            for j in range(resolution):
+                sys.stdout.write("Simulation progress: %.1f%%: Part progress: %.1f%%\r"
+                                % ((100 * i / resolution), (100 * j / resolution)))
+                sys.stdout.flush()  # Prints progress of simulation.
+                self.p3 = p3_ar[j]
+                test_results = np.zeros(measurements_per_test)
+                for k in range(measurements_per_test):
+                    self.grid = np.random.choice([0, 1], size=(self.N, self.M),
+                                                p=[1/2, 1/2])
+                    self.update(1, sweeps=sweeps_per_test, anim=False)
+                    test_results[k] = self.measure_infected()
+                    # heatmap[i][j][k] = test_results[k]
+                heatmap[i][j] = np.average(test_results)
+        if show:
+            plt.imshow(heatmap, interpolation='nearest',
+                       cmap='brg', vmin=0, vmax=2)
+            plt.xlabel("P3")
+            plt.ylabel("P1")
+            plt.title("Sirs test")
+            plt.show()
+        if save:
+            np.savetxt('sirs_heatmap.txt', heatmap)
 
     def run_animation(self):
         anim_running = True
@@ -71,8 +112,8 @@ class Sirs:
 
 
 def main(argv):
-    if len(argv) != 5:
-        print("gol.py M N P1 P2 P3")
+    if len(argv) != 6:
+        print("gol.py M N P1 P2 P3 anim:0 / test:1")
         sys.exit()
     M = int(argv[0])
     N = int(argv[1])
@@ -80,7 +121,11 @@ def main(argv):
     P2 = float(argv[3])
     P3 = float(argv[4])
 
-    s = Sirs(M, N, P1, P2, P3)
-    s.run_animation()
+    if argv[5] == '0' or argv[5] == 'anim':
+        s = Sirs(M, N, P1, P2, P3)
+        s.run_animation()
+    elif argv[5] == '1' or argv[5] == 'test':
+        s = Sirs(M, N, P1, P2, P3, test=True)
+        s.run_test()
 
 main(sys.argv[1:])
