@@ -35,33 +35,33 @@ class GameOfLife:
         return self.grid
 
     def make_oscilator(self, x, y):
-        self.grid[x][y] = 1
-        self.grid[(x + 1 + self.N) % self.N][y] = 1
-        self.grid[(x - 1 + self.M) % self.M][y] = 1
+        self.grid[(x + self.N) % self.N][(y + self.M) % self.M] = 1
+        self.grid[(x + 1 + self.N) % self.N][(y + self.M) % self.M] = 1
+        self.grid[(x - 1 + self.M) % self.M][(y + self.M) % self.M] = 1
 
     def make_glider(self, x, y):
-        self.grid[(x + 1 + self.N) % self.N][y] = 1
-        self.grid[x][(y + 1 + self.M) % self.M] = 1
-        self.grid[x][(y - 1 + self.M) % self.M] = 1
+        self.grid[(x + 1 + self.N) % self.N][(y + self.M) % self.M] = 1
+        self.grid[(x + self.N) % self.N][(y + 1 + self.M) % self.M] = 1
+        self.grid[(x + self.N) % self.N][(y - 1 + self.M) % self.M] = 1
         self.grid[(x + 1 + self.N) % self.N][(y + 1 + self.M) % self.M] = 1
         self.grid[(x - 1 + self.N) % self.N][(y + 1 + self.M) % self.M] = 1
         return 1
 
     def make_glider_gun(self, x, y):
         # Left square
-        self.grid[x][y] = 1
-        self.grid[(x + 1 + self.N) % self.N][y] = 1
-        self.grid[x][(y - 1 + self.M) % self.M] = 1
+        self.grid[(x + self.N) % self.N][(y + self.M) % self.M] = 1
+        self.grid[(x + 1 + self.N) % self.N][(y + self.M) % self.M] = 1
+        self.grid[(x + self.N) % self.N][(y - 1 + self.M) % self.M] = 1
         self.grid[(x + 1 + self.N) % self.N][(y - 1 + self.M) % self.M] = 1
 
         # Right square
-        self.grid[(x + 34 + self.N) % self.N][y + 2] = 1
-        self.grid[(x + 34 + 1 + self.N) % self.N][y + 2] = 1
+        self.grid[(x + 34 + self.N) % self.N][(y + 2 + self.M) % self.M] = 1
+        self.grid[(x + 34 + 1 + self.N) % self.N][(y + 2 +self.M) % self.M] = 1
         self.grid[(x + 34 + self.N) % self.N][(y + 2 - 1 + self.M) % self.M] = 1
         self.grid[(x + 34 + 1 + self.N) % self.N][(y + 2 - 1 + self.M) % self.M] = 1
 
         # Left bit
-        self.grid[(x + 10 + self.N) % self.N][y] = 1
+        self.grid[(x + 10 + self.N) % self.N][(y + self.M) % self.M] = 1
         self.grid[(x + 10 + self.N) % self.N][(y - 1 + self.M) % self.M] = 1
         self.grid[(x + 10 + self.N) % self.N][(y - 2 + self.M) % self.M] = 1
         self.grid[(x + 11 + self.N) % self.N][(y + 1 + self.M) % self.M] = 1
@@ -73,16 +73,16 @@ class GameOfLife:
         self.grid[(x + 14 + self.N) % self.N][(y - 1 + self.M) % self.M] = 1
         self.grid[(x + 15 + self.N) % self.N][(y + 1 + self.M) % self.M] = 1
         self.grid[(x + 15 + self.N) % self.N][(y - 3 + self.M) % self.M] = 1
-        self.grid[(x + 16 + self.N) % self.N][y] = 1
+        self.grid[(x + 16 + self.N) % self.N][(y + self.M) % self.M] = 1
         self.grid[(x + 16 + self.N) % self.N][(y - 1 + self.M) % self.M] = 1
         self.grid[(x + 16 + self.N) % self.N][(y - 2 + self.M) % self.M] = 1
         self.grid[(x + 17 + self.N) % self.N][(y - 1 + self.M) % self.M] = 1
 
         # Right bit
-        self.grid[(x + 20 + self.N) % self.N][y] = 1
+        self.grid[(x + 20 + self.N) % self.N][(y + self.M) % self.M] = 1
         self.grid[(x + 20 + self.N) % self.N][(y + 1 + self.M) % self.M] = 1
         self.grid[(x + 20 + self.N) % self.N][(y + 2 + self.M) % self.M] = 1
-        self.grid[(x + 21 + self.N) % self.N][y] = 1
+        self.grid[(x + 21 + self.N) % self.N][(y + self.M) % self.M] = 1
         self.grid[(x + 21 + self.N) % self.N][(y + 1 + self.M) % self.M] = 1
         self.grid[(x + 21 + self.N) % self.N][(y + 2 + self.M) % self.M] = 1
         self.grid[(x + 22 + self.N) % self.N][(y + 3 + self.M) % self.M] = 1
@@ -165,7 +165,7 @@ class GameOfLife:
 
         self.fig.canvas.mpl_connect('button_press_event', onClick)
 
-        anim = FuncAnimation(self.fig, self.update)
+        anim = FuncAnimation(self.fig, self.update, interval=5)
         plt.show()
 
 

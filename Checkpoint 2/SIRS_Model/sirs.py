@@ -15,10 +15,15 @@ class Sirs:
         if anim:
             self.fig = plt.figure()
 
+    def update(self, k, anim=True):
+
+        if anim:
+            self.fig.clear()
+            plt.imshow(self.grid, interpolation='None',
+                       cmap='Blues', vmin=0, vmax=1)
+        return self.grid
+
     def run_animation(self):
-        """
-        Gives the ability to click on the animation canvas to play and pause.
-        """
         anim_running = True
 
         def onClick(event):
@@ -32,12 +37,20 @@ class Sirs:
 
         self.fig.canvas.mpl_connect('button_press_event', onClick)
 
-        anim = FuncAnimation(self.fig, self.update)
+        anim = FuncAnimation(self.fig, self.update, interval=5)
         plt.show()
 
 
-
 def main(argv):
+    if len(argv) != 5:
+        print("gol.py M N P1 P2 P3")
+        sys.exit()
+    M = int(argv[0])
+    N = int(argv[1])
+    P1 = float(argv[2])
+    P2 = float(argv[3])
+    P3 = float(argv[4])
+
     s = Sirs(5, 5, 0.1, 0.1, 0.1)
 
 main(sys.argv[1:])
