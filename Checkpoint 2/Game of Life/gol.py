@@ -18,14 +18,12 @@ class GameOfLife:
         elif set_state == 'glider':
             self.grid = np.zeros((N, M))
             self.make_glider(int(N/2), int(M/2))
-            self.prev_r = 0
         elif set_state == 'glider gun':
             self.grid = np.zeros((N, M))
             self.make_glider_gun(50, 50)
         self.new_grid = self.grid.copy()  # Have to use .copy!
         if anim:
             self.fig = plt.figure()
-        # self.init_kaw_grid()
 
     def init_half_grid(self):
         """
@@ -119,9 +117,6 @@ class GameOfLife:
         ay = np.average(avg_y)
         return r, ax, ay, edge
 
-    def speed(self, r, steps):
-        print("Speed: %.2f, k: %.2f" % ((r / steps), steps))
-
     def update(self, k, anim=True):
         for z in range(self.sweeps):
             for i in range(self.N):
@@ -145,7 +140,6 @@ class GameOfLife:
             r, ax, ay, edge = self.com_tracking()
             if not edge:
                 print(ax, ay, edge)
-            # self.speed(r, k)
         if anim:
             self.fig.clear()
             plt.imshow(self.grid, interpolation='None',
@@ -182,7 +176,6 @@ class GameOfLife:
                 anim_running = True
 
         self.fig.canvas.mpl_connect('button_press_event', onClick)
-
         anim = FuncAnimation(self.fig, self.update, interval=5)
         plt.show()
 
