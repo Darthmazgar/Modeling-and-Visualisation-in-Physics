@@ -4,11 +4,12 @@ from matplotlib.animation import FuncAnimation
 import sys
 
 class GameOfLife:
-    def __init__(self, N, M, dens, set_state='rand', anim=True):
+    def __init__(self, N, M, dens, set_state='rand', test=False, anim=True):
         self.N = N
         self.M = M
         self.sweeps = 1
         self.set_state = set_state
+        self.test = test
         if set_state == 'rand':
             self.grid = np.random.choice([0, 1], size=(N, M), p=[1 - dens, dens])
         elif set_state == 'oscilator':
@@ -17,6 +18,7 @@ class GameOfLife:
         elif set_state == 'glider':
             self.grid = np.zeros((N, M))
             self.make_glider(int(N/2), int(M/2))
+            self.prev_r = 0
         elif set_state == 'glider gun':
             self.grid = np.zeros((N, M))
             self.make_glider_gun(50, 50)
@@ -96,15 +98,29 @@ class GameOfLife:
     def com_tracking(self, s_x=0, s_y=0):
         s_x=int(self.N/2)
         s_y=int(self.M/2)
-        n = np.sum(self.grid)  # count alive cells so it dosent just have to be a glider.
+        n = int(np.sum(self.grid))  # count alive cells so it dosent just have to be a glider.
         sum = 0
+        avg_y = np.zeros(n)
+        avg_x = np.zeros(n)
+        k = 0
+        edge = False
         for i in range(self.N):
             for j in range(self.M):
                 state = self.grid[i][j]
                 if state:
+                    if i == 0 or i == self.N or j == 0 or j == self.M:
+                        edge = True
                     sum += np.sqrt((i - s_x)**2 + (j - s_y)**2)
+                    avg_y[k] = i - s_x
+                    avg_x[k] = j - s_y
+                    k += 1
         r = sum / n
-        return r
+        ax = np.average(avg_x)
+        ay = np.average(avg_y)
+        return r, ax, ay, edge
+
+    def speed(self, r, steps):
+        print("Speed: %.2f, k: %.2f" % ((r / steps), steps))
 
     def update(self, k, anim=True):
         for z in range(self.sweeps):
@@ -125,9 +141,11 @@ class GameOfLife:
                         # print("Died: %d" % count)
                         self.new_grid[i][j] = 0
             self.grid = self.new_grid.copy()  # Have to use .copy!
-        if self.set_state == 'glider':
-            r = self.com_tracking()
-            print(self.com_tracking())
+        if self.set_state == 'glider' and self.test:
+            r, ax, ay, edge = self.com_tracking()
+            if not edge:
+                print(ax, ay, edge)
+            # self.speed(r, k)
         if anim:
             self.fig.clear()
             plt.imshow(self.grid, interpolation='None',
@@ -190,7 +208,9 @@ def main(argv):
         # gol.animate()
         gol.run_animation()
     elif argv[4] == '1' or argv[4] == 'test':
-        gol = GameOfLife(N, M, dens, anim=False)
+        gol = GameOfLife(N, M, dens, set_state='glider', test=True, anim=False)
+        for i in range(100):
+            gol.update(i, anim=False)
     else:
         print("Not valid input for anim or test.")
 

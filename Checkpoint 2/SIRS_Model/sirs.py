@@ -18,15 +18,15 @@ class Sirs:
 
     def check_nn(self, i, j):
         if self.grid[(i + 1 +self.N) % self.N][j] == 1:
-            return 1
+            return True
         elif self.grid[(i - 1 +self.N) % self.N][j] == 1:
-            return 1
+            return True
         elif self.grid[i][(j + 1 + self.M) % self.M] == 1:
-            return 1
+            return True
         elif self.grid[i][(j - 1 + self.M) % self.M] == 1:
-            return 1
+            return True
         else:
-            return 0
+            return False
 
     def update(self, k, anim=True):
         for k in range(self.sweeps):
