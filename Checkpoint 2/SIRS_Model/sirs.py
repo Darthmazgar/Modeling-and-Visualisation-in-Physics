@@ -4,7 +4,7 @@ from matplotlib.animation import FuncAnimation
 import sys
 
 class Sirs:
-    def __init__(self, N, M, p1, p2, p3, test=False, anim=True):
+    def __init__(self, N, M, p1, p2, p3, immune=0, test=False, anim=True):
         self.N = N
         self.M = M
         self.p1 = p1
@@ -14,7 +14,9 @@ class Sirs:
         self.p3 = p3
         self.test = test
         # 0: suceptable, 1: infected, 2: recovered.
-        self.grid = np.random.choice([0, 1], size=(N, M), p=[1/2, 1/2])
+        frac = (1 - immune) / 2.
+        self.grid = np.random.choice([0, 1, 3], size=(N, M),
+                    p=[frac, frac, immune])
         if anim:
             self.fig = plt.figure()
 
@@ -32,15 +34,17 @@ class Sirs:
 
     def update(self, k, sweeps=1, anim=True):
         for k in range(sweeps):
-            rand_ar = np.random.random((self.N,self.M))
+            rand_ar = np.random.random((self.N,self.M))  # Gen probabilities.
             for i in range(self.N):
                 for j in range(self.M):
                     state = self.grid[i][j]
-                    if state == 0:
+                    if state == 3:  # If immune then leave
+                        continue
+                    elif state == 0:  # If suceptable
                         p = self.p1
-                    elif state == 1:
+                    elif state == 1:  # If Infected
                         p = self.p2
-                    elif state == 2:
+                    elif state == 2:  # If recovering
                         p = self.p3
                     if state == 0:
                         if self.check_nn(i, j) and rand_ar[i][j] <= p:
@@ -107,25 +111,26 @@ class Sirs:
 
         self.fig.canvas.mpl_connect('button_press_event', onClick)
 
-        anim = FuncAnimation(self.fig, self.update, interval=5)
+        anim = FuncAnimation(self.fig, self.update, interval=5, frames=50)
         plt.show()
 
 
 def main(argv):
-    if len(argv) != 6:
-        print("gol.py M N P1 P2 P3 anim:0 / test:1")
+    if len(argv) != 7:
+        print("gol.py M N P1 P2 P3 Pimmune anim:0 / test:1")
         sys.exit()
     M = int(argv[0])
     N = int(argv[1])
     P1 = float(argv[2])
     P2 = float(argv[3])
     P3 = float(argv[4])
+    P4 = float(argv[5])
 
-    if argv[5] == '0' or argv[5] == 'anim':
-        s = Sirs(M, N, P1, P2, P3)
+    if argv[6] == '0' or argv[6] == 'anim':
+        s = Sirs(M, N, P1, P2, P3, immune=P4)
         s.run_animation()
-    elif argv[5] == '1' or argv[5] == 'test':
-        s = Sirs(M, N, P1, P2, P3, test=True)
+    elif argv[6] == '1' or argv[6] == 'test':
+        s = Sirs(M, N, P1, P2, P3, immune=P4, test=True)
         s.run_test()
 
 main(sys.argv[1:])
