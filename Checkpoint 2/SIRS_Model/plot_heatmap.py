@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 
-grid = np.genfromtxt('sirs_heatmap.txt')
+grid = np.genfromtxt('sirs_heatmap1.txt')
 print(np.max(grid))
 plt.imshow(grid, interpolation='bilinear',
            cmap='Blues', vmin=0, vmax=0.5)

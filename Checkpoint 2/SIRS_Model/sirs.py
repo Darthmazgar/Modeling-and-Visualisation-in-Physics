@@ -9,8 +9,6 @@ class Sirs:
         self.M = M
         self.p1 = p1
         self.p2 = p2
-        if test:
-            self.p2 = 0.5
         self.p3 = p3
         self.test = test
         # 0: suceptable, 1: infected, 2: recovered.
@@ -35,9 +33,13 @@ class Sirs:
     def update(self, k, sweeps=1, anim=True):
         for k in range(sweeps):
             rand_ar = np.random.random((self.N,self.M))  # Gen probabilities.
+            rand_xs = np.random.randint(self.N, size=self.N)
+            rand_ys = np.random.randint(self.M, size=self.M)
             for i in range(self.N):
                 for j in range(self.M):
-                    state = self.grid[i][j]
+                    x = rand_xs[j]
+                    y = rand_ys[i]
+                    state = self.grid[x][y]
                     if state == 3:  # If immune then leave
                         continue
                     elif state == 0:  # If suceptable
@@ -47,11 +49,11 @@ class Sirs:
                     elif state == 2:  # If recovering
                         p = self.p3
                     if state == 0:
-                        if self.check_nn(i, j) and rand_ar[i][j] <= p:
-                            self.grid[i][j] = (self.grid[i][j] + 1) % 3
+                        if self.check_nn(y, x) and rand_ar[i][j] <= p:
+                            self.grid[x][y] = (self.grid[x][y] + 1) % 3
                     else:
-                        if rand_ar[i][j] <= p:
-                            self.grid[i][j] = (self.grid[i][j] + 1) % 3
+                        if rand_ar[x][y] <= p:
+                            self.grid[x][y] = (self.grid[x][y] + 1) % 3
         if anim:
             self.fig.clear()
             plt.imshow(self.grid, interpolation='nearest',
@@ -66,8 +68,8 @@ class Sirs:
                     infected += 1
         return infected / (self.N * self.M)
 
-    def run_test(self, resolution=10, sweeps_per_test=100,
-                measurements_per_test=10, show=True, save=True):
+    def phase_test(self, resolution=50, sweeps_per_test=25,
+                measurements_per_test=2, show=True, save=True):
         heatmap = np.zeros((resolution, resolution))  # , measurements_per_test))
         p1_ar = np.linspace(0, 1, resolution)
         p3_ar = np.linspace(0, 1, resolution)
@@ -88,18 +90,78 @@ class Sirs:
                     # heatmap[i][j][k] = test_results[k]
                 heatmap[i][j] = np.average(test_results)
         if show:
-            plt.imshow(heatmap, interpolation='nearest',
-                       cmap='brg', vmin=0, vmax=2)
+            plt.imshow(heatmap, interpolation='nearest', cmap='brg', extent=[0,1,0,1], origin='lower')
             plt.xlabel("P3")
             plt.ylabel("P1")
             plt.title("Sirs test")
             plt.show()
         if save:
-            np.savetxt('sirs_heatmap.txt', heatmap)
+            np.savetxt('sirs_heatmap1.txt', heatmap)
+
+    def contour_test(self, resolution=20, sweeps_per_test=10,
+                measurements_per_test=20, show=True, save=True):
+        heatmap = np.zeros((resolution, resolution))  # , measurements_per_test))
+        p1_ar = np.linspace(0, 1, resolution)
+        p3_ar = np.linspace(0, 1, resolution)
+        self.sweeps_per_test = sweeps_per_test
+        for i in range(resolution):
+            self.p1 = p1_ar[i]
+            for j in range(resolution):
+                sys.stdout.write("Simulation progress: %.1f%%: Part progress: %.1f%%\r"
+                                % ((100 * i / resolution), (100 * j / resolution)))
+                sys.stdout.flush()  # Prints progress of simulation.
+                self.p3 = p3_ar[j]
+                test_results = np.zeros(measurements_per_test)
+                for k in range(measurements_per_test):
+                    self.grid = np.random.choice([0, 1], size=(self.N, self.M),
+                                                p=[1/2, 1/2])
+                    self.update(1, sweeps=sweeps_per_test, anim=False)
+                    test_results[k] = self.measure_infected()
+                    # heatmap[i][j][k] = test_results[k]
+                heatmap[i][j] = (np.average(np.square(test_results)) - np.square(np.average(test_results))) / (self.N * self.M)
+        # varience = np.zeros(resolution)
+        # for i, row in enumerate(heatmap):
+        #     varience[i] = np.average(np.square(row)) - np.square(np.average(row))
+        if show:
+            plt.imshow(heatmap, interpolation='nearest', cmap='brg') # , vmin=0,
+            #            vmax=2, extent=[0,1,0,1], origin='lower')
+            # plt.plot(p1_ar, varience)
+            plt.xlabel("P1")
+            plt.ylabel("P3")
+            plt.title("Contour test")
+            plt.show()
+        if save:
+            np.savetxt('contour_test.txt', heatmap)
+
+
+    def immune_test(self, resolution=20, sweeps_per_test=1000, measurements_per_test=5,  # res: 50, spt: 100, mpt: 10
+                    show=True, save=True):
+        immune_ar = np.linspace(0, 1, resolution)
+        ys = np.zeros(resolution)
+        for i in range(resolution):
+            # self.p1 = immune_ar[i]
+            test_results = np.zeros(measurements_per_test)
+            sys.stdout.write("Simulation progress: %.1f%%\r"
+                            % ((100 * i / resolution)))
+            sys.stdout.flush()  # Prints progress of simulation.
+            for k in range(measurements_per_test):
+                frac = (1 - immune_ar[i]) / 2.
+                self.grid = np.random.choice([0, 1, 3], size=(self.N, self.M),
+                            p=[frac, frac, immune_ar[i]])
+                self.update(1, sweeps=sweeps_per_test, anim=False)
+                test_results[k] = self.measure_infected()
+            ys[i] = np.average(test_results)
+        if show:
+            plt.plot(immune_ar, ys)
+            plt.xlabel("Immune fraction")
+            plt.ylabel("Infected fraction")
+            plt.title("Slice test")
+            plt.show()
+        if save:
+            np.savetxt('sirs_slice_test.txt', ys)
 
     def run_animation(self):
         anim_running = True
-
         def onClick(event):
             nonlocal anim_running
             if anim_running:
@@ -108,16 +170,14 @@ class Sirs:
             else:
                 anim.event_source.start()
                 anim_running = True
-
         self.fig.canvas.mpl_connect('button_press_event', onClick)
-
         anim = FuncAnimation(self.fig, self.update, interval=5, frames=50)
         plt.show()
 
 
 def main(argv):
     if len(argv) != 7:
-        print("gol.py M N P1 P2 P3 Pimmune anim:0 / test:1")
+        print("gol.py M N P1 P2 P3 Pimmune anim:0 or phase:1 or slice:2 or contour:3 or immune:4")
         sys.exit()
     M = int(argv[0])
     N = int(argv[1])
@@ -129,8 +189,14 @@ def main(argv):
     if argv[6] == '0' or argv[6] == 'anim':
         s = Sirs(M, N, P1, P2, P3, immune=P4)
         s.run_animation()
-    elif argv[6] == '1' or argv[6] == 'test':
-        s = Sirs(M, N, P1, P2, P3, immune=P4, test=True)
-        s.run_test()
+    elif argv[6] == '1' or argv[6] == 'phase':
+        s = Sirs(M, N, p1=P1, p2=0.5, p3=P3, immune=0, test=True)
+        s.phase_test()
+    elif argv[6] == '2' or argv[6] == 'immune':
+        s = Sirs(M, N, p1=0.5, p2=0.5, p3=0.5, immune=P4, test=True)
+        s.immune_test()
+    elif argv[6] == '3' or argv[6] == 'contour':
+        s = Sirs(M, N, p1=0.5, p2=0.5, p3=0.5, immune=0, test=True)
+        s.contour_test()
 
 main(sys.argv[1:])
