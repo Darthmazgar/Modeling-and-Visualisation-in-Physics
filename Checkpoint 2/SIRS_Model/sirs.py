@@ -98,8 +98,8 @@ class Sirs:
         if save:
             np.savetxt('sirs_heatmap1.txt', heatmap)
 
-    def contour_test(self, resolution=20, sweeps_per_test=10,
-                measurements_per_test=20, show=True, save=True):
+    def contour_test(self, resolution=50, sweeps_per_test=50,
+                measurements_per_test=100, show=True, save=True):
         heatmap = np.zeros((resolution, resolution))  # , measurements_per_test))
         p1_ar = np.linspace(0, 1, resolution)
         p3_ar = np.linspace(0, 1, resolution)
@@ -112,9 +112,10 @@ class Sirs:
                 sys.stdout.flush()  # Prints progress of simulation.
                 self.p3 = p3_ar[j]
                 test_results = np.zeros(measurements_per_test)
+                self.grid = np.random.choice([0, 1], size=(self.N, self.M),
+                                            p=[1/2, 1/2])
+                self.update(1, sweeps=100, anim=False)
                 for k in range(measurements_per_test):
-                    self.grid = np.random.choice([0, 1], size=(self.N, self.M),
-                                                p=[1/2, 1/2])
                     self.update(1, sweeps=sweeps_per_test, anim=False)
                     test_results[k] = self.measure_infected()
                     # heatmap[i][j][k] = test_results[k]
@@ -123,7 +124,7 @@ class Sirs:
         # for i, row in enumerate(heatmap):
         #     varience[i] = np.average(np.square(row)) - np.square(np.average(row))
         if show:
-            plt.imshow(heatmap, interpolation='nearest', cmap='brg') # , vmin=0,
+            plt.imshow(heatmap, interpolation='nearest', cmap='brg', extent=[0,1,0,1], origin='lower') # , vmin=0,
             #            vmax=2, extent=[0,1,0,1], origin='lower')
             # plt.plot(p1_ar, varience)
             plt.xlabel("P1")

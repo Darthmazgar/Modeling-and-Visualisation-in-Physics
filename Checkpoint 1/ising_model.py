@@ -225,7 +225,14 @@ class Lattice:
             norm_fact = 1 / (self.N**2 * self.ds.kb * temp[i])
             chi[i] = norm_fact * (np.average(np.square(data[i])) - np.square(np.average(data[i])))
         if save:
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
 
+>>>>>>> 549693668ff2eff7fea2d221db63c4c59fa02c54
+=======
+
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
             np.savetxt('susceptibility.txt', chi)
 
     def heat_cap(self, save=True):
@@ -258,11 +265,11 @@ def main():
     # lattice.sys_magnetisation()
     # plt.show()
     #
-    lattice.animate()  # Animate live
+    # lattice.animate()  # Animate live
     #
-    # lattice.temperature_tests()  # Run Tests
-    # lattice.susceptibility()
-    # lattice.heat_cap()
+    lattice.temperature_tests()  # Run Tests
+    lattice.susceptibility()
+    lattice.heat_cap()
     #
     # lattice.sys_magnetisation()
     # lattice.temperature_test()

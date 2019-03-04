@@ -2,6 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f187a382-5075-4641-8e96-4d9eb8a23477" name="Default Changelist" comment="">
+<<<<<<< HEAD
+      <change afterPath="$PROJECT_DIR$/Checkpoint 1/cy_ising_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Checkpoint 1/energy.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Checkpoint 1/energy.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Checkpoint 1/heat_cap.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Checkpoint 1/heat_cap.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Checkpoint 1/magnetisation.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Checkpoint 1/magnetisation.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Checkpoint 1/susceptibility.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Checkpoint 1/susceptibility.txt" afterDir="false" />
+=======
       <change beforePath="$PROJECT_DIR$/Cython tests/build/lib.win-amd64-2.7/ising.pyd" beforeDir="false" afterPath="$PROJECT_DIR$/Cython tests/build/lib.win-amd64-2.7/ising.pyd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cython tests/build/temp.win-amd64-2.7/Release/ising.exp" beforeDir="false" afterPath="$PROJECT_DIR$/Cython tests/build/temp.win-amd64-2.7/Release/ising.exp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cython tests/build/temp.win-amd64-2.7/Release/ising.lib" beforeDir="false" afterPath="$PROJECT_DIR$/Cython tests/build/temp.win-amd64-2.7/Release/ising.lib" afterDir="false" />
@@ -11,6 +19,7 @@
       <change beforePath="$PROJECT_DIR$/Cython tests/ising.pyd" beforeDir="false" afterPath="$PROJECT_DIR$/Cython tests/ising.pyd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cython tests/ising.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/Cython tests/ising.pyx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cython tests/testing.py" beforeDir="false" afterPath="$PROJECT_DIR$/Cython tests/testing.py" afterDir="false" />
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -27,12 +36,20 @@
     <session id="1937385878">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
+<<<<<<< HEAD
+          <entry key="project.closed" value="1" />
+          <entry key="project.open.time.1" value="1" />
+          <entry key="project.open.time.12" value="1" />
+          <entry key="project.open.time.8" value="1" />
+          <entry key="project.opened" value="3" />
+=======
           <entry key="project.closed" value="2" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.11" value="1" />
           <entry key="project.open.time.12" value="1" />
           <entry key="project.open.time.8" value="1" />
           <entry key="project.opened" value="4" />
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -76,8 +93,13 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/Checkpoint 1/cy_ising_model.py">
               <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+                <state relative-caret-position="467">
+                  <caret line="130" column="25" selection-start-line="130" selection-start-column="25" selection-end-line="130" selection-end-column="25" />
+=======
                 <state relative-caret-position="184">
                   <caret line="114" column="34" lean-forward="true" selection-start-line="114" selection-start-column="34" selection-end-line="114" selection-end-column="34" />
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
                   <folding>
                     <element signature="e#0#18#0" expanded="true" />
                     <marker date="1548615898510" expanded="true" signature="121:126" ph="..." />
@@ -89,8 +111,13 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Checkpoint 1/ising_model.py">
               <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+                <state relative-caret-position="352">
+                  <caret line="51" column="28" lean-forward="true" selection-start-line="51" selection-start-column="28" selection-end-line="51" selection-end-column="28" />
+=======
                 <state relative-caret-position="960">
                   <caret line="51" column="28" selection-start-line="51" selection-start-column="28" selection-end-line="51" selection-end-column="28" />
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
                   <folding>
                     <element signature="e#0#10#0" expanded="true" />
                     <marker date="1548508211843" expanded="true" signature="8030:8035" ph="..." />
@@ -102,7 +129,11 @@
         </leaf>
       </split-first>
       <split-second>
+<<<<<<< HEAD
+        <leaf>
+=======
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/Checkpoint 1/cy_ising_model.py">
               <provider selected="true" editor-type-id="text-editor">
@@ -110,7 +141,14 @@
                   <caret line="47" column="18" selection-start-line="47" selection-start-column="18" selection-end-line="47" selection-end-column="18" />
                   <folding>
                     <element signature="e#0#18#0" expanded="true" />
+<<<<<<< HEAD
+                    <element signature="e#2550#2653#1" />
                     <marker date="1548615898510" expanded="true" signature="121:126" ph="..." />
+                    <marker date="1548615898510" expanded="true" signature="3058:4354" ph="..." />
+                    <marker date="1548615898510" expanded="true" signature="4462:4467" ph="..." />
+=======
+                    <marker date="1548615898510" expanded="true" signature="121:126" ph="..." />
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
                   </folding>
                 </state>
               </provider>
@@ -119,7 +157,11 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/matplotlib/cbook/__init__.py">
               <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+                <state relative-caret-position="170">
+=======
                 <state relative-caret-position="7140">
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
                   <caret line="387" selection-start-line="387" selection-end-line="387" />
                 </state>
               </provider>
@@ -128,7 +170,11 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/matplotlib/backend_bases.py">
               <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+                <state relative-caret-position="178">
+=======
                 <state relative-caret-position="36360">
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
                   <caret line="1841" selection-start-line="1841" selection-end-line="1841" />
                 </state>
               </provider>
@@ -137,7 +183,11 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/matplotlib/figure.py">
               <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+                <state relative-caret-position="178">
+=======
                 <state relative-caret-position="28880">
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
                   <caret line="1481" selection-start-line="1481" selection-end-line="1481" />
                 </state>
               </provider>
@@ -146,7 +196,11 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/matplotlib/artist.py">
               <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+                <state relative-caret-position="178">
+=======
                 <state relative-caret-position="740">
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
                   <caret line="54" selection-start-line="54" selection-end-line="54" />
                 </state>
               </provider>
@@ -155,7 +209,11 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/matplotlib/backends/backend_agg.py">
               <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+                <state relative-caret-position="178">
+=======
                 <state relative-caret-position="8180">
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
                   <caret line="432" selection-start-line="432" selection-end-line="432" />
                 </state>
               </provider>
@@ -164,7 +222,11 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$APPLICATION_HOME_DIR$/helpers/pycharm_matplotlib_backend/backend_interagg.py">
               <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+                <state relative-caret-position="170">
+=======
                 <state relative-caret-position="340">
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
                   <caret line="24" selection-start-line="24" selection-end-line="24" />
                 </state>
               </provider>
@@ -173,7 +235,11 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/matplotlib/pyplot.py">
               <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+                <state relative-caret-position="178">
+=======
                 <state relative-caret-position="4020">
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
                   <caret line="252" selection-start-line="252" selection-end-line="252" />
                 </state>
               </provider>
@@ -228,7 +294,29 @@
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
+<<<<<<< HEAD
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Modeling and Visualisaiton in Physics" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Modeling and Visualisaiton in Physics" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Modeling and Visualisaiton in Physics" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Modeling and Visualisaiton in Physics" type="462c0819:PsiDirectoryNode" />
+              <item name="Checkpoint 1" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+=======
     <panes />
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -438,6 +526,11 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/matplotlib/cbook/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+=======
     <entry file="file://$PROJECT_DIR$/Checkpoint 1/cy_ising_model(1).pyx" />
     <entry file="file://$PROJECT_DIR$/Checkpoint 1/setup.py" />
     <entry file="file://$PROJECT_DIR$/Checkpoint 1/ising_model.py">
@@ -454,56 +547,116 @@
     <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/matplotlib/cbook/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="7140">
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
           <caret line="387" selection-start-line="387" selection-end-line="387" />
         </state>
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/matplotlib/backend_bases.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+        <state relative-caret-position="178">
+=======
         <state relative-caret-position="36360">
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
           <caret line="1841" selection-start-line="1841" selection-end-line="1841" />
         </state>
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/matplotlib/figure.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+        <state relative-caret-position="178">
+=======
         <state relative-caret-position="28880">
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
           <caret line="1481" selection-start-line="1481" selection-end-line="1481" />
         </state>
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/matplotlib/artist.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+        <state relative-caret-position="178">
+=======
         <state relative-caret-position="740">
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
           <caret line="54" selection-start-line="54" selection-end-line="54" />
         </state>
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/matplotlib/backends/backend_agg.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+        <state relative-caret-position="178">
+=======
         <state relative-caret-position="8180">
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
           <caret line="432" selection-start-line="432" selection-end-line="432" />
         </state>
       </provider>
     </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/pycharm_matplotlib_backend/backend_interagg.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+        <state relative-caret-position="170">
+=======
         <state relative-caret-position="340">
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
           <caret line="24" selection-start-line="24" selection-end-line="24" />
         </state>
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/matplotlib/pyplot.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+        <state relative-caret-position="178">
+=======
         <state relative-caret-position="4020">
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
           <caret line="252" selection-start-line="252" selection-end-line="252" />
+        </state>
+      </provider>
+    </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/Checkpoint 1/cy_ising_model(1).pyx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40">
+          <caret line="2" column="10" lean-forward="true" selection-start-line="2" selection-start-column="10" selection-end-line="2" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Checkpoint 1/setup.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Checkpoint 1/ising_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="51" column="28" lean-forward="true" selection-start-line="51" selection-start-column="28" selection-end-line="51" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+            <marker date="1548508211843" expanded="true" signature="8030:8035" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Checkpoint 1/cy_ising_model.py">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="467">
+          <caret line="130" column="25" selection-start-line="130" selection-start-column="25" selection-end-line="130" selection-end-column="25" />
+=======
+    <entry file="file://$PROJECT_DIR$/Checkpoint 1/cy_ising_model.py">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="184">
           <caret line="114" column="34" lean-forward="true" selection-start-line="114" selection-start-column="34" selection-end-line="114" selection-end-column="34" />
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
           <folding>
             <element signature="e#0#18#0" expanded="true" />
             <marker date="1548615898510" expanded="true" signature="121:126" ph="..." />
