@@ -37,8 +37,10 @@ class Sirs:
             rand_ys = np.random.randint(self.M, size=self.M)
             for i in range(self.N):
                 for j in range(self.M):
-                    x = rand_xs[j]
-                    y = rand_ys[i]
+                    x = rand_xs[i]
+                    y = rand_ys[j]
+                    # x=i
+                    # y=j
                     state = self.grid[x][y]
                     if state == 3:  # If immune then leave
                         continue
@@ -49,7 +51,7 @@ class Sirs:
                     elif state == 2:  # If recovering
                         p = self.p3
                     if state == 0:
-                        if self.check_nn(y, x) and rand_ar[i][j] <= p:
+                        if self.check_nn(x, y) and rand_ar[i][j] <= p:
                             self.grid[x][y] = (self.grid[x][y] + 1) % 3
                     else:
                         if rand_ar[x][y] <= p:
@@ -177,7 +179,7 @@ class Sirs:
 
 def main(argv):
     if len(argv) != 7:
-        print("gol.py M N P1 P2 P3 Pimmune anim:0 or phase:1 or slice:2 or contour:3 or immune:4")
+        print("sirs.py M N P1 P2 P3 Pimmune anim:0 or phase:1 or slice:2 or contour:3 or immune:4")
         sys.exit()
     M = int(argv[0])
     N = int(argv[1])
@@ -187,7 +189,7 @@ def main(argv):
     P4 = float(argv[5])
 
     if argv[6] == '0' or argv[6] == 'anim':
-        s = Sirs(M, N, P1, P2, P3, immune=P4)
+        s = Sirs(M, N, p1=P1, p2=P2, p3=P3, immune=P4)
         s.run_animation()
     elif argv[6] == '1' or argv[6] == 'phase':
         s = Sirs(M, N, p1=P1, p2=0.5, p3=P3, immune=0, test=True)
