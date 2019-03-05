@@ -19,6 +19,10 @@ e_error = np.genfromtxt('sigma_bs_kaw.txt')
 magnetisation = [np.average(data[x]) for x in range(len(data))]
 energy = [np.average(en[x]) for x in range(len(en))]
 
+<<<<<<< HEAD:Cython tests/plotting.py
+
+=======
+>>>>>>> 08fb9bbdfad4c6d9ec591f15f0ae28181cab55ec:Checkpoint 1/Cython tests/src/plotting.py
 plt.plot(temp, magnetisation)
 plt.title("Magnetisation vs Temperature")
 plt.ylabel("Magnetisation")
@@ -34,8 +38,11 @@ plt.title("Energy vs Temperature")
 plt.ylabel("Energy")
 plt.xlabel("Temperature")
 plt.show()
+plt.errorbar(temp, c, yerr=e_error)
+=======
 plt.errorbar(temp, c, yerr=e_error, capsize=5)
 # plt.plot(temp, c)
+>>>>>>> 3c9f81b144df78d9439b670211603618f2ae8e24
 plt.title("Heat Capacity vs Temperature")
 plt.ylabel("Heat Capacity")
 plt.xlabel("Temperature")

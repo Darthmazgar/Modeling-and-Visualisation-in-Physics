@@ -7,45 +7,6 @@ import sys
 from libc.stdlib cimport abs, rand
 from libc.math cimport exp
 
-class IsingGrid:
-    """
-    An N*M grid of ones and negative ones is initialised the 'spin' of points
-    are changed acording to either Glauber or Kawasaki ising dynamics.
-    """
-    def __init__(self, int N, int M, float T, sv_ext, ds=0, float J=1,
-                float Kb=1, all_up=True, anim=True):
-        self.N = N  # Size of the grid N*M.
-        self.M = M
-        self.J = J  # Energy of an individual spin.
-        self.Kb = Kb  # Boltzmanns constantself.
-        self.T = T  # Temperature of the system.
-        self.ds = ds  # Synamic system used (0:Glauber, 1:Kawasaki).
-        self.sv_ext = sv_ext
-        self.steps_per_sweep = N * M
-        self.anim = anim  # Boolean if animating or not.
-        if anim:
-            self.fig = plt.figure()
-        if all_up:
-            self.grid = np.ones((N, M))  # Initialise all in the same state.
-        else:
-            self.grid = np.random.choice([-1, 1], size=(N, M))
-            # Random initilisation
-
-    def init_kaw_grid(self):
-        """
-        Initialise the grid with one hald all spin 1 and the other all spin -1.
-        Used for initialising Kawasaki tests.
-        """
-        ones = np.ones((int(self.N / 2), self.M))
-        neg_ones = ones * -1
-        self.grid = np.concatenate((ones, neg_ones))
-        return self.grid
-
-    def print_grid(self):
-        """ Prints the current state of the grid to the terminal. """
-        print(self.grid)
-
-    def imshow_grid(self):
         plt.imshow(self.grid, interpolation='sinc',
                    cmap='Blues', vmin=-1, vmax=1)
 
@@ -67,6 +28,10 @@ class IsingGrid:
             self.imshow_grid()
 
     def nn_check(self, int n, int m, int x, int y):
+<<<<<<< HEAD:Cython tests/ising.pyx
+
+        if n == x and (m == y or m == y+1 or m == y-1):
+=======
         """
         Check if two points (x,y) and (n,m) are nearest neighbours.
         :return: (Boolean) True if nearest neighbours; False otherwise.
@@ -75,6 +40,7 @@ class IsingGrid:
         N = self.N
         M = self.M
         if n == x and (m == y or m == (y+1) % N or m == (y-1) % M):
+>>>>>>> 08fb9bbdfad4c6d9ec591f15f0ae28181cab55ec:Checkpoint 1/Cython tests/src/ising.pyx
             return True
         elif m == y and (n == (x+1) % N or n == (x-1) % M):
             return True
@@ -169,6 +135,10 @@ class IsingGrid:
             expo = exp(-dE / (self.Kb * self.T))
             return expo
 
+    def temperature_tests(self, float t_min=1, float t_max=2.9, int data_points=20,
+                        int sweeps=100, int tests=10000, int sweeps_per_test=10,
+                        eng=True, mag=True, save=True):
+=======
     def temperature_tests(self, float t_min=1, float t_max=2.9,
                         int data_points=20, int sweeps=100, int tests=1000,
                         int sweeps_per_test=10, eng=True, mag=True, save=True):
@@ -177,6 +147,7 @@ class IsingGrid:
         measurments at each temperature step. The magnetisation and evergy of
         the system can then be calculated and stored for each test.
         """
+>>>>>>> 08fb9bbdfad4c6d9ec591f15f0ae28181cab55ec:Checkpoint 1/Cython tests/src/ising.pyx
         cdef double [:] temperature = np.linspace(t_min, t_max, data_points)
         cdef double [:,:] magnetisation = np.zeros((data_points, tests))
         cdef double [:, :] energy = np.zeros((data_points, tests))
@@ -241,6 +212,10 @@ class IsingGrid:
         cdef double [:] temp
         data = np.genfromtxt(('magnetisation'+ self.sv_ext +'.txt'))
         temp = np.genfromtxt(('temperature'+ self.sv_ext +'.txt'))
+<<<<<<< HEAD:Cython tests/ising.pyx
+        # cdef double [:] magnetisation, chi
+=======
+>>>>>>> 08fb9bbdfad4c6d9ec591f15f0ae28181cab55ec:Checkpoint 1/Cython tests/src/ising.pyx
         cdef int x, i
         magnetisation = [np.average(data[x]) for x in range(len(data))]
         chi = np.zeros(len(temp))
