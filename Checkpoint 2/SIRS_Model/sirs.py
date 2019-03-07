@@ -185,7 +185,7 @@ class Sirs:
         if show:
             plt.show()
 
-    def immune_test(self, resolution=100, sweeps_per_test=1000, measurements_per_test=2,  # res: 50, spt: 100, mpt: 10
+    def immune_test(self, resolution=100, sweeps_per_test=10, measurements_per_test=1000,  # res: 50, spt: 100, mpt: 10
                     show=True, save=True):
         immune_ar = np.linspace(0, 1, resolution)
         ys = np.zeros(resolution)
@@ -194,10 +194,9 @@ class Sirs:
             test_results = np.zeros(measurements_per_test)
             sys.stdout.write("Simulation progress: %.1f%%\r" % ((100 * i / resolution)))
             sys.stdout.flush()  # Prints progress of simulation.
-
+            frac = (1 - immune_ar[i]) / 2.
+            self.grid = np.random.choice([0, 1, 3], size=(self.N, self.M), p=[frac, frac, immune_ar[i]])
             for j in range(measurements_per_test):
-                frac = (1 - immune_ar[i]) / 2.
-                self.grid = np.random.choice([0, 1, 3], size=(self.N, self.M), p=[frac, frac, immune_ar[i]])
                 self.update(1, sweeps_per_test, anim=False)
                 test_results[j] = self.measure_infected()
             ys[i] = np.average(test_results)
@@ -211,6 +210,7 @@ class Sirs:
             plt.show()
         if save:
             np.savetxt('sirs_immune_test.txt', ys)
+            np.savetxt('immuune_test_errors.txt', yerr)
 
     def run_animation(self):
         anim_running = True
