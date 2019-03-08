@@ -130,10 +130,8 @@ class GameOfLife:
                             count += self.grid[(x + self.N) % self.N]\
                                               [(y + self.M) % self.M]
                     if state == 0 and count == 3:
-                        # print("Born: %d" % count)
                         self.new_grid[i][j] = 1
                     elif state == 1 and (count < 2 or count > 3):
-                        # print("Died: %d" % count)
                         self.new_grid[i][j] = 0
             self.grid = self.new_grid.copy()  # Have to use .copy!
         if self.set_state == 'glider' and self.test:
