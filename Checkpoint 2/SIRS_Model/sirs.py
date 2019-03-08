@@ -70,8 +70,8 @@ class Sirs:
                     infected += 1
         return infected / (self.N * self.M)
 
-    def phase_test(self, resolution=20, sweeps_per_test=25,
-                measurements_per_test=2, show=True, save=True):
+    def phase_test(self, resolution=20, sweeps_per_test=10,
+                measurements_per_test=100, show=True, save=True):
         heatmap = np.zeros((resolution, resolution))  # , measurements_per_test))
         p1_ar = np.linspace(0, 1, resolution)
         p3_ar = np.linspace(0, 1, resolution)
@@ -84,9 +84,10 @@ class Sirs:
                 sys.stdout.flush()  # Prints progress of simulation.
                 self.p3 = p3_ar[j]
                 test_results = np.zeros(measurements_per_test)
+                self.grid = np.random.choice([0, 1], size=(self.N, self.M),
+                            p=[1/2, 1/2])
+                self.update(1, 100, anim=False)
                 for k in range(measurements_per_test):
-                    self.grid = np.random.choice([0, 1], size=(self.N, self.M),
-                                                p=[1/2, 1/2])
                     self.update(1, sweeps=sweeps_per_test, anim=False)
                     test_results[k] = self.measure_infected()
                     # heatmap[i][j][k] = test_results[k]
@@ -96,12 +97,13 @@ class Sirs:
             plt.xlabel("P3")
             plt.ylabel("P1")
             plt.title("Sirs test")
+            plt.savefig('phase_test_new_sweeps.png')
             plt.show()
         if save:
-            np.savetxt('sirs_heatmap1.txt', heatmap)
+            np.savetxt('sirs_heatmap_new_sweeps.txt', heatmap)
 
-    def contour_test(self, resolution=10, sweeps_per_test=50,
-                measurements_per_test=10, show=True, save=True):
+    def contour_test(self, resolution=20, sweeps_per_test=10,
+                measurements_per_test=100, show=True, save=True):
         heatmap = np.zeros((resolution, resolution))  # , measurements_per_test))
         p1_ar = np.linspace(0, 1, resolution)
         p3_ar = np.linspace(0, 1, resolution)
@@ -160,7 +162,7 @@ class Sirs:
             plt.title("Slice test (P2=0.5, P3=0.5)")
             plt.show()
         if save:
-            np.savetxt('contour_test.txt', var)
+            np.savetxt('slice_test.txt', var)
 
     def waves_test(self, resolution=250, sweeps_per_test=10,
                     show=True, save=True):
@@ -183,7 +185,7 @@ class Sirs:
         if show:
             plt.show()
 
-    def immune_test(self, resolution=100, sweeps_per_test=1000, measurements_per_test=2,  # res: 50, spt: 100, mpt: 10
+    def immune_test(self, resolution=100, sweeps_per_test=10, measurements_per_test=1000,  # res: 50, spt: 100, mpt: 10
                     show=True, save=True):
         immune_ar = np.linspace(0, 1, resolution)
         ys = np.zeros(resolution)
@@ -192,10 +194,9 @@ class Sirs:
             test_results = np.zeros(measurements_per_test)
             sys.stdout.write("Simulation progress: %.1f%%\r" % ((100 * i / resolution)))
             sys.stdout.flush()  # Prints progress of simulation.
-
+            frac = (1 - immune_ar[i]) / 2.
+            self.grid = np.random.choice([0, 1, 3], size=(self.N, self.M), p=[frac, frac, immune_ar[i]])
             for j in range(measurements_per_test):
-                frac = (1 - immune_ar[i]) / 2.
-                self.grid = np.random.choice([0, 1, 3], size=(self.N, self.M), p=[frac, frac, immune_ar[i]])
                 self.update(1, sweeps_per_test, anim=False)
                 test_results[j] = self.measure_infected()
             ys[i] = np.average(test_results)
@@ -209,6 +210,7 @@ class Sirs:
             plt.show()
         if save:
             np.savetxt('sirs_immune_test.txt', ys)
+            np.savetxt('immuune_test_errors.txt', yerr)
 
     def run_animation(self):
         anim_running = True
