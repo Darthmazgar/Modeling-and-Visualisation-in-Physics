@@ -25,9 +25,9 @@ class Sirs:
         :return: (bool): True if at least one nearest neighbour is infected;
                         False otherwise.
         """
-        if self.grid[(i + 1 +self.N) % self.N][j] == 1:
+        if self.grid[(i + 1 + self.N) % self.N][j] == 1:
             return True
-        elif self.grid[(i - 1 +self.N) % self.N][j] == 1:
+        elif self.grid[(i - 1 + self.N) % self.N][j] == 1:
             return True
         elif self.grid[i][(j + 1 + self.M) % self.M] == 1:
             return True
@@ -41,15 +41,13 @@ class Sirs:
         Runs the simulation for a given number of sweeps.
         """
         for k in range(sweeps):
-            rand_ar = np.random.random((self.N,self.M))  # Gen probabilities.
+            rand_ar = np.random.uniform(size=(self.N,self.M))  # Gen probabilities.
             rand_xs = np.random.randint(self.N, size=self.N)
             rand_ys = np.random.randint(self.M, size=self.M)
             for i in range(self.N):
                 for j in range(self.M):
                     x = rand_xs[i]
                     y = rand_ys[j]
-                    # x=i
-                    # y=j
                     state = self.grid[x][y]
                     if state == 3:  # If immune then leave
                         continue
@@ -60,10 +58,10 @@ class Sirs:
                     elif state == 2:  # If recovering
                         p = self.p3
                     if state == 0:
-                        if self.check_nn(x, y) and rand_ar[i][j] <= p:
+                        if self.check_nn(x, y) and rand_ar[i][j] < p:
                             self.grid[x][y] = (self.grid[x][y] + 1) % 3
                     else:
-                        if rand_ar[x][y] <= p:
+                        if rand_ar[i][j] < p:
                             self.grid[x][y] = (self.grid[x][y] + 1) % 3
         if anim:
             self.fig.clear()
@@ -83,7 +81,7 @@ class Sirs:
                     infected += 1
         return infected / (self.N * self.M)
 
-    def phase_test(self, resolution=20, sweeps_per_test=10,
+    def phase_test(self, resolution=20, sweeps_per_test=10,  # 20 10 100
                 measurements_per_test=100, show=True, save=True):
         heatmap = np.zeros((resolution, resolution))  # , measurements_per_test))
         p1_ar = np.linspace(0, 1, resolution)
@@ -135,9 +133,11 @@ class Sirs:
                 for k in range(measurements_per_test):
                     self.update(1, sweeps=sweeps_per_test, anim=False)
                     test_results[k] = self.measure_infected()
-                heatmap[i][j] = (np.average(np.square(test_results)) - np.square(np.average(test_results))) / (self.N * self.M)
+                heatmap[i][j] = (np.average(np.square(test_results))
+                    - np.square(np.average(test_results))) / (self.N * self.M)
         if show:
-            plt.imshow(heatmap, interpolation='nearest', cmap='brg', extent=[0,1,0,1], origin='lower') # , vmin=0,
+            plt.imshow(heatmap, interpolation='nearest', cmap='brg',
+                        extent=[0,1,0,1], origin='lower') # , vmin=0,
             plt.xlabel("P1")
             plt.ylabel("P3")
             plt.title("Contour test")
@@ -146,20 +146,15 @@ class Sirs:
             np.savetxt('contour_test.txt', heatmap)
 
     def slice_test(self, resolution=50, sweeps_per_test=10,
-                measurements_per_test=200, show=True, save=True):
+                measurements_per_test=1000, show=True, save=True):
         p1_ar = np.linspace(0.2, 0.5, resolution)
         var = np.zeros(resolution)
         self.sweeps_per_test = sweeps_per_test
         for i in range(resolution):
             self.p1 = p1_ar[i]  # Set p1 value to next.
-
-            # sys.stdout.write("Simulation progress: %.1f%%\r"
-            #                 % ((100 * i / resolution)))
-            # sys.stdout.flush()  # Prints progress of simulation.
-
             test_results = np.zeros(measurements_per_test)
-            self.grid = np.random.choice([0, 1], size=(self.N, self.M),  # Reset the grid
-                                        p=[1/2, 1/2])
+            self.grid = np.random.choice([0, 1], size=(self.N, self.M),
+                                        p=[1/2, 1/2]) # Reset the grid
             self.update(1, sweeps=100, anim=False)  # Let sys settle
             for k in range(measurements_per_test):
                 sys.stdout.write("Simulation progress: %.1f%%: Part progress: %.1f%%\r"
@@ -167,7 +162,8 @@ class Sirs:
                 sys.stdout.flush()  # Prints progress of simulation.
                 self.update(1, sweeps=sweeps_per_test, anim=False)  # Run for so many sweeps
                 test_results[k] = self.measure_infected()  # measure infected
-            var[i] = (np.average(np.square(test_results)) - np.square(np.average(test_results))) / (self.N * self.M)
+            var[i] = (np.average(np.square(test_results))
+                    - np.square(np.average(test_results))) / (self.N * self.M)
         if show:
             plt.plot(p1_ar, var)
             plt.xlabel("P1")
@@ -177,7 +173,7 @@ class Sirs:
         if save:
             np.savetxt('slice_test.txt', var)
 
-    def waves_test(self, resolution=250, sweeps_per_test=10,
+    def waves_test(self, resolution=200, sweeps_per_test=5,
                     show=True, save=True):
         infected_ar = np.zeros(resolution)
         sweeps_ar = np.linspace(0, resolution*sweeps_per_test, resolution)
