@@ -257,4 +257,5 @@ def main(argv):
         s = Sirs(M, N, p1=P1, p2=P2, p3=P3, immune=P4, test=True)
         s.waves_test()
 
-main(sys.argv[1:])
+if __name__ == '__main__':
+    main(sys.argv[1:])
