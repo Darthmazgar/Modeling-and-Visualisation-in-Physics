@@ -237,6 +237,10 @@ class Sirs:
 
 
 def main(argv):
+    # python sirs.py 50 50 0.2 0.5 0.5 0 anim    # Absorbing
+    # python sirs.py 50 50 0.9 0.2 0.2 0 anim    # Dynamic equilibrium
+    # python sirs.py 100 100 .8 .1 .012 0 anim   # Waves
+
     if len(argv) != 7:
         print("sirs.py M N P1 P2 P3 Pimmune anim:0 or phase:1 or slice:2 or contour:3 or immune:4 or 5:waves")
         sys.exit()
