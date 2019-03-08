@@ -7,9 +7,9 @@ class Sirs:
     def __init__(self, N, M, p1, p2, p3, immune=0, test=False, anim=True):
         self.N = N
         self.M = M
-        self.p1 = p1
-        self.p2 = p2
-        self.p3 = p3
+        self.p1 = p1  # Probability of going from suceptable to infected.
+        self.p2 = p2  # Probability of going from infected to recovered.
+        self.p3 = p3  # Probability of going from recovered to suceptable.
         self.test = test
         # 0: suceptable, 1: infected, 2: recovered.
         frac = (1 - immune) / 2.
@@ -19,6 +19,12 @@ class Sirs:
             self.fig = plt.figure()
 
     def check_nn(self, i, j):
+        """
+        Check neighbours in a '+' shape around the point (i, j) to see if they
+        are infected.
+        :return: (bool): True if at least one nearest neighbour is infected;
+                        False otherwise.
+        """
         if self.grid[(i + 1 +self.N) % self.N][j] == 1:
             return True
         elif self.grid[(i - 1 +self.N) % self.N][j] == 1:
@@ -31,6 +37,9 @@ class Sirs:
             return False
 
     def update(self, k, sweeps=1, anim=True):
+        """
+        Runs the simulation for a given number of sweeps.
+        """
         for k in range(sweeps):
             rand_ar = np.random.random((self.N,self.M))  # Gen probabilities.
             rand_xs = np.random.randint(self.N, size=self.N)
@@ -63,6 +72,10 @@ class Sirs:
         return self.grid
 
     def measure_infected(self):
+        """
+        Counts the number of infected cells in the grid and returns the fraction
+        of infected cells.
+        """
         infected = 0
         for i in range(self.N):
             for j in range(self.M):
