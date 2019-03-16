@@ -7,7 +7,7 @@ import sys
 class CahnHil:
     def __init__(self, N, dx=.7, dt=.7, m=.1, k=.1, a=.1, b=.1, phi_0=0,
                 anim=True, f_test=False):
-        print("Running pyx")
+        print("\nRunning pyx")
         self.N = N
         self.dt = dt
         self.dx = dx
@@ -15,6 +15,7 @@ class CahnHil:
         self.k = k
         self.a = a
         self.b = b
+        self.phi_0 = phi_0
         self.steps_per_update = 50
         flucs = 0.01
         self.grid = np.random.uniform(low=-flucs+phi_0, high=flucs+phi_0,
@@ -44,12 +45,10 @@ class CahnHil:
             self.fig.clear()
             plt.imshow(self.grid, interpolation='nearest',
                        cmap='coolwarm', vmin=-1, vmax=1, origin='lower')
+            plt.title("Cahn Hilliard Equation")
+            plt.xlabel("$dx=%.1f, dt=%.1f, \phi_{0}=%.1f$"
+                    % (self.dx, self.dt, self.phi_0))
         return self.grid
-
-    def display(self, sweeps):
-        plt.imshow(self.grid, interpolation='nearest',
-                   cmap='coolwarm', vmin=-1, vmax=1, origin='lower')
-        plt.show()
 
     def add_drop(self, int size, int x, int y):
         cdef int i, j, dens, r

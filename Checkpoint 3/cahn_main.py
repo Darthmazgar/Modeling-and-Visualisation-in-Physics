@@ -21,7 +21,9 @@ def main(args):
         ch = CahnHil(N, dt=dt, dx=dx, phi_0=phi_0)
         if len(args) == 6:
             for i in range(int(args[5])):
-                ch.add_drop(np.random.uniform()*15, np.random.randint(N), np.random.randint(N))
+                ch.add_drop(np.random.uniform()*15, np.random.randint(N),
+                        np.random.randint(N))
+        ch.steps_per_update = 100
         ch.run_animation()
     elif args[4] == '1' or args[4] == 'test':
         cd = CahnHil(N, dt=dt, dx=dx, f_test=True,phi_0=phi_0)
@@ -31,7 +33,8 @@ def main(args):
         cd = CahnHil(N, dt=dt, dx=dx, f_test=True,phi_0=phi_0)
         cd.steps_per_update = sweeps
         cd.update(1, anim=args[4])
-        cd.display(sweeps)
+        # cd.display(sweeps)
+        plt.show()
 
 
 if __name__ == '__main__':
