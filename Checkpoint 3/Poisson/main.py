@@ -19,13 +19,10 @@ def main(args):
     p = Poisson(N, 0.1)
     # print(p.grid)
     p.add_point_charge(int(N/2), int(N/2), int(N/2))
-    # for i in range(1):
-    #     p.update(1)
-    #
-    p.zero_boundaries()
+    p.update(1, 10)
+    # print(p.phi_grid)
     print(p.rho_grid)
-    print("\n\n")
-    print(p.phi_grid)
+
 
     # p.run_animation()
 

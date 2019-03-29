@@ -16,7 +16,7 @@ class CahnHil:
         self.a = a
         self.b = b
         self.phi_0 = phi_0
-        self.steps_per_update = 50
+        self.steps_per_update = 100
         flucs = 0.01
         self.grid = np.random.uniform(low=-flucs+phi_0, high=flucs+phi_0,
                                     size=(self.N, self.N))
@@ -37,10 +37,12 @@ class CahnHil:
                 sys.stdout.write("Simulation progress: %.1f%%\r"
                                 % ((100 * z / self.steps_per_update)))
                 sys.stdout.flush()  # Prints progress of simulation.
+
             for i in range(self.N):
                 for j in range(self.N):
                     self.next_grid[i][j] = self.next_phi(i, j)
             self.grid = self.next_grid.copy()
+
         if anim == 'True' or anim == 'run':
             self.fig.clear()
             plt.imshow(self.grid, interpolation='nearest',
@@ -91,7 +93,6 @@ class CahnHil:
 
     def grad(self, int i, int j):
         cdef double t1, t2
-
         t1 = (1/2) * (self.grid[(i+1+self.N) % self.N][j] - self.grid[(i-1+self.N) % self.N][j])
         t2 = (1/2) * (self.grid[i][(j+1+self.N) % self.N] - self.grid[i][(j-1+self.N) % self.N])
         grad_sq = (t1 + t2)**2
