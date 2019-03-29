@@ -27,7 +27,7 @@ class Poisson:
         for i in range(self.N):
             for j in range(self.N):
                 for k in range(self.N):
-                    self.phi_grid[i][j][k] = self.next_phi(i, j, k)
+                    self.phi_grid[i][j][k] = self.jacobi_update(i, j, k)
                     # self.next_phi(i, j, k)
 
         self.zero_boundaries()
@@ -40,17 +40,12 @@ class Poisson:
         self.phi_grid[0, :, :] = 0
         self.phi_grid[-1, :, :] = 0
 
-    def next_phi(self, int i, int j, int k):
+    def jacobi_update(self, int i, int j, int k):
         cdef double l1, l2, l3, l4
         l1 = self.phi_grid[(i + 1 + self.N) % self.N][j][k] + self.phi_grid[(i - 1 + self.N) % self.N][j][k]
         l2 = self.phi_grid[i][(j + 1 + self.N) % self.N][k] + self.phi_grid[i][(j - 1 + self.N) % self.N][k]
         l3 = self.phi_grid[i][j][(k + 1 + self.N) % self.N] + self.phi_grid[i][j][(k - 1 + self.N) % self.N]
         l4 = self.dx**2 * self.rho_grid[i][j][k]
-        # print("\n%.0f" % self.rho_grid[i][j][k])
-        # print("calc")
-        # print((1/6.) * self.dx**2 * self.rho_grid[i][j][k])
-        # val = (1/6.) * (l1 + l2 + l3 + l4)
-        # print(val)
         return (1/6.) * (l1 + l2 + l3 + l4)
 
     def animate(self):

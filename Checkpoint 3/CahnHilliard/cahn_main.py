@@ -27,8 +27,8 @@ def main(args):
         ch.run_animation()
     elif args[4] == '1' or args[4] == 'test':
         ch = CahnHil(N, dt=dt, dx=dx, f_test=True,phi_0=phi_0)
-        ch.steps_per_update = 50
-        ch.run_f_test(50)
+        ch.steps_per_update = 200
+        ch.run_f_test(100)
     elif args[4] == '2' or args[4] == 'run':
         sweeps = int(input("Run for how many sweeps?\n"))
         ch = CahnHil(N, dt=dt, dx=dx, f_test=True,phi_0=phi_0, anim='True')

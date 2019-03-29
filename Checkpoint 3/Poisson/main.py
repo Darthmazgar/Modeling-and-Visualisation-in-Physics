@@ -22,11 +22,12 @@ def main(args):
     # for i in range(1):
     #     p.update(1)
     #
-    # p.zero_boundaries()
-    # print(p.rho_grid)
-    # print("\n\n\n\n")
-    # print(p.phi_grid)
-    p.run_animation()
+    p.zero_boundaries()
+    print(p.rho_grid)
+    print("\n\n")
+    print(p.phi_grid)
+
+    # p.run_animation()
 
 
 

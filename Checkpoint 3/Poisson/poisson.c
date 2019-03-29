@@ -833,7 +833,7 @@ static const char *__pyx_f[] = {
 /*--- Type declarations ---*/
 struct __pyx_obj_7poisson___pyx_scope_struct__run_animation;
 
-/* "poisson.pyx":60
+/* "poisson.pyx":55
  *         plt.show()
  * 
  *     def run_animation(self):             # <<<<<<<<<<<<<<
@@ -1319,7 +1319,6 @@ static const char __pyx_k_poisson[] = "poisson";
 static const char __pyx_k_prepare[] = "__prepare__";
 static const char __pyx_k_accuracy[] = "accuracy";
 static const char __pyx_k_interval[] = "interval";
-static const char __pyx_k_next_phi[] = "next_phi";
 static const char __pyx_k_phi_grid[] = "phi_grid";
 static const char __pyx_k_qualname[] = "__qualname__";
 static const char __pyx_k_rho_grid[] = "rho_grid";
@@ -1330,17 +1329,18 @@ static const char __pyx_k_poisson_pyx[] = "poisson.pyx";
 static const char __pyx_k_anim_running[] = "anim_running";
 static const char __pyx_k_event_source[] = "event_source";
 static const char __pyx_k_FuncAnimation[] = "FuncAnimation";
+static const char __pyx_k_jacobi_update[] = "jacobi_update";
 static const char __pyx_k_run_animation[] = "run_animation";
 static const char __pyx_k_Poisson___init[] = "Poisson.__init__";
 static const char __pyx_k_Poisson_update[] = "Poisson.update";
 static const char __pyx_k_Poisson_animate[] = "Poisson.animate";
 static const char __pyx_k_zero_boundaries[] = "zero_boundaries";
-static const char __pyx_k_Poisson_next_phi[] = "Poisson.next_phi";
 static const char __pyx_k_add_point_charge[] = "add_point_charge";
 static const char __pyx_k_matplotlib_pyplot[] = "matplotlib.pyplot";
 static const char __pyx_k_button_press_event[] = "button_press_event";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_matplotlib_animation[] = "matplotlib.animation";
+static const char __pyx_k_Poisson_jacobi_update[] = "Poisson.jacobi_update";
 static const char __pyx_k_Poisson_run_animation[] = "Poisson.run_animation";
 static const char __pyx_k_Poisson_zero_boundaries[] = "Poisson.zero_boundaries";
 static const char __pyx_k_Poisson_add_point_charge[] = "Poisson.add_point_charge";
@@ -1354,7 +1354,7 @@ static PyObject *__pyx_n_s_Poisson;
 static PyObject *__pyx_n_s_Poisson___init;
 static PyObject *__pyx_n_s_Poisson_add_point_charge;
 static PyObject *__pyx_n_s_Poisson_animate;
-static PyObject *__pyx_n_s_Poisson_next_phi;
+static PyObject *__pyx_n_s_Poisson_jacobi_update;
 static PyObject *__pyx_n_s_Poisson_run_animation;
 static PyObject *__pyx_n_s_Poisson_run_animation_locals_onC;
 static PyObject *__pyx_n_s_Poisson_update;
@@ -1388,6 +1388,7 @@ static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_init;
 static PyObject *__pyx_n_s_interval;
 static PyObject *__pyx_n_s_j;
+static PyObject *__pyx_n_s_jacobi_update;
 static PyObject *__pyx_n_s_k;
 static PyObject *__pyx_n_s_l1;
 static PyObject *__pyx_n_s_l2;
@@ -1400,7 +1401,6 @@ static PyObject *__pyx_n_s_metaclass;
 static PyObject *__pyx_n_s_module;
 static PyObject *__pyx_n_s_mpl_connect;
 static PyObject *__pyx_n_s_name;
-static PyObject *__pyx_n_s_next_phi;
 static PyObject *__pyx_n_s_np;
 static PyObject *__pyx_n_s_numpy;
 static PyObject *__pyx_n_s_onClick;
@@ -1427,7 +1427,7 @@ static PyObject *__pyx_pf_7poisson_7Poisson___init__(CYTHON_UNUSED PyObject *__p
 static PyObject *__pyx_pf_7poisson_7Poisson_2add_point_charge(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, int __pyx_v_i, int __pyx_v_j, int __pyx_v_k); /* proto */
 static PyObject *__pyx_pf_7poisson_7Poisson_4update(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, int __pyx_v_k); /* proto */
 static PyObject *__pyx_pf_7poisson_7Poisson_6zero_boundaries(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_7poisson_7Poisson_8next_phi(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, int __pyx_v_i, int __pyx_v_j, int __pyx_v_k); /* proto */
+static PyObject *__pyx_pf_7poisson_7Poisson_8jacobi_update(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, int __pyx_v_i, int __pyx_v_j, int __pyx_v_k); /* proto */
 static PyObject *__pyx_pf_7poisson_7Poisson_10animate(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_7poisson_7Poisson_13run_animation_onClick(PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_event); /* proto */
 static PyObject *__pyx_pf_7poisson_7Poisson_12run_animation(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
@@ -2197,7 +2197,7 @@ static PyObject *__pyx_pf_7poisson_7Poisson_4update(CYTHON_UNUSED PyObject *__py
  *         for i in range(self.N):
  *             for j in range(self.N):             # <<<<<<<<<<<<<<
  *                 for k in range(self.N):
- *                     self.phi_grid[i][j][k] = self.next_phi(i, j, k)
+ *                     self.phi_grid[i][j][k] = self.jacobi_update(i, j, k)
  */
     __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 28, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
@@ -2251,7 +2251,7 @@ static PyObject *__pyx_pf_7poisson_7Poisson_4update(CYTHON_UNUSED PyObject *__py
  *         for i in range(self.N):
  *             for j in range(self.N):
  *                 for k in range(self.N):             # <<<<<<<<<<<<<<
- *                     self.phi_grid[i][j][k] = self.next_phi(i, j, k)
+ *                     self.phi_grid[i][j][k] = self.jacobi_update(i, j, k)
  *                     # self.next_phi(i, j, k)
  */
       __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_N); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 29, __pyx_L1_error)
@@ -2265,11 +2265,11 @@ static PyObject *__pyx_pf_7poisson_7Poisson_4update(CYTHON_UNUSED PyObject *__py
         /* "poisson.pyx":30
  *             for j in range(self.N):
  *                 for k in range(self.N):
- *                     self.phi_grid[i][j][k] = self.next_phi(i, j, k)             # <<<<<<<<<<<<<<
+ *                     self.phi_grid[i][j][k] = self.jacobi_update(i, j, k)             # <<<<<<<<<<<<<<
  *                     # self.next_phi(i, j, k)
  * 
  */
-        __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_next_phi); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 30, __pyx_L1_error)
+        __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_jacobi_update); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 30, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
         __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_k); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 30, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_12);
@@ -2341,7 +2341,7 @@ static PyObject *__pyx_pf_7poisson_7Poisson_4update(CYTHON_UNUSED PyObject *__py
  *         for i in range(self.N):
  *             for j in range(self.N):             # <<<<<<<<<<<<<<
  *                 for k in range(self.N):
- *                     self.phi_grid[i][j][k] = self.next_phi(i, j, k)
+ *                     self.phi_grid[i][j][k] = self.jacobi_update(i, j, k)
  */
     }
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -2504,7 +2504,7 @@ static PyObject *__pyx_pf_7poisson_7Poisson_6zero_boundaries(CYTHON_UNUSED PyObj
  *         self.phi_grid[0, :, :] = 0
  *         self.phi_grid[-1, :, :] = 0             # <<<<<<<<<<<<<<
  * 
- *     def next_phi(self, int i, int j, int k):
+ *     def jacobi_update(self, int i, int j, int k):
  */
   __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_phi_grid); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 41, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -2535,22 +2535,22 @@ static PyObject *__pyx_pf_7poisson_7Poisson_6zero_boundaries(CYTHON_UNUSED PyObj
 /* "poisson.pyx":43
  *         self.phi_grid[-1, :, :] = 0
  * 
- *     def next_phi(self, int i, int j, int k):             # <<<<<<<<<<<<<<
+ *     def jacobi_update(self, int i, int j, int k):             # <<<<<<<<<<<<<<
  *         cdef double l1, l2, l3, l4
  *         l1 = self.phi_grid[(i + 1 + self.N) % self.N][j][k] + self.phi_grid[(i - 1 + self.N) % self.N][j][k]
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_7poisson_7Poisson_9next_phi(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_7poisson_7Poisson_9next_phi = {"next_phi", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_7poisson_7Poisson_9next_phi, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_7poisson_7Poisson_9next_phi(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_7poisson_7Poisson_9jacobi_update(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_7poisson_7Poisson_9jacobi_update = {"jacobi_update", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_7poisson_7Poisson_9jacobi_update, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_7poisson_7Poisson_9jacobi_update(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
   int __pyx_v_i;
   int __pyx_v_j;
   int __pyx_v_k;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("next_phi (wrapper)", 0);
+  __Pyx_RefNannySetupContext("jacobi_update (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_i,&__pyx_n_s_j,&__pyx_n_s_k,0};
     PyObject* values[4] = {0,0,0,0};
@@ -2578,23 +2578,23 @@ static PyObject *__pyx_pw_7poisson_7Poisson_9next_phi(PyObject *__pyx_self, PyOb
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_i)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("next_phi", 1, 4, 4, 1); __PYX_ERR(0, 43, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("jacobi_update", 1, 4, 4, 1); __PYX_ERR(0, 43, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_j)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("next_phi", 1, 4, 4, 2); __PYX_ERR(0, 43, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("jacobi_update", 1, 4, 4, 2); __PYX_ERR(0, 43, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_k)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("next_phi", 1, 4, 4, 3); __PYX_ERR(0, 43, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("jacobi_update", 1, 4, 4, 3); __PYX_ERR(0, 43, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "next_phi") < 0)) __PYX_ERR(0, 43, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "jacobi_update") < 0)) __PYX_ERR(0, 43, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
       goto __pyx_L5_argtuple_error;
@@ -2611,20 +2611,20 @@ static PyObject *__pyx_pw_7poisson_7Poisson_9next_phi(PyObject *__pyx_self, PyOb
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("next_phi", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 43, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("jacobi_update", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 43, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("poisson.Poisson.next_phi", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("poisson.Poisson.jacobi_update", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_7poisson_7Poisson_8next_phi(__pyx_self, __pyx_v_self, __pyx_v_i, __pyx_v_j, __pyx_v_k);
+  __pyx_r = __pyx_pf_7poisson_7Poisson_8jacobi_update(__pyx_self, __pyx_v_self, __pyx_v_i, __pyx_v_j, __pyx_v_k);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_7poisson_7Poisson_8next_phi(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, int __pyx_v_i, int __pyx_v_j, int __pyx_v_k) {
+static PyObject *__pyx_pf_7poisson_7Poisson_8jacobi_update(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, int __pyx_v_i, int __pyx_v_j, int __pyx_v_k) {
   double __pyx_v_l1;
   double __pyx_v_l2;
   double __pyx_v_l3;
@@ -2637,10 +2637,10 @@ static PyObject *__pyx_pf_7poisson_7Poisson_8next_phi(CYTHON_UNUSED PyObject *__
   PyObject *__pyx_t_4 = NULL;
   PyObject *__pyx_t_5 = NULL;
   double __pyx_t_6;
-  __Pyx_RefNannySetupContext("next_phi", 0);
+  __Pyx_RefNannySetupContext("jacobi_update", 0);
 
   /* "poisson.pyx":45
- *     def next_phi(self, int i, int j, int k):
+ *     def jacobi_update(self, int i, int j, int k):
  *         cdef double l1, l2, l3, l4
  *         l1 = self.phi_grid[(i + 1 + self.N) % self.N][j][k] + self.phi_grid[(i - 1 + self.N) % self.N][j][k]             # <<<<<<<<<<<<<<
  *         l2 = self.phi_grid[i][(j + 1 + self.N) % self.N][k] + self.phi_grid[i][(j - 1 + self.N) % self.N][k]
@@ -2778,7 +2778,7 @@ static PyObject *__pyx_pf_7poisson_7Poisson_8next_phi(CYTHON_UNUSED PyObject *__
  *         l2 = self.phi_grid[i][(j + 1 + self.N) % self.N][k] + self.phi_grid[i][(j - 1 + self.N) % self.N][k]
  *         l3 = self.phi_grid[i][j][(k + 1 + self.N) % self.N] + self.phi_grid[i][j][(k - 1 + self.N) % self.N]             # <<<<<<<<<<<<<<
  *         l4 = self.dx**2 * self.rho_grid[i][j][k]
- *         # print("\n%.0f" % self.rho_grid[i][j][k])
+ *         return (1/6.) * (l1 + l2 + l3 + l4)
  */
   __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_phi_grid); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -2844,8 +2844,8 @@ static PyObject *__pyx_pf_7poisson_7Poisson_8next_phi(CYTHON_UNUSED PyObject *__
  *         l2 = self.phi_grid[i][(j + 1 + self.N) % self.N][k] + self.phi_grid[i][(j - 1 + self.N) % self.N][k]
  *         l3 = self.phi_grid[i][j][(k + 1 + self.N) % self.N] + self.phi_grid[i][j][(k - 1 + self.N) % self.N]
  *         l4 = self.dx**2 * self.rho_grid[i][j][k]             # <<<<<<<<<<<<<<
- *         # print("\n%.0f" % self.rho_grid[i][j][k])
- *         # print("calc")
+ *         return (1/6.) * (l1 + l2 + l3 + l4)
+ * 
  */
   __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_dx); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -2871,15 +2871,15 @@ static PyObject *__pyx_pf_7poisson_7Poisson_8next_phi(CYTHON_UNUSED PyObject *__
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_l4 = __pyx_t_6;
 
-  /* "poisson.pyx":54
- *         # val = (1/6.) * (l1 + l2 + l3 + l4)
- *         # print(val)
+  /* "poisson.pyx":49
+ *         l3 = self.phi_grid[i][j][(k + 1 + self.N) % self.N] + self.phi_grid[i][j][(k - 1 + self.N) % self.N]
+ *         l4 = self.dx**2 * self.rho_grid[i][j][k]
  *         return (1/6.) * (l1 + l2 + l3 + l4)             # <<<<<<<<<<<<<<
  * 
  *     def animate(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = PyFloat_FromDouble(((1.0 / 6.) * (((__pyx_v_l1 + __pyx_v_l2) + __pyx_v_l3) + __pyx_v_l4))); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 54, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(((1.0 / 6.) * (((__pyx_v_l1 + __pyx_v_l2) + __pyx_v_l3) + __pyx_v_l4))); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
@@ -2888,7 +2888,7 @@ static PyObject *__pyx_pf_7poisson_7Poisson_8next_phi(CYTHON_UNUSED PyObject *__
   /* "poisson.pyx":43
  *         self.phi_grid[-1, :, :] = 0
  * 
- *     def next_phi(self, int i, int j, int k):             # <<<<<<<<<<<<<<
+ *     def jacobi_update(self, int i, int j, int k):             # <<<<<<<<<<<<<<
  *         cdef double l1, l2, l3, l4
  *         l1 = self.phi_grid[(i + 1 + self.N) % self.N][j][k] + self.phi_grid[(i - 1 + self.N) % self.N][j][k]
  */
@@ -2900,7 +2900,7 @@ static PyObject *__pyx_pf_7poisson_7Poisson_8next_phi(CYTHON_UNUSED PyObject *__
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("poisson.Poisson.next_phi", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("poisson.Poisson.jacobi_update", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2908,7 +2908,7 @@ static PyObject *__pyx_pf_7poisson_7Poisson_8next_phi(CYTHON_UNUSED PyObject *__
   return __pyx_r;
 }
 
-/* "poisson.pyx":56
+/* "poisson.pyx":51
  *         return (1/6.) * (l1 + l2 + l3 + l4)
  * 
  *     def animate(self):             # <<<<<<<<<<<<<<
@@ -2943,18 +2943,18 @@ static PyObject *__pyx_pf_7poisson_7Poisson_10animate(CYTHON_UNUSED PyObject *__
   PyObject *__pyx_t_7 = NULL;
   __Pyx_RefNannySetupContext("animate", 0);
 
-  /* "poisson.pyx":57
+  /* "poisson.pyx":52
  * 
  *     def animate(self):
  *         anim = FuncAnimation(self.fig, self.update)             # <<<<<<<<<<<<<<
  *         plt.show()
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_FuncAnimation); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_FuncAnimation); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 52, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_fig); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_fig); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 52, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_update); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_update); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 52, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_5 = NULL;
   __pyx_t_6 = 0;
@@ -2971,7 +2971,7 @@ static PyObject *__pyx_pf_7poisson_7Poisson_10animate(CYTHON_UNUSED PyObject *__
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_5, __pyx_t_3, __pyx_t_4};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 52, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -2981,7 +2981,7 @@ static PyObject *__pyx_pf_7poisson_7Poisson_10animate(CYTHON_UNUSED PyObject *__
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_5, __pyx_t_3, __pyx_t_4};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 52, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -2989,7 +2989,7 @@ static PyObject *__pyx_pf_7poisson_7Poisson_10animate(CYTHON_UNUSED PyObject *__
   } else
   #endif
   {
-    __pyx_t_7 = PyTuple_New(2+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 57, __pyx_L1_error)
+    __pyx_t_7 = PyTuple_New(2+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 52, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     if (__pyx_t_5) {
       __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_5); __pyx_t_5 = NULL;
@@ -3000,7 +3000,7 @@ static PyObject *__pyx_pf_7poisson_7Poisson_10animate(CYTHON_UNUSED PyObject *__
     PyTuple_SET_ITEM(__pyx_t_7, 1+__pyx_t_6, __pyx_t_4);
     __pyx_t_3 = 0;
     __pyx_t_4 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_7, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_7, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 52, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   }
@@ -3008,16 +3008,16 @@ static PyObject *__pyx_pf_7poisson_7Poisson_10animate(CYTHON_UNUSED PyObject *__
   __pyx_v_anim = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "poisson.pyx":58
+  /* "poisson.pyx":53
  *     def animate(self):
  *         anim = FuncAnimation(self.fig, self.update)
  *         plt.show()             # <<<<<<<<<<<<<<
  * 
  *     def run_animation(self):
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_plt); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 58, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_plt); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_show); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 58, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_show); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -3032,12 +3032,12 @@ static PyObject *__pyx_pf_7poisson_7Poisson_10animate(CYTHON_UNUSED PyObject *__
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_7);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 58, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "poisson.pyx":56
+  /* "poisson.pyx":51
  *         return (1/6.) * (l1 + l2 + l3 + l4)
  * 
  *     def animate(self):             # <<<<<<<<<<<<<<
@@ -3064,7 +3064,7 @@ static PyObject *__pyx_pf_7poisson_7Poisson_10animate(CYTHON_UNUSED PyObject *__
   return __pyx_r;
 }
 
-/* "poisson.pyx":60
+/* "poisson.pyx":55
  *         plt.show()
  * 
  *     def run_animation(self):             # <<<<<<<<<<<<<<
@@ -3087,7 +3087,7 @@ static PyObject *__pyx_pw_7poisson_7Poisson_13run_animation(PyObject *__pyx_self
   return __pyx_r;
 }
 
-/* "poisson.pyx":66
+/* "poisson.pyx":61
  *         self.fig = plt.figure()
  *         anim_running = True
  *         def onClick(event):             # <<<<<<<<<<<<<<
@@ -3122,7 +3122,7 @@ static PyObject *__pyx_pf_7poisson_7Poisson_13run_animation_onClick(PyObject *__
   __pyx_outer_scope = (struct __pyx_obj_7poisson___pyx_scope_struct__run_animation *) __Pyx_CyFunction_GetClosure(__pyx_self);
   __pyx_cur_scope = __pyx_outer_scope;
 
-  /* "poisson.pyx":68
+  /* "poisson.pyx":63
  *         def onClick(event):
  *             nonlocal anim_running
  *             if anim_running:             # <<<<<<<<<<<<<<
@@ -3132,26 +3132,26 @@ static PyObject *__pyx_pf_7poisson_7Poisson_13run_animation_onClick(PyObject *__
   __pyx_t_1 = (__pyx_cur_scope->__pyx_v_anim_running != 0);
   if (__pyx_t_1) {
 
-    /* "poisson.pyx":69
+    /* "poisson.pyx":64
  *             nonlocal anim_running
  *             if anim_running:
  *                 print("Paused.")             # <<<<<<<<<<<<<<
  *                 anim.event_source.stop()
  *                 anim_running = False
  */
-    if (__Pyx_PrintOne(0, __pyx_kp_s_Paused) < 0) __PYX_ERR(0, 69, __pyx_L1_error)
+    if (__Pyx_PrintOne(0, __pyx_kp_s_Paused) < 0) __PYX_ERR(0, 64, __pyx_L1_error)
 
-    /* "poisson.pyx":70
+    /* "poisson.pyx":65
  *             if anim_running:
  *                 print("Paused.")
  *                 anim.event_source.stop()             # <<<<<<<<<<<<<<
  *                 anim_running = False
  *             else:
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_anim)) { __Pyx_RaiseClosureNameError("anim"); __PYX_ERR(0, 70, __pyx_L1_error) }
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_anim, __pyx_n_s_event_source); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 70, __pyx_L1_error)
+    if (unlikely(!__pyx_cur_scope->__pyx_v_anim)) { __Pyx_RaiseClosureNameError("anim"); __PYX_ERR(0, 65, __pyx_L1_error) }
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_anim, __pyx_n_s_event_source); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 65, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_stop); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 70, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_stop); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 65, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_t_3 = NULL;
@@ -3166,12 +3166,12 @@ static PyObject *__pyx_pf_7poisson_7Poisson_13run_animation_onClick(PyObject *__
     }
     __pyx_t_2 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 70, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 65, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "poisson.pyx":71
+    /* "poisson.pyx":66
  *                 print("Paused.")
  *                 anim.event_source.stop()
  *                 anim_running = False             # <<<<<<<<<<<<<<
@@ -3180,7 +3180,7 @@ static PyObject *__pyx_pf_7poisson_7Poisson_13run_animation_onClick(PyObject *__
  */
     __pyx_cur_scope->__pyx_v_anim_running = 0;
 
-    /* "poisson.pyx":68
+    /* "poisson.pyx":63
  *         def onClick(event):
  *             nonlocal anim_running
  *             if anim_running:             # <<<<<<<<<<<<<<
@@ -3190,7 +3190,7 @@ static PyObject *__pyx_pf_7poisson_7Poisson_13run_animation_onClick(PyObject *__
     goto __pyx_L3;
   }
 
-  /* "poisson.pyx":73
+  /* "poisson.pyx":68
  *                 anim_running = False
  *             else:
  *                 print("Resume.")             # <<<<<<<<<<<<<<
@@ -3198,19 +3198,19 @@ static PyObject *__pyx_pf_7poisson_7Poisson_13run_animation_onClick(PyObject *__
  *                 anim_running = True
  */
   /*else*/ {
-    if (__Pyx_PrintOne(0, __pyx_kp_s_Resume) < 0) __PYX_ERR(0, 73, __pyx_L1_error)
+    if (__Pyx_PrintOne(0, __pyx_kp_s_Resume) < 0) __PYX_ERR(0, 68, __pyx_L1_error)
 
-    /* "poisson.pyx":74
+    /* "poisson.pyx":69
  *             else:
  *                 print("Resume.")
  *                 anim.event_source.start()             # <<<<<<<<<<<<<<
  *                 anim_running = True
  *         self.fig.canvas.mpl_connect('button_press_event', onClick)
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_anim)) { __Pyx_RaiseClosureNameError("anim"); __PYX_ERR(0, 74, __pyx_L1_error) }
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_anim, __pyx_n_s_event_source); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 74, __pyx_L1_error)
+    if (unlikely(!__pyx_cur_scope->__pyx_v_anim)) { __Pyx_RaiseClosureNameError("anim"); __PYX_ERR(0, 69, __pyx_L1_error) }
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_anim, __pyx_n_s_event_source); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 69, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_start); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 74, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_start); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 69, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_t_4 = NULL;
@@ -3225,12 +3225,12 @@ static PyObject *__pyx_pf_7poisson_7Poisson_13run_animation_onClick(PyObject *__
     }
     __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 74, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 69, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "poisson.pyx":75
+    /* "poisson.pyx":70
  *                 print("Resume.")
  *                 anim.event_source.start()
  *                 anim_running = True             # <<<<<<<<<<<<<<
@@ -3241,7 +3241,7 @@ static PyObject *__pyx_pf_7poisson_7Poisson_13run_animation_onClick(PyObject *__
   }
   __pyx_L3:;
 
-  /* "poisson.pyx":66
+  /* "poisson.pyx":61
  *         self.fig = plt.figure()
  *         anim_running = True
  *         def onClick(event):             # <<<<<<<<<<<<<<
@@ -3264,7 +3264,7 @@ static PyObject *__pyx_pf_7poisson_7Poisson_13run_animation_onClick(PyObject *__
   return __pyx_r;
 }
 
-/* "poisson.pyx":60
+/* "poisson.pyx":55
  *         plt.show()
  * 
  *     def run_animation(self):             # <<<<<<<<<<<<<<
@@ -3287,21 +3287,21 @@ static PyObject *__pyx_pf_7poisson_7Poisson_12run_animation(CYTHON_UNUSED PyObje
   if (unlikely(!__pyx_cur_scope)) {
     __pyx_cur_scope = ((struct __pyx_obj_7poisson___pyx_scope_struct__run_animation *)Py_None);
     __Pyx_INCREF(Py_None);
-    __PYX_ERR(0, 60, __pyx_L1_error)
+    __PYX_ERR(0, 55, __pyx_L1_error)
   } else {
     __Pyx_GOTREF(__pyx_cur_scope);
   }
 
-  /* "poisson.pyx":64
+  /* "poisson.pyx":59
  *         Gives the ability to click on the animation canvas to play and pause.
  *         """
  *         self.fig = plt.figure()             # <<<<<<<<<<<<<<
  *         anim_running = True
  *         def onClick(event):
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_plt); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 64, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_plt); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_figure); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 64, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_figure); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -3316,13 +3316,13 @@ static PyObject *__pyx_pf_7poisson_7Poisson_12run_animation(CYTHON_UNUSED PyObje
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 64, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_fig, __pyx_t_1) < 0) __PYX_ERR(0, 64, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_fig, __pyx_t_1) < 0) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "poisson.pyx":65
+  /* "poisson.pyx":60
  *         """
  *         self.fig = plt.figure()
  *         anim_running = True             # <<<<<<<<<<<<<<
@@ -3331,31 +3331,31 @@ static PyObject *__pyx_pf_7poisson_7Poisson_12run_animation(CYTHON_UNUSED PyObje
  */
   __pyx_cur_scope->__pyx_v_anim_running = 1;
 
-  /* "poisson.pyx":66
+  /* "poisson.pyx":61
  *         self.fig = plt.figure()
  *         anim_running = True
  *         def onClick(event):             # <<<<<<<<<<<<<<
  *             nonlocal anim_running
  *             if anim_running:
  */
-  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_7poisson_7Poisson_13run_animation_1onClick, 0, __pyx_n_s_Poisson_run_animation_locals_onC, ((PyObject*)__pyx_cur_scope), __pyx_n_s_poisson, __pyx_d, ((PyObject *)__pyx_codeobj__9)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 66, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_7poisson_7Poisson_13run_animation_1onClick, 0, __pyx_n_s_Poisson_run_animation_locals_onC, ((PyObject*)__pyx_cur_scope), __pyx_n_s_poisson, __pyx_d, ((PyObject *)__pyx_codeobj__9)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 61, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_onClick = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "poisson.pyx":76
+  /* "poisson.pyx":71
  *                 anim.event_source.start()
  *                 anim_running = True
  *         self.fig.canvas.mpl_connect('button_press_event', onClick)             # <<<<<<<<<<<<<<
  *         anim = FuncAnimation(self.fig, self.update, interval=500)
  *         plt.show()
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_fig); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 76, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_fig); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 71, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_canvas); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 76, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_canvas); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 71, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_mpl_connect); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 76, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_mpl_connect); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 71, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -3373,7 +3373,7 @@ static PyObject *__pyx_pf_7poisson_7Poisson_12run_animation(CYTHON_UNUSED PyObje
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_3)) {
     PyObject *__pyx_temp[3] = {__pyx_t_2, __pyx_n_s_button_press_event, __pyx_v_onClick};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 71, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
@@ -3381,13 +3381,13 @@ static PyObject *__pyx_pf_7poisson_7Poisson_12run_animation(CYTHON_UNUSED PyObje
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
     PyObject *__pyx_temp[3] = {__pyx_t_2, __pyx_n_s_button_press_event, __pyx_v_onClick};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 71, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
   #endif
   {
-    __pyx_t_5 = PyTuple_New(2+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 76, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_New(2+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 71, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     if (__pyx_t_2) {
       __Pyx_GIVEREF(__pyx_t_2); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_2); __pyx_t_2 = NULL;
@@ -3398,26 +3398,26 @@ static PyObject *__pyx_pf_7poisson_7Poisson_12run_animation(CYTHON_UNUSED PyObje
     __Pyx_INCREF(__pyx_v_onClick);
     __Pyx_GIVEREF(__pyx_v_onClick);
     PyTuple_SET_ITEM(__pyx_t_5, 1+__pyx_t_4, __pyx_v_onClick);
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 71, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "poisson.pyx":77
+  /* "poisson.pyx":72
  *                 anim_running = True
  *         self.fig.canvas.mpl_connect('button_press_event', onClick)
  *         anim = FuncAnimation(self.fig, self.update, interval=500)             # <<<<<<<<<<<<<<
  *         plt.show()
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_FuncAnimation); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_FuncAnimation); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 72, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_fig); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_fig); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 72, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_update); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_update); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 72, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 72, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_3);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_3);
@@ -3425,10 +3425,10 @@ static PyObject *__pyx_pf_7poisson_7Poisson_12run_animation(CYTHON_UNUSED PyObje
   PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_5);
   __pyx_t_3 = 0;
   __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 72, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_interval, __pyx_int_500) < 0) __PYX_ERR(0, 77, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 77, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_interval, __pyx_int_500) < 0) __PYX_ERR(0, 72, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 72, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -3437,14 +3437,14 @@ static PyObject *__pyx_pf_7poisson_7Poisson_12run_animation(CYTHON_UNUSED PyObje
   __pyx_cur_scope->__pyx_v_anim = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "poisson.pyx":78
+  /* "poisson.pyx":73
  *         self.fig.canvas.mpl_connect('button_press_event', onClick)
  *         anim = FuncAnimation(self.fig, self.update, interval=500)
  *         plt.show()             # <<<<<<<<<<<<<<
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_plt); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_plt); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 73, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_show); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_show); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 73, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_5 = NULL;
@@ -3459,12 +3459,12 @@ static PyObject *__pyx_pf_7poisson_7Poisson_12run_animation(CYTHON_UNUSED PyObje
   }
   __pyx_t_3 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 78, __pyx_L1_error)
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 73, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "poisson.pyx":60
+  /* "poisson.pyx":55
  *         plt.show()
  * 
  *     def run_animation(self):             # <<<<<<<<<<<<<<
@@ -3648,7 +3648,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_Poisson___init, __pyx_k_Poisson___init, sizeof(__pyx_k_Poisson___init), 0, 0, 1, 1},
   {&__pyx_n_s_Poisson_add_point_charge, __pyx_k_Poisson_add_point_charge, sizeof(__pyx_k_Poisson_add_point_charge), 0, 0, 1, 1},
   {&__pyx_n_s_Poisson_animate, __pyx_k_Poisson_animate, sizeof(__pyx_k_Poisson_animate), 0, 0, 1, 1},
-  {&__pyx_n_s_Poisson_next_phi, __pyx_k_Poisson_next_phi, sizeof(__pyx_k_Poisson_next_phi), 0, 0, 1, 1},
+  {&__pyx_n_s_Poisson_jacobi_update, __pyx_k_Poisson_jacobi_update, sizeof(__pyx_k_Poisson_jacobi_update), 0, 0, 1, 1},
   {&__pyx_n_s_Poisson_run_animation, __pyx_k_Poisson_run_animation, sizeof(__pyx_k_Poisson_run_animation), 0, 0, 1, 1},
   {&__pyx_n_s_Poisson_run_animation_locals_onC, __pyx_k_Poisson_run_animation_locals_onC, sizeof(__pyx_k_Poisson_run_animation_locals_onC), 0, 0, 1, 1},
   {&__pyx_n_s_Poisson_update, __pyx_k_Poisson_update, sizeof(__pyx_k_Poisson_update), 0, 0, 1, 1},
@@ -3682,6 +3682,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_init, __pyx_k_init, sizeof(__pyx_k_init), 0, 0, 1, 1},
   {&__pyx_n_s_interval, __pyx_k_interval, sizeof(__pyx_k_interval), 0, 0, 1, 1},
   {&__pyx_n_s_j, __pyx_k_j, sizeof(__pyx_k_j), 0, 0, 1, 1},
+  {&__pyx_n_s_jacobi_update, __pyx_k_jacobi_update, sizeof(__pyx_k_jacobi_update), 0, 0, 1, 1},
   {&__pyx_n_s_k, __pyx_k_k, sizeof(__pyx_k_k), 0, 0, 1, 1},
   {&__pyx_n_s_l1, __pyx_k_l1, sizeof(__pyx_k_l1), 0, 0, 1, 1},
   {&__pyx_n_s_l2, __pyx_k_l2, sizeof(__pyx_k_l2), 0, 0, 1, 1},
@@ -3694,7 +3695,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_module, __pyx_k_module, sizeof(__pyx_k_module), 0, 0, 1, 1},
   {&__pyx_n_s_mpl_connect, __pyx_k_mpl_connect, sizeof(__pyx_k_mpl_connect), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
-  {&__pyx_n_s_next_phi, __pyx_k_next_phi, sizeof(__pyx_k_next_phi), 0, 0, 1, 1},
   {&__pyx_n_s_np, __pyx_k_np, sizeof(__pyx_k_np), 0, 0, 1, 1},
   {&__pyx_n_s_numpy, __pyx_k_numpy, sizeof(__pyx_k_numpy), 0, 0, 1, 1},
   {&__pyx_n_s_onClick, __pyx_k_onClick, sizeof(__pyx_k_onClick), 0, 0, 1, 1},
@@ -3794,23 +3794,23 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *         self.phi_grid[0, :, :] = 0
  *         self.phi_grid[-1, :, :] = 0             # <<<<<<<<<<<<<<
  * 
- *     def next_phi(self, int i, int j, int k):
+ *     def jacobi_update(self, int i, int j, int k):
  */
   __pyx_tuple__7 = PyTuple_Pack(3, __pyx_int_neg_1, __pyx_slice_, __pyx_slice_); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 41, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
 
-  /* "poisson.pyx":66
+  /* "poisson.pyx":61
  *         self.fig = plt.figure()
  *         anim_running = True
  *         def onClick(event):             # <<<<<<<<<<<<<<
  *             nonlocal anim_running
  *             if anim_running:
  */
-  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_n_s_event); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 66, __pyx_L1_error)
+  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_n_s_event); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 61, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__8);
   __Pyx_GIVEREF(__pyx_tuple__8);
-  __pyx_codeobj__9 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_poisson_pyx, __pyx_n_s_onClick, 66, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__9)) __PYX_ERR(0, 66, __pyx_L1_error)
+  __pyx_codeobj__9 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_poisson_pyx, __pyx_n_s_onClick, 61, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__9)) __PYX_ERR(0, 61, __pyx_L1_error)
 
   /* "poisson.pyx":9
  * 
@@ -3863,38 +3863,38 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "poisson.pyx":43
  *         self.phi_grid[-1, :, :] = 0
  * 
- *     def next_phi(self, int i, int j, int k):             # <<<<<<<<<<<<<<
+ *     def jacobi_update(self, int i, int j, int k):             # <<<<<<<<<<<<<<
  *         cdef double l1, l2, l3, l4
  *         l1 = self.phi_grid[(i + 1 + self.N) % self.N][j][k] + self.phi_grid[(i - 1 + self.N) % self.N][j][k]
  */
   __pyx_tuple__19 = PyTuple_Pack(8, __pyx_n_s_self, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_k, __pyx_n_s_l1, __pyx_n_s_l2, __pyx_n_s_l3, __pyx_n_s_l4); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__19);
   __Pyx_GIVEREF(__pyx_tuple__19);
-  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(4, 0, 8, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_poisson_pyx, __pyx_n_s_next_phi, 43, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(4, 0, 8, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_poisson_pyx, __pyx_n_s_jacobi_update, 43, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) __PYX_ERR(0, 43, __pyx_L1_error)
 
-  /* "poisson.pyx":56
+  /* "poisson.pyx":51
  *         return (1/6.) * (l1 + l2 + l3 + l4)
  * 
  *     def animate(self):             # <<<<<<<<<<<<<<
  *         anim = FuncAnimation(self.fig, self.update)
  *         plt.show()
  */
-  __pyx_tuple__21 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_anim); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __pyx_tuple__21 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_anim); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__21);
   __Pyx_GIVEREF(__pyx_tuple__21);
-  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_poisson_pyx, __pyx_n_s_animate, 56, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_poisson_pyx, __pyx_n_s_animate, 51, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 51, __pyx_L1_error)
 
-  /* "poisson.pyx":60
+  /* "poisson.pyx":55
  *         plt.show()
  * 
  *     def run_animation(self):             # <<<<<<<<<<<<<<
  *         """
  *         Gives the ability to click on the animation canvas to play and pause.
  */
-  __pyx_tuple__23 = PyTuple_Pack(5, __pyx_n_s_self, __pyx_n_s_anim_running, __pyx_n_s_onClick, __pyx_n_s_onClick, __pyx_n_s_anim); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(0, 60, __pyx_L1_error)
+  __pyx_tuple__23 = PyTuple_Pack(5, __pyx_n_s_self, __pyx_n_s_anim_running, __pyx_n_s_onClick, __pyx_n_s_onClick, __pyx_n_s_anim); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(0, 55, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__23);
   __Pyx_GIVEREF(__pyx_tuple__23);
-  __pyx_codeobj__24 = (PyObject*)__Pyx_PyCode_New(1, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__23, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_poisson_pyx, __pyx_n_s_run_animation, 60, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__24)) __PYX_ERR(0, 60, __pyx_L1_error)
+  __pyx_codeobj__24 = (PyObject*)__Pyx_PyCode_New(1, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__23, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_poisson_pyx, __pyx_n_s_run_animation, 55, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__24)) __PYX_ERR(0, 55, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -3950,7 +3950,7 @@ static int __Pyx_modinit_type_init_code(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_modinit_type_init_code", 0);
   /*--- Type init code ---*/
-  if (PyType_Ready(&__pyx_type_7poisson___pyx_scope_struct__run_animation) < 0) __PYX_ERR(0, 60, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_7poisson___pyx_scope_struct__run_animation) < 0) __PYX_ERR(0, 55, __pyx_L1_error)
   __pyx_type_7poisson___pyx_scope_struct__run_animation.tp_print = 0;
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_7poisson___pyx_scope_struct__run_animation.tp_dictoffset && __pyx_type_7poisson___pyx_scope_struct__run_animation.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_7poisson___pyx_scope_struct__run_animation.tp_getattro = __Pyx_PyObject_GenericGetAttrNoDict;
@@ -4335,37 +4335,37 @@ if (!__Pyx_RefNanny) {
   /* "poisson.pyx":43
  *         self.phi_grid[-1, :, :] = 0
  * 
- *     def next_phi(self, int i, int j, int k):             # <<<<<<<<<<<<<<
+ *     def jacobi_update(self, int i, int j, int k):             # <<<<<<<<<<<<<<
  *         cdef double l1, l2, l3, l4
  *         l1 = self.phi_grid[(i + 1 + self.N) % self.N][j][k] + self.phi_grid[(i - 1 + self.N) % self.N][j][k]
  */
-  __pyx_t_3 = __Pyx_CyFunction_NewEx(&__pyx_mdef_7poisson_7Poisson_9next_phi, 0, __pyx_n_s_Poisson_next_phi, NULL, __pyx_n_s_poisson, __pyx_d, ((PyObject *)__pyx_codeobj__20)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_CyFunction_NewEx(&__pyx_mdef_7poisson_7Poisson_9jacobi_update, 0, __pyx_n_s_Poisson_jacobi_update, NULL, __pyx_n_s_poisson, __pyx_d, ((PyObject *)__pyx_codeobj__20)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_next_phi, __pyx_t_3) < 0) __PYX_ERR(0, 43, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_jacobi_update, __pyx_t_3) < 0) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "poisson.pyx":56
+  /* "poisson.pyx":51
  *         return (1/6.) * (l1 + l2 + l3 + l4)
  * 
  *     def animate(self):             # <<<<<<<<<<<<<<
  *         anim = FuncAnimation(self.fig, self.update)
  *         plt.show()
  */
-  __pyx_t_3 = __Pyx_CyFunction_NewEx(&__pyx_mdef_7poisson_7Poisson_11animate, 0, __pyx_n_s_Poisson_animate, NULL, __pyx_n_s_poisson, __pyx_d, ((PyObject *)__pyx_codeobj__22)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_CyFunction_NewEx(&__pyx_mdef_7poisson_7Poisson_11animate, 0, __pyx_n_s_Poisson_animate, NULL, __pyx_n_s_poisson, __pyx_d, ((PyObject *)__pyx_codeobj__22)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_animate, __pyx_t_3) < 0) __PYX_ERR(0, 56, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_animate, __pyx_t_3) < 0) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "poisson.pyx":60
+  /* "poisson.pyx":55
  *         plt.show()
  * 
  *     def run_animation(self):             # <<<<<<<<<<<<<<
  *         """
  *         Gives the ability to click on the animation canvas to play and pause.
  */
-  __pyx_t_3 = __Pyx_CyFunction_NewEx(&__pyx_mdef_7poisson_7Poisson_13run_animation, 0, __pyx_n_s_Poisson_run_animation, NULL, __pyx_n_s_poisson, __pyx_d, ((PyObject *)__pyx_codeobj__24)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 60, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_CyFunction_NewEx(&__pyx_mdef_7poisson_7Poisson_13run_animation, 0, __pyx_n_s_Poisson_run_animation, NULL, __pyx_n_s_poisson, __pyx_d, ((PyObject *)__pyx_codeobj__24)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 55, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_run_animation, __pyx_t_3) < 0) __PYX_ERR(0, 60, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_run_animation, __pyx_t_3) < 0) __PYX_ERR(0, 55, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
   /* "poisson.pyx":8
