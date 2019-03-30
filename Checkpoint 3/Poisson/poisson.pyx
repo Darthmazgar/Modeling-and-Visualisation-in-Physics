@@ -30,6 +30,14 @@ class Poisson:
     #                 grid[i][j][k] = Vector(0, 0, 0)
     #     return grid
 
+    def zero_boundaries(self):
+        self.phi_grid[:, :, 0] = 0
+        self.phi_grid[:, :, -1] = 0
+        self.phi_grid[:, 0, :] = 0
+        self.phi_grid[:, -1, :] = 0
+        self.phi_grid[0, :, :] = 0
+        self.phi_grid[-1, :, :] = 0
+
     def add_point_charge(self, int i, int j, int k):
         if i >= self.N or j >= self.N or k >= self.N:
             raise ValueError("Point selected (%d, %d, %d) out of range" % (i, j, k)
@@ -37,8 +45,8 @@ class Poisson:
         self.rho_grid[i][j][k] = 1
 
 
-    def update(self, int k, int sweeps):
-        for z in range(sweeps):
+    def update(self, int k):
+        for z in range(1):  # sweeps
             for i in range(1, self.N-1):
                 for j in range(1, self.N-1):  # 1 -> N-1 to preserve zero at boundary
                     for k in range(1, self.N-1):
@@ -48,13 +56,11 @@ class Poisson:
             self.phi_grid = self.next_phi_grid.copy()
             self.rho_grid = self.next_rho_grid.copy()
 
-    def zero_boundaries(self):
-        self.phi_grid[:, :, 0] = 0
-        self.phi_grid[:, :, -1] = 0
-        self.phi_grid[:, 0, :] = 0
-        self.phi_grid[:, -1, :] = 0
-        self.phi_grid[0, :, :] = 0
-        self.phi_grid[-1, :, :] = 0
+        self.fig.clear()
+        plt.imshow(self.phi_grid[12], interpolation='nearest',
+                       cmap='coolwarm', origin='lower')
+        plt.colorbar()
+        print(k)
 
     def jacobi_update(self, int i, int j, int k):
         cdef double l1, l2, l3, l4
@@ -82,6 +88,12 @@ class Poisson:
             + self.phi_grid[i][j][(k-1 + self.N) % self.N]
             - 6 * self.phi_grid[i][j][k])
         return (- grad_sq_phi * self.epsilon)
+
+    def e_field(self, int i, int j, int k):
+        dx = self.phi_grid[(i+1+self.N) % self.N][j][k] - self.phi_grid[(i-1+self.N) % self.N][j][k]
+        dy = self.phi_grid[i][(j+1+self.N) % self.N][k] - self.phi_grid[i][(j-1+self.N) % self.N][k]
+        dz = self.phi_grid[i][j][(k+1+self.N) % self.N] - self.phi_grid[i][j][(k-1+self.N) % self.N]
+        return np.array((dx, dy, dz))
 
     def animate(self):
         anim = FuncAnimation(self.fig, self.update)
