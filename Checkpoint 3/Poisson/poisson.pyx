@@ -60,7 +60,6 @@ class Poisson:
         plt.imshow(self.phi_grid[12], interpolation='nearest',
                        cmap='coolwarm', origin='lower')
         plt.colorbar()
-        print(k)
 
     def jacobi_update(self, int i, int j, int k):
         cdef double l1, l2, l3, l4
