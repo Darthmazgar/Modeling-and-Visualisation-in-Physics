@@ -4,14 +4,9 @@ from matplotlib.animation import FuncAnimation
 import copy
 import sys
 
-# class Vector:
-#     def __init__(self, x, y, z):
-#         self.x = x
-#         self.y = y
-#         self.z = z
 
 class Poisson:
-    def __init__(self, int N, float accuracy, float dx=1, float epsilon=1):
+    def __init__(self, int N, float accuracy, float dx=1., float epsilon=1.):
         self.N = N
         self.acc = accuracy
         self.dx = dx
@@ -20,15 +15,6 @@ class Poisson:
         self.next_rho_grid = np.zeros((N, N, N))
         self.phi_grid = np.zeros((N, N, N))
         self.next_phi_grid = np.zeros((N, N, N))
-    #     self.e_grid = self.init_e_grid(N)
-    #
-    # def init_e_grid(self, N):
-    #     grid = np.zeros((N, N, N), dtype=object)
-    #     for i in range(self.N):
-    #         for j in range(self.N):
-    #             for k in range(self.N):
-    #                 grid[i][j][k] = Vector(0, 0, 0)
-    #     return grid
 
     def zero_boundaries(self):
         self.phi_grid[:, :, 0] = 0
@@ -44,6 +30,15 @@ class Poisson:
                         + " (%d, %d, %d)" % (self.N, self.N, self.N))
         self.rho_grid[i][j][k] = 1
 
+    def add_line_charge(self, int x, int y):
+        """
+        Add a line of charge which follows the z axis by speifying the x, y loc.
+        """
+        if x >= self.N or y >= self.N:
+            raise ValueError("Point selected (%d, %d) out of range" % (x, y)
+                        + " (%d, %d)" % (self.N, self.N))
+        for i in range(1, self.N-1):
+            self.rho_grid[i][y][x] = 1
 
     def update(self, int k):
         for z in range(1):  # sweeps
@@ -56,10 +51,10 @@ class Poisson:
             self.phi_grid = self.next_phi_grid.copy()
             self.rho_grid = self.next_rho_grid.copy()
 
-        self.fig.clear()
-        plt.imshow(self.phi_grid[12], interpolation='nearest',
-                       cmap='coolwarm', origin='lower')
-        plt.colorbar()
+        # self.fig.clear()
+        # plt.imshow(self.rho_grid[12], interpolation='nearest',
+        #                cmap='coolwarm', origin='lower')
+        # plt.colorbar()
 
     def jacobi_update(self, int i, int j, int k):
         cdef double l1, l2, l3, l4
@@ -85,7 +80,10 @@ class Poisson:
             + self.phi_grid[i][(j-1 + self.N) % self.N][k]
             + self.phi_grid[i][j][(k+1 + self.N) % self.N]
             + self.phi_grid[i][j][(k-1 + self.N) % self.N]
-            - 6 * self.phi_grid[i][j][k])
+            - 6. * self.phi_grid[i][j][k])
+        # val = -grad_sq_phi * self.epsilon
+        # if val != 0:
+        #     print(-grad_sq_phi * self.epsilon)
         return (- grad_sq_phi * self.epsilon)
 
     def e_field(self, int i, int j, int k):
