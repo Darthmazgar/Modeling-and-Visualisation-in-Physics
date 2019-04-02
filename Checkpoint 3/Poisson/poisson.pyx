@@ -23,6 +23,7 @@ class Poisson:
 
 
     def zero_boundaries(self):
+        """ Sets the boundaries of the volume to be zero. """
         self.phi_grid[:, :, 0] = 0
         self.phi_grid[:, :, -1] = 0
         self.phi_grid[:, 0, :] = 0
@@ -31,12 +32,14 @@ class Poisson:
         self.phi_grid[-1, :, :] = 0
 
     def add_point_charge(self, int i, int j, int k, float val):
+        """ Adds a point charge at point (i, j, k) where i, j and k are integers. """
         if i >= self.N or j >= self.N or k >= self.N:
             raise ValueError("Point selected (%d, %d, %d) out of range" % (i, j, k)
                         + " (%d, %d, %d)" % (self.N, self.N, self.N))
         self.rho_grid[i][j][k] = val
 
     def add_line_charge(self, int i, int j, float val):
+        """ Adds a line of charge in aligned with the z-axis at position (i, j). """
         if i >= self.N or j >= self.N:
             raise ValueError("Point selected (%d, %d) out of range" % (i, j)
                         + " (%d, %d)" % (self.N, self.N))
@@ -46,6 +49,7 @@ class Poisson:
 
 
     def update(self, int k):
+        """ Updates the phi grid for the full volume. """
         cdef int z, i, j
         for z in range(self.sweeps):  # sweeps
             for i in range(1, self.N-1):
@@ -58,7 +62,7 @@ class Poisson:
 
             self.phi_grid = self.next_phi_grid.copy()
 
-        if self.animation:
+        if self.animation:  # If animating then plot slice.
             self.fig.clear()
             plt.imshow(self.phi_grid[int(self.N/2)], interpolation='nearest',
                            cmap='coolwarm', origin='lower')
@@ -66,6 +70,7 @@ class Poisson:
 
 
     def jacobi_update(self, int i, int j, int k):
+        """ Updates the point (i, j, k) following the Jacobi algorithm. """
         cdef double l1, l2, l3, l4
         l1 = self.phi_grid[(i + 1 + self.N) % self.N][j][k] + self.phi_grid[(i - 1 + self.N) % self.N][j][k]
         l2 = self.phi_grid[i][(j + 1 + self.N) % self.N][k] + self.phi_grid[i][(j - 1 + self.N) % self.N][k]
@@ -74,6 +79,7 @@ class Poisson:
         return (1/6.) * (l1 + l2 + l3 + l4)
 
     def gauss_seidel_update(self, int i, int j, int k):
+        """ Updates the point (i, j, k) following the Gauss-Seidel algorithm. """
         cdef double l1, l2, l3, l4
         l1 = self.phi_grid[(i + 1 + self.N) % self.N][j][k] + self.next_phi_grid[(i - 1 + self.N) % self.N][j][k]
         l2 = self.phi_grid[i][(j + 1 + self.N) % self.N][k] + self.next_phi_grid[i][(j - 1 + self.N) % self.N][k]
@@ -87,13 +93,13 @@ class Poisson:
         plt.imshow(self.phi_grid[int(self.N/2)], interpolation='nearest',
                        cmap='coolwarm', origin='lower')
         plt.colorbar()
+        # print(np.shape(self.phi_grid[int(self.N/2)]))
         np.savetxt('point_contour.txt', self.phi_grid[int(self.N/2)], header='Point charge contour data.\nFor Grid size: {} and Init sweeps: {}'.format(self.N, self.sweeps))
         plt.show()
 
         cut = self.phi_grid[int(self.N/2)][int(self.N/2)]
         xs = np.linspace(-int(self.N/2), int(self.N/2), self.N)
-
-        np.savetxt('point_cut.txt', zip(xs,cut), header='Point charge midplane cut data.\nFor Grid size: {} and Init sweeps: {}'.format(self.N, self.sweeps))
+        np.savetxt('point_cut.txt', np.array(list(zip(xs,cut))), header='Point charge midplane cut data.\nFor Grid size: {} and Init sweeps: {}'.format(self.N, self.sweeps))
         plt.plot(xs, cut)
         plt.title("Cut through point charge 1D")
         plt.xlabel("Displacement")
@@ -120,7 +126,10 @@ class Poisson:
         if save:
             np.savetxt('bx.txt', bx, header=('The x component of the magnetic field.\nFor Grid size: {} and Init sweeps: {}'.format(self.N, self.sweeps)))
             np.savetxt('by.txt', by, header=('The y component of the magnetic field.\nFor Grid size: {} and Init sweeps: {}'.format(self.N, self.sweeps)))
-
+        if self.animation:
+            plt.imshow(self.phi_grid[int(self.N/2)], interpolation='nearest',
+                           cmap='coolwarm', origin='lower')
+            plt.colorbar()
         plt.quiver(bx, -by, pivot='tip')
         plt.title('Magnetic field')
         plt.xlabel("Grid size: {}$^3$, Init sweeps: {}".format(self.N, self.sweeps))
