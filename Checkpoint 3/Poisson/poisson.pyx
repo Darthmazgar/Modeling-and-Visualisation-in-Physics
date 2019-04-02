@@ -4,14 +4,10 @@ from matplotlib.animation import FuncAnimation
 import copy
 import sys
 
-# class Vector:
-#     def __init__(self, x, y, z):
-#         self.x = x
-#         self.y = y
-#         self.z = z
 
 class Poisson:
     def __init__(self, int N, float accuracy, method, float dx=1, float epsilon=1):
+
         self.N = N
         self.acc = accuracy
         self.dx = dx
@@ -24,6 +20,7 @@ class Poisson:
         self.next_phi_grid = np.zeros((N, N, N))
 
         self.animation = False
+
 
     def zero_boundaries(self):
         self.phi_grid[:, :, 0] = 0
@@ -47,6 +44,7 @@ class Poisson:
             self.rho_grid[z][i][j] = val
         # self.rho_grid[i][i][:] = val
 
+
     def update(self, int k):
         cdef int z, i, j
         for z in range(self.sweeps):  # sweeps
@@ -65,6 +63,7 @@ class Poisson:
             plt.imshow(self.phi_grid[int(self.N/2)], interpolation='nearest',
                            cmap='coolwarm', origin='lower')
             plt.colorbar()
+
 
     def jacobi_update(self, int i, int j, int k):
         cdef double l1, l2, l3, l4
