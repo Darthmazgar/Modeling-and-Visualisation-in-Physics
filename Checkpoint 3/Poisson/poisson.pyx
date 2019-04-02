@@ -82,6 +82,26 @@ class Poisson:
         l4 = self.dx**2 * self.rho_grid[i][j][k]
         return (1/6.) * (l1 + l2 + l3 + l4)
 
+    def contour_test(self):
+        self.sweeps = 100
+        self.update(1)
+        plt.imshow(self.phi_grid[int(self.N/2)], interpolation='nearest',
+                       cmap='coolwarm', origin='lower')
+        plt.colorbar()
+        np.savetxt('point_contour.txt', self.phi_grid[int(self.N/2)], header='Point charge contour data.\nFor Grid size: {} and Init sweeps: {}'.format(self.N, self.sweeps))
+        plt.show()
+
+        cut = self.phi_grid[int(self.N/2)][int(self.N/2)]
+        xs = np.linspace(-int(self.N/2), int(self.N/2), self.N)
+
+        np.savetxt('point_cut.txt', zip(xs,cut), header='Point charge midplane cut data.\nFor Grid size: {} and Init sweeps: {}'.format(self.N, self.sweeps))
+        plt.plot(xs, cut)
+        plt.title("Cut through point charge 1D")
+        plt.xlabel("Displacement")
+        plt.ylabel("Charge")
+        plt.show()
+
+
     def plot_E_field(self, save=False):
         E_field = np.gradient(self.phi_grid)
         ex = E_field[2][int(self.N/2)][:][:]

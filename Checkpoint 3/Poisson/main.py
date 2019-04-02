@@ -22,7 +22,8 @@ def main(args):
         p.add_point_charge(int(2*N/3), int(2*N/3), int(2*N/3), val=-1.)
 
     if args[1] == 'anim':
-        p.run_animation()
+        # p.run_animation()
+        p.contour_test()
     else:
         p.sweeps = 100
         p.update(1)
