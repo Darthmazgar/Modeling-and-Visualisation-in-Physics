@@ -20,15 +20,6 @@ class Poisson:
         self.next_rho_grid = np.zeros((N, N, N))
         self.phi_grid = np.zeros((N, N, N))
         self.next_phi_grid = np.zeros((N, N, N))
-    #     self.e_grid = self.init_e_grid(N)
-    #
-    # def init_e_grid(self, N):
-    #     grid = np.zeros((N, N, N), dtype=object)
-    #     for i in range(self.N):
-    #         for j in range(self.N):
-    #             for k in range(self.N):
-    #                 grid[i][j][k] = Vector(0, 0, 0)
-    #     return grid
 
     def zero_boundaries(self):
         self.phi_grid[:, :, 0] = 0
@@ -44,23 +35,27 @@ class Poisson:
                         + " (%d, %d, %d)" % (self.N, self.N, self.N))
         self.rho_grid[i][j][k] = 1
 
+    def add_line_charge(self, int i, int j):
+        if i >= self.N or j >= self.N:
+            raise ValueError("Point selected (%d, %d) out of range" % (i, j)
+                        + " (%d, %d)" % (self.N, self.N))
+        for z in range(1, self.N-1):  # Maybe from 0 -> self.N
+            self.rho_grid[z][i][j] = 1
 
     def update(self, int k):
-        for z in range(1):  # sweeps
+        for z in range(1000):  # sweeps
             for i in range(1, self.N-1):
                 for j in range(1, self.N-1):  # 1 -> N-1 to preserve zero at boundary
                     for k in range(1, self.N-1):
-                        self.next_phi_grid[i][j][k] = self.jacobi_update(i, j, k)
-                        # self.next_phi_grid[i][j][k] = self.gauss_seidel_update(i, j, k)
-                        self.next_rho_grid[i][j][k] = self.rho_update(i, j, k)
-            self.phi_grid = self.next_phi_grid.copy()
-            self.rho_grid = self.next_rho_grid.copy()
+                        # self.next_phi_grid[i][j][k] = self.jacobi_update(i, j, k)
+                        self.next_phi_grid[i][j][k] = self.gauss_seidel_update(i, j, k)
 
-        self.fig.clear()
-        plt.imshow(self.phi_grid[12], interpolation='nearest',
-                       cmap='coolwarm', origin='lower')
-        plt.colorbar()
-        print(k)
+            self.phi_grid = self.next_phi_grid.copy()
+
+        # self.fig.clear()
+        # plt.imshow(self.phi_grid[12], interpolation='nearest',
+        #                cmap='coolwarm', origin='lower')
+        # plt.colorbar()
 
     def jacobi_update(self, int i, int j, int k):
         cdef double l1, l2, l3, l4
@@ -68,6 +63,9 @@ class Poisson:
         l2 = self.phi_grid[i][(j + 1 + self.N) % self.N][k] + self.phi_grid[i][(j - 1 + self.N) % self.N][k]
         l3 = self.phi_grid[i][j][(k + 1 + self.N) % self.N] + self.phi_grid[i][j][(k - 1 + self.N) % self.N]
         l4 = self.dx**2 * self.rho_grid[i][j][k]
+        # val = (1/6.) * (l1 + l2 + l3 + l4)
+        # if val != 0:
+        #     print(val)
         return (1/6.) * (l1 + l2 + l3 + l4)
 
     def gauss_seidel_update(self, int i, int j, int k):
@@ -89,11 +87,19 @@ class Poisson:
             - 6 * self.phi_grid[i][j][k])
         return (- grad_sq_phi * self.epsilon)
 
-    def e_field(self, int i, int j, int k):
-        dx = self.phi_grid[(i+1+self.N) % self.N][j][k] - self.phi_grid[(i-1+self.N) % self.N][j][k]
-        dy = self.phi_grid[i][(j+1+self.N) % self.N][k] - self.phi_grid[i][(j-1+self.N) % self.N][k]
-        dz = self.phi_grid[i][j][(k+1+self.N) % self.N] - self.phi_grid[i][j][(k-1+self.N) % self.N]
-        return np.array((dx, dy, dz))
+    # def e_field(self, int i, int j, int k):  # Made obselete by using np.gradient(self.phi_grid)
+    #     dx = self.phi_grid[(i+1+self.N) % self.N][j][k] - self.phi_grid[(i-1+self.N) % self.N][j][k]
+    #     dy = self.phi_grid[i][(j+1+self.N) % self.N][k] - self.phi_grid[i][(j-1+self.N) % self.N][k]
+    #     dz = self.phi_grid[i][j][(k+1+self.N) % self.N] - self.phi_grid[i][j][(k-1+self.N) % self.N]
+    #     return np.array((dx, dy, dz))
+
+    def plot_E_field(self):
+        E_field = np.gradient(self.phi_grid)
+        # print(np.shape(E_field))
+        ex = E_field[2][int(self.N/2)][:][:]
+        ey = E_field[1][int(self.N/2)][:][:]
+        plt.quiver(ex, ey, pivot='tip')
+        plt.show()
 
     def animate(self):
         anim = FuncAnimation(self.fig, self.update)
