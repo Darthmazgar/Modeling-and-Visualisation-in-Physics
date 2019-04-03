@@ -7,7 +7,6 @@ import sys
 
 class Poisson:
     def __init__(self, int N, float accuracy, method, float dx=1, float epsilon=1):
-
         self.N = N
         self.acc = accuracy
         self.dx = dx
@@ -21,7 +20,6 @@ class Poisson:
 
         self.animation = False
         self.lim_reached = False
-
 
     def zero_boundaries(self):
         """ Sets the boundaries of the volume to be zero. """
@@ -46,8 +44,24 @@ class Poisson:
                         + " (%d, %d)" % (self.N, self.N))
         for z in range(1, self.N-1):  # Maybe from 0 -> self.N
             self.rho_grid[z][i][j] = val
-        # self.rho_grid[i][i][:] = val
 
+    def add_plane(self, int y, float val):
+        for z in range(1, self.N-1):
+            for x in range(1, self.N-1):
+                self.rho_grid[x][y][z] = val
+
+    def add_gausian(self, float size, float val):
+        """
+        Adds a Gaussian distribution of charge in the centre of the space with
+        size being a flot between 0 and 1 definin the sizr of the distribution
+        for 1 sigma.
+        """
+        x, y, z = np.meshgrid(np.linspace(-1, 1, self.N), np.linspace(-1, 1, self.N), np.linspace(-1, 1, self.N))
+        d = np.sqrt(x**2 + y**2 + z**2)
+        sigma, mu = size, 0.1
+        # print(np.shape(np.exp(-( (d-mu)**2 / ( 2.0 * sigma**2 ) ) )))
+        # print(np.exp(-( (d-mu)**2 / ( 2.0 * sigma**2 ) ) ))
+        self.rho_grid = np.exp(-((d - mu)**2 / ( 2.0*sigma**2))) * val
 
     def update(self, int k):
         """
@@ -66,7 +80,7 @@ class Poisson:
             max_diff = np.max(np.sqrt(np.square(np.subtract(self.phi_grid, self.next_phi_grid))))
             if max_diff <= self.acc and not self.lim_reached:
                 if not self.animation:
-                    print("Accuracy level of {:0.6f} reached after {} sweeps.".format(self.acc, (z+1)*k))
+                    print("Accuracy level of {:0.6f} reached after {} sweeps.".format(self.acc, (z+1)))
                 else:
                     print("Accuracy level of {:0.6f}.".format(self.acc))
                 self.lim_reached = True

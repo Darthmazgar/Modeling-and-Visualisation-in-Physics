@@ -8,7 +8,8 @@ from poisson import *
 def main(args):
     if len(args) != 5:
         print("\nTo few arguments.\n")
-        print("python main.py N (anim or plot or test) method(jacobi, gauss_seidel) distribution(line or point) max_change")
+        print("python main.py N (anim or plot or test) method(jacobi,",
+        "gauss_seidel) distribution(line or point) max_change")
         sys.exit()
     N = int(args[0])
     method = args[2]
@@ -24,8 +25,13 @@ def main(args):
     if args[3] == 'plines':
         p.add_line_charge(int(N/3), int(N/3), val=1.)
         p.add_line_charge(int(2*N/3), int(2*N/3), val=1.)
+    if args[3] == 'plane':
+        p.add_plane(int(N/2), val=1)
+    if args[3] == 'gaussian':
+        p.add_gausian(size=0.1, val=-1)
 
-    p.sweeps = 500
+    MAX_SWEEPS = 10000
+    p.sweeps = MAX_SWEEPS
 
     if args[1] == 'anim':
         p.sweeps = 1
