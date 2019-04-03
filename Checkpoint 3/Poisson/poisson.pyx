@@ -46,8 +46,9 @@ class Poisson:
             self.rho_grid[z][i][j] = val
 
     def add_plane(self, int y, float val):
-        for z in range(1, self.N-1):
-            for x in range(1, self.N-1):
+        """ Adds a plane of charge in the x,y plane. """
+        for z in range(self.N):
+            for x in range(self.N):
                 self.rho_grid[x][y][z] = val
 
     def add_gausian(self, float size, float val):
@@ -73,6 +74,9 @@ class Poisson:
             for i in range(1, self.N-1):
                 for j in range(1, self.N-1):  # 1 -> N-1 to preserve zero at boundary
                     for k in range(1, self.N-1):
+            # for i in range(self.N):
+            #     for j in range(self.N):
+            #         for k in range(self.N):
                         if self.method == 'jacobi':
                             self.next_phi_grid[i][j][k] = self.jacobi_update(i, j, k)
                         else:

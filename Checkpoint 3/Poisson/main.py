@@ -26,9 +26,9 @@ def main(args):
         p.add_line_charge(int(N/3), int(N/3), val=1.)
         p.add_line_charge(int(2*N/3), int(2*N/3), val=1.)
     if args[3] == 'plane':
-        p.add_plane(int(N/2), val=1)
+        p.add_plane(int(N/2), val=1.)
     if args[3] == 'gaussian':
-        p.add_gausian(size=0.1, val=-1)
+        p.add_gausian(size=0.1, val=1.)
 
     MAX_SWEEPS = 10000
     p.sweeps = MAX_SWEEPS
