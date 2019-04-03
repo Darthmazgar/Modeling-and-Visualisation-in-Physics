@@ -6,13 +6,14 @@ import sys
 from poisson import *
 
 def main(args):
-    if len(args) != 4:
+    if len(args) != 5:
         print("\nTo few arguments.\n")
-        print("python main.py N (anim or plot or test) method(jacobi, gauss_seidel) distribution(line or point)")
+        print("python main.py N (anim or plot or test) method(jacobi, gauss_seidel) distribution(line or point) max_change")
         sys.exit()
     N = int(args[0])
     method = args[2]
-    p = Poisson(N, 0.1, method=method)
+    max_change = float(args[4])
+    p = Poisson(N, accuracy=max_change, method=method)
     if args[3] == 'point':
         p.add_point_charge(int(N/2), int(N/2), int(N/2), val=1.)
     if args[3] == 'line':
@@ -24,7 +25,7 @@ def main(args):
         p.add_line_charge(int(N/3), int(N/3), val=1.)
         p.add_line_charge(int(2*N/3), int(2*N/3), val=1.)
 
-    p.sweeps = 1000
+    p.sweeps = 500
 
     if args[1] == 'anim':
         p.sweeps = 1

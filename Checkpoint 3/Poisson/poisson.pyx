@@ -20,6 +20,7 @@ class Poisson:
         self.next_phi_grid = np.zeros((N, N, N))
 
         self.animation = False
+        self.lim_reached = False
 
 
     def zero_boundaries(self):
@@ -49,7 +50,10 @@ class Poisson:
 
 
     def update(self, int k):
-        """ Updates the phi grid for the full volume. """
+        """
+        Updates the phi grid for the full volume.
+        :param: <int> k: Needed as frame number for animation. Set to 1 else.
+        """
         cdef int z, i, j
         for z in range(self.sweeps):  # sweeps
             for i in range(1, self.N-1):
@@ -59,11 +63,19 @@ class Poisson:
                             self.next_phi_grid[i][j][k] = self.jacobi_update(i, j, k)
                         else:
                             self.next_phi_grid[i][j][k] = self.gauss_seidel_update(i, j, k)
-
+            max_diff = np.max(np.sqrt(np.square(np.subtract(self.phi_grid, self.next_phi_grid))))
+            if max_diff <= self.acc and not self.lim_reached:
+                if not self.animation:
+                    print("Accuracy level of {:0.6f} reached after {} sweeps.".format(self.acc, (z+1)*k))
+                else:
+                    print("Accuracy level of {:0.6f}.".format(self.acc))
+                self.lim_reached = True
+                break
             self.phi_grid = self.next_phi_grid.copy()
 
         if self.animation:  # If animating then plot slice.
             self.fig.clear()
+            plt.title("Potential Strength")
             plt.imshow(self.phi_grid[int(self.N/2)], interpolation='nearest',
                            cmap='coolwarm', origin='lower')
             plt.colorbar()
@@ -88,6 +100,11 @@ class Poisson:
         return (1/6.) * (l1 + l2 + l3 + l4)
 
     def contour_test(self):
+        """
+        Produces a contour plot for the potential strength in space, along with
+        a slice plot through the mid plane which can be used to check the fall
+        of rate of the field strength.
+        """
         self.sweeps = 100
         self.update(1)
         plt.imshow(self.phi_grid[int(self.N/2)], interpolation='nearest',
@@ -108,6 +125,8 @@ class Poisson:
 
 
     def plot_E_field(self, save=False):
+        """ Plots the current electric field of the system as a slice through
+        the x,y plane. """
         E_field = np.gradient(self.phi_grid)
         ex = E_field[2][int(self.N/2)][:][:]
         ey = E_field[1][int(self.N/2)][:][:]
@@ -120,6 +139,9 @@ class Poisson:
         plt.show()
 
     def plot_B_field(self, save=False):
+        """ Plots the current magnetic field of the system as a slice through
+        the x,y plane. If there is only one charge present reises a ValueError
+        as no magnetic monopoles exist. """
         if np.count_nonzero(self.rho_grid) == 1:
             raise ValueError("No magnetic monopoles exist. Try adding more charges.")
         bx, by = np.gradient(self.phi_grid[int(self.N/2)][:][:], edge_order=0)
