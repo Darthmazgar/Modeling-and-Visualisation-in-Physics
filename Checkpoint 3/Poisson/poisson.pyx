@@ -18,6 +18,8 @@ class Poisson:
         self.phi_grid = np.zeros((N, N, N))
         self.next_phi_grid = np.zeros((N, N, N))
 
+        self.over_relax_factor = 1  # Over relax factor should be kept between 1 & 2.
+
         self.animation = False
         self.lim_reached = False
 
@@ -60,8 +62,6 @@ class Poisson:
         x, y, z = np.meshgrid(np.linspace(-1, 1, self.N), np.linspace(-1, 1, self.N), np.linspace(-1, 1, self.N))
         d = np.sqrt(x**2 + y**2 + z**2)
         sigma, mu = size, 0.1
-        # print(np.shape(np.exp(-( (d-mu)**2 / ( 2.0 * sigma**2 ) ) )))
-        # print(np.exp(-( (d-mu)**2 / ( 2.0 * sigma**2 ) ) ))
         self.rho_grid = np.exp(-((d - mu)**2 / ( 2.0*sigma**2))) * val
 
     def update(self, int k):
@@ -78,15 +78,18 @@ class Poisson:
             #     for j in range(self.N):
             #         for k in range(self.N):
                         if self.method == 'jacobi':
+                            # delta_phi = self.jacobi_update(i, j, k) - self.phi_grid[i][j][k]
+                            # self.next_phi_grid[i][j][k] = self.phi_grid[i][j][k] + self.over_relax_factor * delta_phi
                             self.next_phi_grid[i][j][k] = self.jacobi_update(i, j, k)
                         else:
-                            self.next_phi_grid[i][j][k] = self.gauss_seidel_update(i, j, k)
+                            delta_phi = self.gauss_seidel_update(i, j, k) - self.phi_grid[i][j][k]
+                            self.next_phi_grid[i][j][k] = self.phi_grid[i][j][k] + self.over_relax_factor * delta_phi
             max_diff = np.max(np.sqrt(np.square(np.subtract(self.phi_grid, self.next_phi_grid))))
             if max_diff <= self.acc and not self.lim_reached:
                 if not self.animation:
                     print("Accuracy level of {:0.6f} reached after {} sweeps.".format(self.acc, (z+1)))
                 else:
-                    print("Accuracy level of {:0.6f}.".format(self.acc))
+                    print("Accuracy level of {:0.6f} reached.".format(self.acc))
                 self.lim_reached = True
                 break
             self.phi_grid = self.next_phi_grid.copy()
@@ -97,6 +100,7 @@ class Poisson:
             plt.imshow(self.phi_grid[int(self.N/2)], interpolation='nearest',
                            cmap='coolwarm', origin='lower')
             plt.colorbar()
+        return z
 
 
     def jacobi_update(self, int i, int j, int k):
@@ -173,6 +177,49 @@ class Poisson:
         plt.quiver(bx, -by, pivot='tip')
         plt.title('Magnetic field')
         plt.xlabel("Grid size: {}$^3$, Init sweeps: {}".format(self.N, self.sweeps))
+        plt.show()
+
+    def over_relax_test(self, int test_steps, int MAX_SWEEPS, test_type, save=True):
+        over_relax_vals = np.linspace(1, 2, test_steps)
+        sweeps_to_converge = np.zeros(test_steps)
+        self.sweeps = MAX_SWEEPS
+        for i in range(test_steps):
+            sys.stdout.write("Simulation progress: %.1f%%\r"
+                            % ((100 * i / test_steps)))
+            sys.stdout.flush()  # Prints progress of simulation.
+
+            # Reset the grid and if a limit has been reached
+            self.phi_grid = np.zeros((self.N, self.N, self.N))
+            self.next_phi_grid = np.zeros((self.N, self.N, self.N))
+            self.lim_reached = False
+
+            if test_type == 'point':
+                self.add_point_charge(int(self.N/2), int(self.N/2), int(self.N/2), val=1.)
+            if test_type == 'line':
+                self.add_line_charge(int(self.N/2), int(self.N/2), val=1.)
+            if test_type == 'dipole':
+                self.add_point_charge(int(self.N/3), int(self.N/3), int(self.N/3), val=1.)
+                self.add_point_charge(int(2*self.N/3), int(2*self.N/3), int(2*self.N/3), val=-1.)
+            if test_type == 'plines':
+                self.add_line_charge(int(self.N/3), int(self.N/3), val=1.)
+                self.add_line_charge(int(2*self.N/3), int(2*self.N/3), val=1.)
+            if test_type == 'plane':
+                self.add_plane(int(self.N/2), val=1.)
+            if test_type == 'gaussian':
+                self.add_gausian(size=0.1, val=1.)
+
+
+            self.over_relax_factor = over_relax_vals[i]
+            sweeps_to_converge[i] = self.update(1)
+
+        if save:
+            np.savetxt('over_relax_test_{}_steps.txt'.format(test_steps),
+                np.array(list(zip(over_relax_vals, sweeps_to_converge))),
+                header=('Steps to converge vs over relax factor w\nFor grid size: {} and {} points.\nConverging to a maximum change of {:.5f} using the {} algorithm.'.format(self.N, test_steps, self.acc, self.method)))
+        plt.plot(over_relax_vals, sweeps_to_converge)
+        plt.xlabel("Over relax factor $\omega$")
+        plt.ylabel("Sweeps to converge")
+        plt.title("Over relaxation factor vs convergence time using the {} algorithm".format(self.method))
         plt.show()
 
     def animate(self):

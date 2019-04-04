@@ -30,8 +30,10 @@ def main(args):
     if args[3] == 'gaussian':
         p.add_gausian(size=0.1, val=1.)
 
-    MAX_SWEEPS = 10000
+    # MAX_SWEEPS = 100000
+    MAX_SWEEPS = 100
     p.sweeps = MAX_SWEEPS
+    p.over_relax_factor = 1.72
 
     if args[1] == 'anim':
         p.sweeps = 1
@@ -39,6 +41,8 @@ def main(args):
     if args[1] == 'test':
         p.contour_test()
         sys.exit()
+    elif args[1] == 'conv_test':
+        p.over_relax_test(100, MAX_SWEEPS, test_type=args[3])
     else:
         p.update(1)
         p.plot_E_field(save=True)
