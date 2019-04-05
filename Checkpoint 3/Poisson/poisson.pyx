@@ -149,8 +149,8 @@ class Poisson:
     def plot_E_field(self, save=False):
         """ Plots the current electric field of the system as a slice through
         the x,y plane. """
-        E_field = np.gradient(self.phi_grid)
-        ex = E_field[2][int(self.N/2)][:][:]
+        E_field = np.gradient(-self.phi_grid)
+        ex = E_field[2][int(self.N/2)][:][:] # 2, 1
         ey = E_field[1][int(self.N/2)][:][:]
         if save:
             np.savetxt('ex.txt', ex, header=('The x component of the electric field.\nFor Grid size: {} and Init sweeps: {}'.format(self.N, self.sweeps)))
@@ -166,7 +166,9 @@ class Poisson:
         as no magnetic monopoles exist. """
         if np.count_nonzero(self.rho_grid) == 1:
             raise ValueError("No magnetic monopoles exist. Try adding more charges.")
+            sys.exit()
         bx, by = np.gradient(self.phi_grid[int(self.N/2)][:][:], edge_order=0)
+        # print(np.shape(bx))
         if save:
             np.savetxt('bx.txt', bx, header=('The x component of the magnetic field.\nFor Grid size: {} and Init sweeps: {}'.format(self.N, self.sweeps)))
             np.savetxt('by.txt', by, header=('The y component of the magnetic field.\nFor Grid size: {} and Init sweeps: {}'.format(self.N, self.sweeps)))

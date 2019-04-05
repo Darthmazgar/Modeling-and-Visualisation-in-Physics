@@ -16,19 +16,19 @@ def main(args):
     max_change = float(args[4])
     p = Poisson(N, accuracy=max_change, method=method)
     if args[3] == 'point':
-        p.add_point_charge(int(N/2), int(N/2), int(N/2), val=1.)
+        p.add_point_charge(int(N/2), int(N/2), int(N/2), val=-1.)
     if args[3] == 'line':
-        p.add_line_charge(int(N/2), int(N/2), val=1.)
+        p.add_line_charge(int(N/2), int(N/2), val=-1.)
     if args[3] == 'dipole':
-        p.add_point_charge(int(N/3), int(N/3), int(N/3), val=1.)
-        p.add_point_charge(int(2*N/3), int(2*N/3), int(2*N/3), val=-1.)
+        p.add_point_charge(int(N/3), int(N/3), int(N/3), val=-1.)
+        p.add_point_charge(int(2*N/3), int(2*N/3), int(2*N/3), val=1.)
     if args[3] == 'plines':
-        p.add_line_charge(int(N/3), int(N/3), val=1.)
-        p.add_line_charge(int(2*N/3), int(2*N/3), val=1.)
+        p.add_line_charge(int(N/3), int(N/3), val=-1.)
+        p.add_line_charge(int(2*N/3), int(2*N/3), val=-1.)
     if args[3] == 'plane':
-        p.add_plane(int(N/2), val=1.)
+        p.add_plane(int(N/2), val=-1.)
     if args[3] == 'gaussian':
-        p.add_gausian(size=0.1, val=1.)
+        p.add_gausian(size=0.1, val=-1.)
 
     # MAX_SWEEPS = 100000
     MAX_SWEEPS = 100
