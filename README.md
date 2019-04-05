@@ -17,3 +17,6 @@ The system is stocasticaly updated changing the state of each cell from 'S' suce
 ## Checkpoint 3 ##
 ### Cahn Hilliard Equation ##
 Separates an imulsion by movind to change the order parameter of any given point. This fillows the Cahn Hilliard equation to minimise the free energy of the system by reducing the curvature. 
+
+### Poisson's Equation ###
+solves for the electric field and magnetic field un a cube of size N. Updates are made either using the Jacobi or Gauss-Seidel algorithms.

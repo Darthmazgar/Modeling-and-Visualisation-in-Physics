@@ -89,6 +89,7 @@ class CahnHil:
         t2 = (self.a/4) * self.grid[i][j]**4
         t3 = (self.k/2) * self.grad(i ,j)**2
         f = t1 + t2 + t3
+        f /= self.N**2
         return f
 
     def grad(self, int i, int j):
@@ -112,10 +113,11 @@ class CahnHil:
             # f_engs[z] /= self.N**2
             self.update(1, anim='test')
 
-        np.savetxt('free_energy.txt', f_engs, fmt='%.6f', header='Free energy with time'
-            +' for a time step of %.2f, space step %.2f' % (self.dt, self.dx))
+
         xs = np.linspace(0, test_length*self.dt*self.steps_per_update,
                         test_length)
+        np.savetxt('free_energy_{}_{}.txt'.format(self.N, self.phi_0), np.array(list(zip(xs, f_engs))), fmt='%.6f', header='Free energy with time'
+            +' for a time step of %.2f, space step %.2f, Grid size: %d' % (self.dt, self.dx, self.N))
         fig, ax = plt.subplots()
         ax.plot(xs, f_engs)
         ax.set_xlabel('Time')
