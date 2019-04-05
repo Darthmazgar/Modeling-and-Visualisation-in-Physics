@@ -33,7 +33,7 @@ def main(args):
     # MAX_SWEEPS = 100000
     MAX_SWEEPS = 100
     p.sweeps = MAX_SWEEPS
-    p.over_relax_factor = 1.72
+    p.over_relax_factor = 1.7#1.72
 
     if args[1] == 'anim':
         p.sweeps = 1
