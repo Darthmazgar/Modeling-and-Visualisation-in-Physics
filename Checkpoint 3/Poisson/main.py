@@ -1,3 +1,6 @@
+# To watch evolution run : python main.py 30 anim gauss line 1e1
+# For E field plot, E field cut and B field plot : python main.py 30 plot gauss line 1e1
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
@@ -8,7 +11,7 @@ from poisson import *
 def main(args):
     if len(args) != 5:
         print("\nTo few arguments.\n")
-        print("python main.py N (anim or plot or test) method(jacobi,",
+        print("python main.py N (anim or plot or test or conv_test) method(jacobi,",
         "gauss_seidel) distribution(line or point) max_change")
         sys.exit()
     N = int(args[0])
@@ -31,20 +34,22 @@ def main(args):
         p.add_gausian(size=0.1, val=1.)
 
     # MAX_SWEEPS = 100000
-    MAX_SWEEPS = 100
+    MAX_SWEEPS = 500
     p.sweeps = MAX_SWEEPS
     p.over_relax_factor = 1.72
 
     if args[1] == 'anim':
         p.sweeps = 1
         p.run_animation()
-    if args[1] == 'test':
+    elif args[1] == 'test':
         p.contour_test()
         sys.exit()
     elif args[1] == 'conv_test':
-        p.over_relax_test(100, MAX_SWEEPS, test_type=args[3])
+        p.over_relax_test(25, MAX_SWEEPS, test_type=args[3])
     else:
         p.update(1)
+        # p.log_plot()
+
         p.plot_E_field(save=True)
         p.plot_B_field(save=True)
 

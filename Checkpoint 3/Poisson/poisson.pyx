@@ -74,17 +74,13 @@ class Poisson:
             for i in range(1, self.N-1):
                 for j in range(1, self.N-1):  # 1 -> N-1 to preserve zero at boundary
                     for k in range(1, self.N-1):
-            # for i in range(self.N):
-            #     for j in range(self.N):
-            #         for k in range(self.N):
                         if self.method == 'jacobi':
-                            # delta_phi = self.jacobi_update(i, j, k) - self.phi_grid[i][j][k]
-                            # self.next_phi_grid[i][j][k] = self.phi_grid[i][j][k] + self.over_relax_factor * delta_phi
                             self.next_phi_grid[i][j][k] = self.jacobi_update(i, j, k)
                         else:
                             delta_phi = self.gauss_seidel_update(i, j, k) - self.phi_grid[i][j][k]
                             self.next_phi_grid[i][j][k] = self.phi_grid[i][j][k] + self.over_relax_factor * delta_phi
-            max_diff = np.max(np.sqrt(np.square(np.subtract(self.phi_grid, self.next_phi_grid))))
+
+            max_diff = np.sum(np.abs(np.subtract(self.next_phi_grid, self.phi_grid)))
             if max_diff <= self.acc and not self.lim_reached:
                 if not self.animation:
                     print("Accuracy level of {:0.6f} reached after {} sweeps.".format(self.acc, (z+1)))
@@ -150,14 +146,53 @@ class Poisson:
         """ Plots the current electric field of the system as a slice through
         the x,y plane. """
         E_field = np.gradient(self.phi_grid)
+        norm = np.abs(np.sqrt(E_field[0]**2 + E_field[1]**2 + E_field[2]**2))
+
         ex = E_field[2][int(self.N/2)][:][:]
         ey = E_field[1][int(self.N/2)][:][:]
+
+        norm = np.sqrt(ex**2 + ey**2)
+
+
         if save:
             np.savetxt('ex.txt', ex, header=('The x component of the electric field.\nFor Grid size: {} and Init sweeps: {}'.format(self.N, self.sweeps)))
             np.savetxt('ey.txt', ex, header=('The y component of the electric field.\nFor Grid size: {} and Init sweeps: {}'.format(self.N, self.sweeps)))
-        plt.quiver(ex, ey, pivot='tip')
+
+        plt.imshow(np.sqrt(ex**2 + ey**2), interpolation='nearest',
+               cmap='coolwarm', origin='lower')
+        np.savetxt("E_FIELD_DATA.txt", norm)
+
+        plt.quiver(ex/norm, ey/norm, pivot='tip')
         plt.title('Electric field')
         plt.xlabel("Grid size: {}$^3$, Init sweeps: {}".format(self.N, self.sweeps))
+        plt.show()
+
+        plt.plot(np.abs(ex[int(self.N/2)]))
+        np.savetxt('e_field_cut.txt', np.abs(ex[int(self.N/2)][int(self.N/2):]))
+        plt.ylabel("E-field magnitude")
+        plt.xlabel("Diaplacment with origin at: {}".format(int(self.N/2)))
+        plt.title("E field x component")
+        plt.show()
+
+    def log_plot(self):
+        dx = (np.arange(self.N) - int(self.N/2))**2
+        dy = dx.copy()
+        dz = dx.copy()
+        dist_grid = np.zeros((self.N, self.N, self.N))
+        for i in range(self.N):
+            for j in range(self.N):
+                for k in range(self.N):
+
+                    dist_grid[i][j][k] = np.sqrt(dx[i] + dy[j] + dz[k])
+
+        xs = np.log(dist_grid.reshape(-1))
+        ys = np.log(self.phi_grid.reshape(-1))
+        sv = np.array(list(zip(xs, ys)))
+        np.savetxt('log_log_phi_plot.txt', sv, header=("Log log plot for x,y,z components on a size {} grid".format(self.N)))
+        plt.scatter(xs, ys)
+        plt.title("Log dist vs log mag fot phi array")
+        plt.xlabel("log(distance)")
+        plt.ylabel("log(magnitudes)")
         plt.show()
 
     def plot_B_field(self, save=False):
@@ -170,11 +205,13 @@ class Poisson:
         if save:
             np.savetxt('bx.txt', bx, header=('The x component of the magnetic field.\nFor Grid size: {} and Init sweeps: {}'.format(self.N, self.sweeps)))
             np.savetxt('by.txt', by, header=('The y component of the magnetic field.\nFor Grid size: {} and Init sweeps: {}'.format(self.N, self.sweeps)))
-        if self.animation:
-            plt.imshow(self.phi_grid[int(self.N/2)], interpolation='nearest',
-                           cmap='coolwarm', origin='lower')
-            plt.colorbar()
-        plt.quiver(bx, -by, pivot='tip')
+            np.savetxt('b_field_cut.txt', np.abs(by[int(self.N/2)][25:]), header=('The y component of the magnetic field.\nFor Grid size: {} and Init sweeps: {}'.format(self.N, self.sweeps)))
+
+        norm = np.sqrt(bx**2 + by**2)
+        np.savetxt("B_FIELD_DATA.txt", norm)
+        plt.imshow(np.sqrt(bx**2 + by**2), interpolation='nearest',
+               cmap='coolwarm', origin='lower')
+        plt.quiver(bx/norm, -by/norm, pivot='tip')
         plt.title('Magnetic field')
         plt.xlabel("Grid size: {}$^3$, Init sweeps: {}".format(self.N, self.sweeps))
         plt.show()
