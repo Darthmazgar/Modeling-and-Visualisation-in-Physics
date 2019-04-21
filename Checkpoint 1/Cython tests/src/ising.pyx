@@ -28,10 +28,6 @@ from libc.math cimport exp
             self.imshow_grid()
 
     def nn_check(self, int n, int m, int x, int y):
-<<<<<<< HEAD:Cython tests/ising.pyx
-
-        if n == x and (m == y or m == y+1 or m == y-1):
-=======
         """
         Check if two points (x,y) and (n,m) are nearest neighbours.
         :return: (Boolean) True if nearest neighbours; False otherwise.
@@ -40,7 +36,6 @@ from libc.math cimport exp
         N = self.N
         M = self.M
         if n == x and (m == y or m == (y+1) % N or m == (y-1) % M):
->>>>>>> 08fb9bbdfad4c6d9ec591f15f0ae28181cab55ec:Checkpoint 1/Cython tests/src/ising.pyx
             return True
         elif m == y and (n == (x+1) % N or n == (x-1) % M):
             return True
@@ -138,16 +133,16 @@ from libc.math cimport exp
     def temperature_tests(self, float t_min=1, float t_max=2.9, int data_points=20,
                         int sweeps=100, int tests=10000, int sweeps_per_test=10,
                         eng=True, mag=True, save=True):
-=======
-    def temperature_tests(self, float t_min=1, float t_max=2.9,
-                        int data_points=20, int sweeps=100, int tests=1000,
-                        int sweeps_per_test=10, eng=True, mag=True, save=True):
-        """
-        Runs the simulation for a range of temperatures taking 'tests'
-        measurments at each temperature step. The magnetisation and evergy of
-        the system can then be calculated and stored for each test.
-        """
->>>>>>> 08fb9bbdfad4c6d9ec591f15f0ae28181cab55ec:Checkpoint 1/Cython tests/src/ising.pyx
+# =======
+#     def temperature_tests(self, float t_min=1, float t_max=2.9,
+#                         int data_points=20, int sweeps=100, int tests=1000,
+#                         int sweeps_per_test=10, eng=True, mag=True, save=True):
+#         """
+#         Runs the simulation for a range of temperatures taking 'tests'
+#         measurments at each temperature step. The magnetisation and evergy of
+#         the system can then be calculated and stored for each test.
+#         """
+# >>>>>>> 08fb9bbdfad4c6d9ec591f15f0ae28181cab55ec:Checkpoint 1/Cython tests/src/ising.pyx
         cdef double [:] temperature = np.linspace(t_min, t_max, data_points)
         cdef double [:,:] magnetisation = np.zeros((data_points, tests))
         cdef double [:, :] energy = np.zeros((data_points, tests))
@@ -212,10 +207,7 @@ from libc.math cimport exp
         cdef double [:] temp
         data = np.genfromtxt(('magnetisation'+ self.sv_ext +'.txt'))
         temp = np.genfromtxt(('temperature'+ self.sv_ext +'.txt'))
-<<<<<<< HEAD:Cython tests/ising.pyx
-        # cdef double [:] magnetisation, chi
-=======
->>>>>>> 08fb9bbdfad4c6d9ec591f15f0ae28181cab55ec:Checkpoint 1/Cython tests/src/ising.pyx
+
         cdef int x, i
         magnetisation = [np.average(data[x]) for x in range(len(data))]
         chi = np.zeros(len(temp))

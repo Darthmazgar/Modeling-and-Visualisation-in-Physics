@@ -15,6 +15,7 @@ def main(argv):
 
     f = FisherEqn(N, R, dt)
     # print(f.phi_grid)
+    f.sweeps_per_update = 1
     f.run_animation()
 
 
