@@ -15,7 +15,7 @@ class CellularAutomata:
         self.animation = True
 
     def choose_nn(self, i, j):
-        choice = np.random.randint(low=0, high=3)
+        choice = np.random.randint(low=0, high=4)
         if choice == 0:
             return self.grid[(i+1+self.N)%self.N][j]
         if choice == 1:
@@ -32,7 +32,7 @@ class CellularAutomata:
             for i in range(self.N):
                 for j in range(self.N):
                     # print(rand_choices[i][j][0], rand_choices[i][j][1])
-                    print(update_probabilities[i][j])
+                    # print(update_probabilities[i][j])
                     val = self.choose_nn(rand_choices[i][j][0], rand_choices[i][j][1])
                     # since the update is cyclic RG -> GB -> BR = p1 and the reverse p2
                     # if val > the selected cell use p1 else use p2.
@@ -45,9 +45,22 @@ class CellularAutomata:
         if self.animation:
             self.fig.clear()
             plt.imshow(self.grid, interpolation='nearest',
-                           cmap='coolwarm', origin='lower')# , vmim=-1, vmax=2)
-            # plt.colorbar()
+                           cmap='coolwarm_r', origin='lower', vmin=0, vmax=2)
+            plt.colorbar()
 
+    def vary_p2(self, test_steps=10):
+        self.p1 = 1
+        self.sweeps_per_update = 1
+        p2_steps = np.linspace(0.5, 1, test_steps)
+        prop = np.zeros(test_steps)
+        for i in range(test_steps):
+            self.p2 = p2_steps[i]
+            self.update(1)
+            vals, counts = np.unique(self.grid, return_counts=True)
+            print(counts)
+            prop[i] = np.max(counts) / self.N**2
+        txt_file = np.array(list(zip(p2_steps, prop)))
+        np.savetxt("vary_p2.txt", txt_file)
 
     def run_animation(self):
         """

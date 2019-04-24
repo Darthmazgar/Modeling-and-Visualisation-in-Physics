@@ -1,0 +1,20 @@
+Everything starts with a random initialisation hence the random nature.
+
+As time progresses some random groups of colours will form. In regions where
+there is a higher density of one colour over the others there is an increases
+luminosity of attempts to change to be an adjasent colour. Where p=1 this always
+happens.
+
+This results in larger regions of a particular colour.
+
+Since we are only considering nearest neighbours in a '+' shape then either
+vertical or horizontal phases will form grouping each colour.
+
+Random fluctuations resulting in the random selection of which cell to be
+updated results in some colours growing larger than others. This in turn further
+increases the spread of that colour.
+
+Again from random fluctuations receding colours may fight back and grow again.
+
+In the end one colour will be overwhelmingly likley change to the dominant
+colour resulting in the end board being all one colour.

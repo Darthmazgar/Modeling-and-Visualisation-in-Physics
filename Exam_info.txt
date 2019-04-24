@@ -1,0 +1,49 @@
+Dear All,
+
+just a reminder that the MVP revision tutorial is on today in the cplab, 10-1, you can look at the
+text for the tutorial when you get in (or from home) at
+
+https://www2.ph.ed.ac.uk/~dmarendu/MVP/Practice19.pdf
+
+hope you find it useful! The link will keep working until the exam at least, so you can access it at some other time if today is inconvenient.
+
+I also wanted to clarify a couple of details regarding the exam which is coming up at the end of next week:
+
+- at the end of the exam you should upload the code, any data and graphs/snapshots/other files you have
+via learn, there will be a box on the course page where you will be able to do that; in case you cannot
+do it for any reason there is no problem, you can alternatively just email me the files at
+dmarendu@ph.ed.ac.uk or Davide.Marenduzzo@ed.ac.uk at the end of the exam
+
+- ideally you should upload/submit a single file, e.g. as a .tar, tar.gz or .zip; in case you do not know
+how to do this, it is simple, please follow these instructions (to create a .tar or .tar.gz, i suggest
+you give these commands a try before the day of the exam!):
+
+  1. open a terminal in your home
+
+  2. create a directory, for instance called MVPExam (mkdir MVPExam)
+
+  3. move all the files which you want to submit into the directory MVPExam
+
+  4. from the terminal you are in (where you have just created the MVPExam directory) type
+
+      tar -cvf BXXX.tar MVPExam/*
+
+      where XXX=your exam number (so i can match codes to scripts). this command creates a file called
+      BXXX.tar where you store your director with all your files
+
+  5. type
+
+      gzip BXXX.tar
+
+      this creates a (gzipped) file called BXXX.tar.gz which you can then submit (you can also submit the
+      .tar file generated in step 4., it will just be a bit larger)
+
+- you will also be given the usual exam scripts on which you can sketch some of the graphs or discuss the
+results when required, or include any  other things which you would like/need me to see (e.g.,
+instructions to run the code if non-standard, or anything else); if you have used the convention above
+and substituted XXX with your exam number i will be able to match scripts and codes most easily, but if
+you forget do not worry - i will still manage to do so.
+
+All the best, and any questions let me know!
+
+Davide
