@@ -4,7 +4,7 @@ from matplotlib.animation import FuncAnimation
 import sys
 
 class Diffusion:
-    def __init__(self, N, mean_val=0.5, sigma=10, kapa=0.01, D=1, dx=1, dt=0.01):
+    def __init__(self, N, mean_val=0.5, sigma=10, kapa=0.01, D=1, dx=1, dt=0.1):
         self.N = N
         self.sigma = sigma
         self.kapa = kapa
@@ -43,24 +43,27 @@ class Diffusion:
         return l1 + l2 + l3
 
     def rolling_nn_sum(self):
-        self.rolling_nn = (np.roll(self.psi_grid, 1, 0) + np.roll(self.psi_grid, -1, 0)
-            + np.roll(self.psi_grid, 0, 1) + np.roll(self.psi_grid, 0, -1))
+        rolled_sum = (np.roll(self.psi_grid, 1, 0) + np.roll(self.psi_grid, -1, 0)
+            + np.roll(self.psi_grid, 1, 1) + np.roll(self.psi_grid, -1, 1))
+        return rolled_sum
 
     def rolling_laplacian(self, i, j):
         return self.rolling_nn[i][j] - 4*self.psi_grid[i][j]
 
     def update(self, k):
         for z in range(self.sweeps_per_update):
-            # rand_choices = np.random.randint(low=0, high=self.N, size=(self.N, self.N, 2))
-            # update_probabilities = np.random.uniform(size=(self.N, self.N))
-            self.rolling_nn_sum()
-            for i in range(self.N):
-                for j in range(self.N):
-                    # self.next_psi_grid[i][j] = (self.psi_grid[i][j] + self.D * self.dt / self.dx**2
-                    #     * self.laplacian(i, j) + self.rho_grid[i][j] - self.kapa * self.psi_grid[i][j])
-                    self.next_psi_grid[i][j] = (self.psi_grid[i][j] + self.D * self.dt / self.dx**2
-                        * self.rolling_laplacian(i, j) + self.rho_grid[i][j] - self.kapa * self.psi_grid[i][j])
-        self.psi_grid = self.next_psi_grid.copy()
+            # for i in range(self.N):
+            #     for j in range(self.N):
+            #         self.next_psi_grid[i][j] = (self.psi_grid[i][j] + self.D * self.dt / self.dx**2
+            #             * self.laplacian(i, j) + self.rho_grid[i][j] - self.kapa * self.psi_grid[i][j])
+
+        # Calculating the new phi grid using a rolling method.
+        #     self.new_phi_array = self.phi + (self.D*self.dt/(self.dx**2)) * (np.roll(self.phi, 1,0) + np.roll(self.phi, -1,0) + np.roll(self.phi, 1,1) + np.roll(self.phi, -1,1)\
+        # - 4.0 * self.phi) + self.rho - self.k * self.phi
+        # self.phi = np.copy(self.new_phi_array)
+            self.psi_grid += (self.D*self.dt/(self.dx**2)) * (self.rolling_nn_sum() - 4*self.psi_grid) - self.kapa * self.psi_grid + self.rho_grid
+
+            # self.psi_grid = self.next_psi_grid.copy()
         if self.animation:
             self.fig.clear()
             plt.imshow(self.psi_grid, interpolation='nearest',
@@ -74,7 +77,7 @@ class Diffusion:
             mean_psi[i] = np.mean(self.psi_grid)
             self.update(1)
         lin = [x for x in range(steps)]
-        mean_psi = np.array(list(zip(mean_psi, lin)))
+        mean_psi = np.array(list(zip(lin, mean_psi)))
         np.savetxt("Mean_psi_val_with_time.txt", mean_psi, header='The mean psi value changing with time over %d steps.' % steps)
 
     def psi_with_r(self):
@@ -92,7 +95,7 @@ class Diffusion:
                 r_vals[z] = np.sqrt((i - centre_y)**2 + (j - centre_x)**2)
                 psi_vals[z] = self.psi_grid[i][j]
                 z += 1
-        results = np.array(list(zip(psi_vals, r_vals)))
+        results = np.array(list(zip(r_vals, psi_vals)))
         np.savetxt("psi_with_r.txt", results, header="psi varying with r after %d equilibrium sweeps." % self.sweeps_per_update)
 
     def run_animation(self):

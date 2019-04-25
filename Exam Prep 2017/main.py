@@ -10,9 +10,9 @@ def main(argv):
     p2 = float(argv[2])
 
     ca = CellularAutomata(N, p1, p2)
-    # ca.run_animation()
-    ca.animation = False
-    ca.vary_p2()
+    ca.run_animation()
+    # ca.animation = False
+    # ca.vary_p2()
 
 
 

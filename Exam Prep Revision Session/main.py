@@ -16,8 +16,8 @@ def main(argv):
 
 
     dif.animation = False
-    dif.measure_mean_psi()
-    # dif.psi_with_r()
+    # dif.measure_mean_psi()
+    dif.psi_with_r()
 
 
 
