@@ -11,13 +11,13 @@ def main(argv):
 
 
     dif = Diffusion(N, kapa=kapa, sigma=sigma)
-    # dif.run_animation()
+    dif.run_animation()
 
 
 
-    dif.animation = False
+    # dif.animation = False
     # dif.measure_mean_psi()
-    dif.psi_with_r()
+    # dif.psi_with_r()
 
 
 
