@@ -7,6 +7,18 @@ import sys
 from libc.stdlib cimport abs, rand
 from libc.math cimport exp
 
+class IsingGrid:
+    def __init__(self, N, M, T, ds=ds, sv_ext='', anim=True, all_up=False):
+        self.N = N
+        self.M = M
+        self.T = T
+        self.ds = ds
+        self.sv_ext = sv_ext
+        self.anim = anim
+        self.all_up = all_up
+
+
+        
         plt.imshow(self.grid, interpolation='sinc',
                    cmap='Blues', vmin=-1, vmax=1)
 
@@ -133,16 +145,7 @@ from libc.math cimport exp
     def temperature_tests(self, float t_min=1, float t_max=2.9, int data_points=20,
                         int sweeps=100, int tests=10000, int sweeps_per_test=10,
                         eng=True, mag=True, save=True):
-# =======
-#     def temperature_tests(self, float t_min=1, float t_max=2.9,
-#                         int data_points=20, int sweeps=100, int tests=1000,
-#                         int sweeps_per_test=10, eng=True, mag=True, save=True):
-#         """
-#         Runs the simulation for a range of temperatures taking 'tests'
-#         measurments at each temperature step. The magnetisation and evergy of
-#         the system can then be calculated and stored for each test.
-#         """
-# >>>>>>> 08fb9bbdfad4c6d9ec591f15f0ae28181cab55ec:Checkpoint 1/Cython tests/src/ising.pyx
+
         cdef double [:] temperature = np.linspace(t_min, t_max, data_points)
         cdef double [:,:] magnetisation = np.zeros((data_points, tests))
         cdef double [:, :] energy = np.zeros((data_points, tests))

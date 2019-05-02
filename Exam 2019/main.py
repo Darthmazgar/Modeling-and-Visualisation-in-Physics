@@ -1,5 +1,5 @@
 import sys
-from ising import Ising
+from other import Other ##################
 
 def main(argv):
     if len(argv) != 2:
@@ -7,14 +7,11 @@ def main(argv):
         sys.exit()
     N = int(argv[0])
 
-    i = Ising(N)
+    i = Other(N) ##############
     if argv[1] == 'anim':
         i.run_animation()
     elif argv[1] == 'test':
-        i.run_tests()   
-
-
-
+        i.run_tests()
 
 
 if __name__ == '__main__':
