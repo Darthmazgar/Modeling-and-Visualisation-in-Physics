@@ -11,7 +11,9 @@ class SuperfluidTransiton: ################
         self.c = c
         self.J = J
         self.kb = kb
-        self.grid = np.random.choice([1, -1, 0], size=(N,N) , p=[c*0.5,c*0.5,1-c])
+        n_spins = 50
+        spins = [x for x in range(-n_spins, n_spins)]
+        self.grid = np.random.choice(spins, size=(N,N) )# , p=[c*0.5,c*0.5,1-c])
         self.animation = False
         self.sweeps_per_update = 1
 
@@ -78,7 +80,7 @@ class SuperfluidTransiton: ################
         if self.animation:
             self.fig.clear()
             plt.imshow(self.grid, interpolation='nearest',
-                           cmap='coolwarm', origin='lower' , vmin=-1, vmax=1)
+                           cmap='coolwarm', origin='lower') # , vmin=-1, vmax=1)
             plt.colorbar()
 
     def run_animation(self):
