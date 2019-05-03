@@ -1,17 +1,27 @@
+"""
+2019 Modeling and Visualisation in Physics Exam
+B075090
+"""
+
 import sys
-from other import Other ##################
+from autocat import Autocat
 
 def main(argv):
-    if len(argv) != 2:
-        print("main.py N anim/test")
+    if len(argv) != 5:
+        print("python3 main.py N R F dt anim/testc/testd")
         sys.exit()
     N = int(argv[0])
+    R = float(argv[1])
+    F = float(argv[2])
+    dt = float(argv[3])
 
-    i = Other(N) ##############
-    if argv[1] == 'anim':
+    i = Autocat(N, R, F, dt=dt)
+    if argv[4] == 'anim':
         i.run_animation()
-    elif argv[1] == 'test':
-        i.run_tests()
+    elif argv[4] == 'testc':
+        i.run_c_tests()
+    elif argv[4] == 'testd':
+        i.run_d_tests()
 
 
 if __name__ == '__main__':
